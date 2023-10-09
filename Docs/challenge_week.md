@@ -61,7 +61,21 @@ The names that I have applied to these are not what they are called in the docum
 
 ## Technologies Research
 
-Content
+As I am going to be making a Web application, I need to consider the available tech stacks available to me, what each of them brings to the table, and which one I intend on using. The major stacks that are current (and I am familiar with enough to use) are the ME[ARV]N and L[EA]MP. These differ quite a bit, and even have different meanings in different situations [https://dev.to/theme_selection/best-web-development-stack-2jpe]
+
+### ME[ARV]N Stack
+
+MEAN, MERN and MEVN are all stacks that are very similar to each other, differing only in the front-end framework that they utilise. The M stands for MongoDB (or MySql if you need a relational database), the E is for Express.js and the N is for Node.js. The A, R and V options are Angular, React and Vue respectively.
+
+The database used is the first thing to be considered. MySql is a relational SQL database, which is used for storing well structured data that has heavy relationships with each other. MongoDB is the exact opposite of that, and is for storing well customised data structures that may not be related to each other. Due to the structured nature of the data that I will be using, MySQL is likely the better solution here. As well as this, it is a database solution that I am more familiar with, so is better 
+
+Angular is the oldest option, and as such is the 'original' use of this stack for JS development. This has since been replaced as the most popular use of the stack as React has grown in popularity for developers over the years, and is currently the most desired front-end frameworks, with Vue and Angular following that (in that order of desirability) - [reference](https://survey.stackoverflow.co/2023/#section-admired-and-desired-web-frameworks-and-technologies).
+
+I have used both React and Vue in the past, and I preferred React. This is for two reasons:
+
+- The syntax and 
+
+### L[EA]MP Stack
 
 ---
 
