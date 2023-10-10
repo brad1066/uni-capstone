@@ -93,11 +93,16 @@ There are a number of fullstack frameworks such as Next and Nuxt which make use 
 ## Project Objectives
 
 ### MVP:
-- Design and implement a suitable data structure for storing related information
-- Design and implement an API to allow CRUD actions to be performed to store data in the implemented data structure
-- Design and Implement an Admin interface to perform CRUD activities on Users and all content
-- Design and Implement a Teacher's interface to perform CRUD activities on their resources
-- Design and Implement a Student's interface to view allowed content on teacher generated resources
+
+The first thing that I need to achieve for this project is the design and implementation of a suitable data structure for storing information about users (Admin, Teachers and Students), courses, classes and modules. This is integral to the project, as everything else hinges on having access to this content. I will use a variety of tools to design the data structure, though the implementation of that will be dependant on whichever tech stack I choose.
+
+The next thing to implement is an API to allow CRUD actions to be performed to make use of the data structure. I have the choice of making an REST or GraphQL API for handling this. REST is simpler to set up for direct interactions with some data source, but not so much for heavily related content where you might need (or want) to dig deep into the underlying relations. For this reason, I will likely create a GraphQL API to interact with the data, despite the increased difficulty to set up and implement.
+
+Next I need to be able to actually interact with this API and data structure in some way other than direct code interactions or API calls. To do so, I will create some interface for an Admin user. They will be able to do everything that a Student and Teacher can do, as well as being able to add/remove users. They will be able to perform interactions on all the data that is in the database that is user-generated.
+
+I next need to implement the teacher's interface. This will allow them to perform CRUD operations on all their own content, as well as being able to manage their classes. They will also be able to enrol and remove students on their classes.
+
+Finally for the MVP, I need to implement a UI to allow student's to view content that they have access to (classes for which they are enrolled). They will only (at this point) be able to view the data, though adding options to favourite and pin content is something that would be a nice addition to include.
 
 ### Extra:
 - Design and Implement an Teacher interface for performing CRUD interactions on Assignments
