@@ -61,21 +61,32 @@ The names that I have applied to these are not what they are called in the docum
 
 ## Technologies Research
 
-As I am going to be making a Web application, I need to consider the available tech stacks available to me, what each of them brings to the table, and which one I intend on using. The major stacks that are current (and I am familiar with enough to use) are the ME[ARV]N and L[EA]MP. These differ quite a bit, and even have different meanings in different situations [https://dev.to/theme_selection/best-web-development-stack-2jpe]
+As I am going to be making a Web application, I need to consider the available tech stacks available to me, what each of them brings to the table, and which one I intend on using. The major stacks that are current (and I am familiar with enough to use) are the ME[ARV]N and L[EA]MP. These differ quite a bit, and even have different meanings in different situations [https://dev.to/theme_selection/best-web-development-stack-2jpe].
 
 ### ME[ARV]N Stack
 
 MEAN, MERN and MEVN are all stacks that are very similar to each other, differing only in the front-end framework that they utilise. The M stands for MongoDB (or MySql if you need a relational database), the E is for Express.js and the N is for Node.js. The A, R and V options are Angular, React and Vue respectively.
 
-The database used is the first thing to be considered. MySql is a relational SQL database, which is used for storing well structured data that has heavy relationships with each other. MongoDB is the exact opposite of that, and is for storing well customised data structures that may not be related to each other. Due to the structured nature of the data that I will be using, MySQL is likely the better solution here. As well as this, it is a database solution that I am more familiar with, so is better 
+The database used is the first thing to be considered. MySql is a relational SQL database, which is used for storing well structured data that has heavy relationships with each other. MongoDB is the exact opposite of that, and is for storing well customised data structures that may not be related to each other.
 
 Angular is the oldest option, and as such is the 'original' use of this stack for JS development. This has since been replaced as the most popular use of the stack as React has grown in popularity for developers over the years, and is currently the most desired front-end frameworks, with Vue and Angular following that (in that order of desirability) - [reference](https://survey.stackoverflow.co/2023/#section-admired-and-desired-web-frameworks-and-technologies).
 
 I have used both React and Vue in the past, and I preferred React. This is for two reasons:
+- The syntax and component creation is easier for me to work with
+- State is more obvious and simple to interact with
+- There is a very healthy environment of libraries and documentation to work with React.
 
-- The syntax and 
+Node is the backend JavaScript runtime environment for each of these, and is used to run ExpressJS. Express is used to handle incoming requests from the client. This includes GET requests for pages but also GET, POST and PUT requests for performing CRUD operations (Create, Read, Update, Delete).
 
 ### L[EA]MP Stack
+
+LEMP and LAMP are PHP stacks. These are often used to serve static applications and might make use of some JS frameworks to manipulate the DOM to perform some reactive tasks. These use Linux, MariaDB/MySql and PHP alongside either (E)nginx or Apache to be able to serve up content. This PHP can be in the form of a framework such as Laravel, or a standard PHP application with no specific framework. Linux is the operating system of the web server, which then runs both a database server and a web server. The PHP is then ran on the web server.
+
+This is a really effective stack for producing web pages that can be generated on the server (using the PHP code), with little responsive behaviour on the client. This is because the server can do all of the lifting for the client and send just the information that the page needs to load (usually just HTML and CSS, with some small amount of JS). This is not ideal for this project, as much of it will be heavily interactive.
+
+### Other Stacks of Note
+
+There are a number of fullstack frameworks such as Next and Nuxt which make use of Node and React to handle requests on the server and create reactive applications on the front end. These frameworks also tend to have some method internally to handle data requests, but leaving that actual implementation for getting that data to the developer. For example, you can use Next with Prisma and GraphQL to create a full stack JS application without having to directly interact with Node or Express, which can become quite a handful as the application grows. There are plenty of video tutorials that explain using these kinds of stacks, and may be something that I use to implement my solution. [see example](https://www.youtube.com/watch?v=4cpqSOQKSo8&list=PLn2e1F9Rfr6k6MwzS-p9FGK1NDBxxwLPk&index=4).
 
 ---
 
