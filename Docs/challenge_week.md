@@ -92,7 +92,19 @@ There are a number of fullstack frameworks such as Next and Nuxt which make use 
 
 ## Project Objectives
 
-Content
+### MVP:
+- Design and implement a suitable data structure for storing related information
+- Design and implement an API to allow CRUD actions to be performed to store data in the implemented data structure
+- Design and Implement an Admin interface to perform CRUD activities on Users and all content
+- Design and Implement a Teacher's interface to perform CRUD activities on their resources
+- Design and Implement a Student's interface to view allowed content on teacher generated resources
+
+### Extra:
+- Design and Implement an Teacher interface for performing CRUD interactions on Assignments
+- Design and Implement a Student's interface to interact with the teacher created assignments
+- Design and Implement method of submitting assignment work for Students
+- Design and Implement method of responding to assignment submissions for Teachers
+- Design and Implement communication channels for classes and/or teachers
 
 ---
 
