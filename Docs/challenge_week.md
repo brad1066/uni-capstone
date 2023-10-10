@@ -105,11 +105,10 @@ I next need to implement the teacher's interface. This will allow them to perfor
 Finally for the MVP, I need to implement a UI to allow student's to view content that they have access to (classes for which they are enrolled). They will only (at this point) be able to view the data, though adding options to favourite and pin content is something that would be a nice addition to include.
 
 ### Extra:
-- Design and Implement an Teacher interface for performing CRUD interactions on Assignments
-- Design and Implement a Student's interface to interact with the teacher created assignments
-- Design and Implement method of submitting assignment work for Students
-- Design and Implement method of responding to assignment submissions for Teachers
-- Design and Implement communication channels for classes and/or teachers
+
+Once I have completed the MVP requirements, there are some things that I want to also add to enrich the experience. The first of these is to add assignments, that would ideally be able to accept submissions from students, with teachers being able to respond to those submissions. This is quite a lot of extra work, and would be broken down into chunks that can be implemented seperately. First, Teachers would need to be able to perform CRUD operations on the assignments, then students would need to be able to view that content. Next, student's need to be able to submit their work, and teachers to be able to view and download those submissions. Finally, teachers need to be able to provide feedback and notes on those assignment submissions.
+
+A second feature that I would like to implement after the MVP is for teachers and students to be able to communicate through the application. This would enable Q&A forums and direct communication between Teachers and their Students. This is something that I foresee being the most difficult to implement, so will be the last thing that I attempt to add to the application.
 
 ---
 
