@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./next-app
+    container_name: golearn-next
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+    ports:
+      - '3000:3000'
+    depends_on:
+      - database
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - node-network
+
+  database:
+    image: mongo:6-jammy
+    container_name: golearn-mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - golearndb:/data/db
+    networks:
+      - node-network
+
+volumes:
+  golearndb:
+
+networks:
+  node-network:
+    driver: bridge
