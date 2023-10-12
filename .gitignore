@@ -1,3 +1,5 @@
 *.docx
 *.tmp
 *.pptx
+
+node_modules/
