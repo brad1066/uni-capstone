@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app:
     build: ./next-app
+    command: npm run dev
     container_name: golearn-next
     environment:
       - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
@@ -11,8 +12,9 @@ services:
     depends_on:
       - database
     volumes:
-      - .:/app
-      - /app/node_modules
+      - ./next-app:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
     networks:
       - node-network
 
