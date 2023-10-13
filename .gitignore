@@ -3,5 +3,6 @@
 *.pptx
 
 *.bkp
+*.dtmp
 
 node_modules/
