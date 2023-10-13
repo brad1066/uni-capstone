@@ -47,7 +47,7 @@ Where there is an array typing for the database, in a SQL relational database, t
 - students: [Student](#student)[ ] `(string[] of Student ids)`
 - classes: [Class](#class)[ ] `(string[ ] of Class ids)`
 
-### Class: string
+### Class
 - title: string
 - students: [Student](#student)[ ] `(string[] of Student ids)`
 - teachers: [Teacher](#teacher)[ ] `(string[] of Teacher ids)`
