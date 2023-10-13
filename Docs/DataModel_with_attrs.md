@@ -21,7 +21,7 @@ Where there is an array typing for the database, in a SQL relational database, t
 - [Section](#section)
 - [Resource](#resource)
 
-## User
+### User
 - username: string (unique, primary key replacing id field)
 - password: string
 - title:?  string
@@ -32,7 +32,7 @@ Where there is an array typing for the database, in a SQL relational database, t
 - contactDetails: ? [Contact](#contact)
 - role: `admin` | `teacher` | `student` | `unassigned`
 
-## Student
+### Student
 - username: [User](#user) `(string User username)`
 - emergencyContact: [Contact](#contact)
 - termAddress: [Address](#address)
