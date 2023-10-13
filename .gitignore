@@ -2,4 +2,6 @@
 *.tmp
 *.pptx
 
+*.bkp
+
 node_modules/
