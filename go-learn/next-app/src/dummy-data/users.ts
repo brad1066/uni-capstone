@@ -1,8 +1,8 @@
 import { TUser } from "@/lib/types";
 
-export const admin: TUser = {
+export const adminUser: TUser = {
   username: 'admin',
-  password: 'password',
+  password: '$2b$10$.Km.2in9..BfZVBdPV6...aPFWaS6Jy8dk09EahHVWsMLep63LFmy',
   title: 'Mr',
   forename: 'Herman',
   middleNames: 'the',
@@ -17,7 +17,7 @@ export const admin: TUser = {
 
 export const tjones1: TUser = {
   username: 'tjones1',
-  password: 'password',
+  password: '$2b$10$.Km.2in9..BfZVBdPV6...aPFWaS6Jy8dk09EahHVWsMLep63LFmy',
   title: 'Mr',
   forename: 'Tom',
   surname: 'Jones',
@@ -30,7 +30,7 @@ export const tjones1: TUser = {
 
 export const tjones2: TUser = {
   username: 'tjones2',
-  password: 'password',
+  password: '$2b$10$.Km.2in9..BfZVBdPV6...aPFWaS6Jy8dk09EahHVWsMLep63LFmy',
   title: 'Mrs',
   forename: 'Tina',
   surname: 'Jones',
@@ -43,7 +43,7 @@ export const tjones2: TUser = {
 
 export const tj000001: TUser = {
   username: 'tj000001',
-  password: 'password',
+  password: '$2b$10$.Km.2in9..BfZVBdPV6...aPFWaS6Jy8dk09EahHVWsMLep63LFmy',
   title: 'Mr',
   forename: 'Terry',
   surname: 'Jones',
@@ -56,7 +56,7 @@ export const tj000001: TUser = {
 
 export const tj000002: TUser = {
   username: 'tj000002',
-  password: 'password',
+  password: '$2b$10$.Km.2in9..BfZVBdPV6...aPFWaS6Jy8dk09EahHVWsMLep63LFmy',
   title: 'Miss',
   forename: 'Tammy',
   surname: 'Jones',
@@ -67,4 +67,4 @@ export const tj000002: TUser = {
   role: 'student',
 }
 
-export default [admin, tjones1, tjones2, tj000001, tj000002] as TUser[]
+export default [adminUser, tjones1, tjones2, tj000001, tj000002] as TUser[]

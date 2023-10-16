@@ -58,4 +58,37 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  img {
+    width: auto;
+    height: auto;
+  }
+}
+
+@layer components {
+  header.site-header {
+    display: grid;
+    grid-template-areas: 'icon navigation account';
+    grid-template-columns: auto 1fr auto auto;
+    gap: 1rem;
+  }
+  
+  .site-header > .site-icon {
+    @apply rounded-md object-cover cursor-pointer m-4;
+    grid-area: icon;
+  }
+
+  .site-header > .navbar {
+    @apply m-4 my-auto;
+    grid-area: navigation;
+  }
+
+  .site-header > .account-button {
+    @apply m-4 my-auto;
+    grid-area: account;
+  }
+}
+
+h1, .h1 {
+  font-size: 2em;
 }

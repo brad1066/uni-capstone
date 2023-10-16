@@ -9,6 +9,9 @@ const nextConfig = {
         aggregateTimeout: 300
       }
       return config
+    },
+    env: {
+      PASSWORD_SALT: '$2b$10$$2b$10$20UUpDj.ycrRX.X3s4tM0O'
     }
   }
 

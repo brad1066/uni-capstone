@@ -1,5 +1,6 @@
 export type TUser = {
     username?: string
+    password?: string
     title?: string
     forename?: string
     middleNames?: string

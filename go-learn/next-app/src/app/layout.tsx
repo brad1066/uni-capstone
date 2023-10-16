@@ -1,8 +1,8 @@
-import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
+import PageWrapper from '@/lib/PageWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,18 +17,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <body className={inter.className}>
-          <Header showNav showThemeSwitcher/>
-          {children}
+    <html lang="en" suppressHydrationWarning={true}>
+      <PageWrapper>
+        <body className={inter.className + ' min-h-screen'}>
+          <Header />
+          <main className='flex flex-col items-center justify-between px-24'>
+            {children}
+          </main>
         </body>
-      </ThemeProvider>
+      </PageWrapper>
     </html>
   )
 }
