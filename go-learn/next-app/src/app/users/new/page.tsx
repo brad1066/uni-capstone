@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
-import { notFound, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 const NewUsersPage = () => {
@@ -11,7 +11,7 @@ const NewUsersPage = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) validateLoggedIn?.().then(({ loggedIn, user }) => {
+    if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
       if (!loggedIn) router.push('/login')
     })
     setLoading(false)
@@ -23,6 +23,10 @@ const NewUsersPage = () => {
         <Button onClick={router.back}>Go Back</Button>
       </>
     }
+
+    {!loading && user && (
+      <></>
+    )}
   </>)
 }
 
