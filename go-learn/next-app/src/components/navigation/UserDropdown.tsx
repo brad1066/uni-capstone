@@ -41,7 +41,7 @@ export function UserDropdown({ className }: UserDropdownProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem >
-          <Link href="/account">Profile</Link>
+          <Link href="/profile">Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {user?.role == 'admin' && (<DropdownMenuGroup>
