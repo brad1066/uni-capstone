@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
 
 @layer base {
   :root {
@@ -26,7 +25,7 @@
     --ring: 0 72.2% 50.6%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -50,13 +49,13 @@
   }
 }
 
- 
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground grid;
+    grid-template-rows: auto 1fr;
   }
 
   img {
@@ -67,12 +66,13 @@
 
 @layer components {
   header.site-header {
+    position: sticky;
     display: grid;
     grid-template-areas: 'icon navigation account';
     grid-template-columns: auto 1fr auto auto;
     gap: 1rem;
   }
-  
+
   .site-header > .site-icon {
     @apply rounded-md object-cover cursor-pointer m-4;
     grid-area: icon;
@@ -89,6 +89,20 @@
   }
 }
 
-h1, .h1 {
+@layer forms { 
+  .newUserNameEntries .alwaysShown {
+    @apply grid gap-x-4;
+    grid-template-columns: minmax(2rem, 1fr) 2fr 2fr auto;
+    align-items: end;
+  }
+  .newUserContactEntries .alwaysShown {
+    @apply grid gap-x-4;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
+
+h1,
+.h1 {
   font-size: 2em;
 }

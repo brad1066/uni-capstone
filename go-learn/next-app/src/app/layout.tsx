@@ -21,7 +21,7 @@ export default function RootLayout({
       <PageWrapper>
         <body className={inter.className + ' min-h-screen'}>
           <Header />
-          <main className='flex flex-col items-center justify-between px-24'>
+          <main className='flex flex-col items-center px-24 min-h-[100%]'>
             {children}
           </main>
         </body>
