@@ -36,15 +36,15 @@ export default function UsersAdminPage() {
         Sorry, but you cannot access this resource. <Link href='/'>Go Home</Link>
       </>}
       {!loading && user?.role == 'admin' && <>
-        <h1>Users</h1>
+        <h1 className="mb-[1rem]">Users</h1>
         <div className={cn('w-full', !filter ? `grid grid-cols-2 gap-x-[1rem]` : '')}>
           {(!filter || filter == 'teachers') && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>
-                <ul className="flex flex-col gap-[1rem]">
+              <ul className="flex flex-col gap-[1rem]">
                 {
                   users.filter(user => user.role == 'teacher').map(user => (
-                    <AdminUserItem user={user} key={user.username} />
+                    <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
                   ))
                 }
               </ul>
@@ -58,7 +58,7 @@ export default function UsersAdminPage() {
                 <ul className="flex flex-col gap-[1rem]">
                   {
                     users.filter(user => user.role == 'student').map(user => (
-                      <AdminUserItem user={user} key={user.username} />
+                      <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
                     ))
                   }
                 </ul>
