@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { ThemeToggler } from "../ui/ThemeToggler"
 import Link from "next/link"
+import { useEffect } from "react"
 
 type UserDropdownProps = {
   className?: string
@@ -41,26 +42,43 @@ export function UserDropdown({ className }: UserDropdownProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem >
-          <Link href="/profile">Profile</Link>
+          <Link href={`/profile/${user?.username}`} className="w-full">Profile</Link>
         </DropdownMenuItem>
+
         <DropdownMenuSeparator />
-        {user?.role == 'admin' && (<DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Manage users</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem><Link href="/users/teachers">Teachers</Link></DropdownMenuItem>
-                <DropdownMenuItem><Link href="/users/students">Students</Link></DropdownMenuItem>
-                <DropdownMenuItem><Link href="/users">All</Link></DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem><Link href="/users/new">New user</Link></DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          {/* Stuff Admin can do in this group */}
+          {(user?.role == 'admin') && (<>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Manage users</DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem><Link href="/admin/users?filter=teachers" className="w-full">Teachers</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/admin/users?filter=students" className="w-full">Students</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/admin/users" className="w-full">All</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem><Link href="/admin/users/new" className="w-full">New user</Link></DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Manage courses</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/admin/classes" className="w-full">Manage classes</Link></DropdownMenuItem>
+          </>)}
+          {/* Stuff Teachers can do in this group */}
+          {(user?.role == 'teacher') && (<>
+            <DropdownMenuItem><Link href="/teacher/courses" className="w-full">My courses</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/teacher/classes" className="w-full">My classes</Link></DropdownMenuItem>
+          </>)}
+          {/* Stuff Students can do in this group */}
+          {(user?.role == 'student') && (<>
+            <DropdownMenuItem><Link href="/" className="w-full">Dashboard</Link></DropdownMenuItem>
+          </>)}
         </DropdownMenuGroup>
-        )}
-        <DropdownMenuItem onClick={async () => { await logout?.(); router.push('/login') }}>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem className="cursor-pointer" onClick={async () => { await logout?.(); router.push('/login') }}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
