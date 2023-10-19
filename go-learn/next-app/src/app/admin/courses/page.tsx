@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Dashboard() {
+export default function CoursesAdminPage() {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
