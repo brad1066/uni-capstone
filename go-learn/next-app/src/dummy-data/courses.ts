@@ -4,20 +4,20 @@ import { module1, module2 } from "./modules";
 
 export const course1: TCourse = {
     id: '0000-0000-0000-0007',
-    title: 'Course 1',
+    title: 'Computer Science (BSc)',
     description: 'Some Description',
-    websiteURL: 'https://golearn.ac.uk/courses/0000000000000007',
-    modules: [module1],
-    students: [student1]
+    websiteURL: 'https://golearn.ac.uk/courses/0000-0000-0000-0007',
+    // modules: [module1],
+    // students: [student1]
 }
 
 export const course2: TCourse = {
     id: '0000-0000-0000-0008',
-    title: 'Course 2',
+    title: 'English Literature (BA)',
     description: 'Some Description',
-    websiteURL: 'https://golearn.ac.uk/courses/0000000000000008',
-    modules: [module2],
-    students: [student2]
+    websiteURL: 'https://golearn.ac.uk/courses/0000-0000-0000-0008',
+    // modules: [module2],
+    // students: [student2]
 
 }
 
