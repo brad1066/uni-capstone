@@ -1,14 +1,15 @@
 import { TUser } from "@/lib/types"
 import Link from "next/link"
 import { Button } from "../ui/button"
-import { EyeOpenIcon, GearIcon, ReaderIcon, TrashIcon, ViewNoneIcon, ViewVerticalIcon } from "@radix-ui/react-icons"
+import { EyeOpenIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 type AdminUserItemProps = {
   user: TUser
+  onDelete?: () => Promise<any>
 }
 
-const AdminUserItem = ({ user }: AdminUserItemProps) => {
+const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
   return (<>
     <li className="w-full flex justify-between gap-[1rem] items-center">
       {user.title} {user.forename} {user.surname}
@@ -24,14 +25,14 @@ const AdminUserItem = ({ user }: AdminUserItemProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="secondary">
-              <Link href={`/admin/users/${user.username}`}><GearIcon /></Link>
+              <Link href={`/admin/users/${user.username}`}><Pencil2Icon /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Edit user</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { console.log('Deletion of user: ' + user.username) }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={() => { console.log('Deletion of user: ' + user.username); onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove user</TooltipContent>
