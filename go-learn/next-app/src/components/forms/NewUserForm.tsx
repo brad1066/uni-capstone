@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -12,23 +12,23 @@ import { useState } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons"
 import { Separator } from "../ui/separator"
 import { TUser } from "@/lib/types"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 type NewUserFormProps = {
   className?: string
-  submitUser?: (user: TUser) => any
+  submitUser?: (user: TUser) => Promise<any>
   disabled?: boolean
 }
 
 const formSchema = z.object({
   title: z.string(),
-  forename: z.string().min(1, { message: 'This is a required field' }),
+  forename: z.string().min(2, { message: 'Forename is required' }),
   middleNames: z.string().optional(),
-  surname: z.string().min(1, { message: 'This is a required field' }),
+  surname: z.string().min(2, { message: 'Surname is required' }),
   letters: z.string().optional(),
-  contactLabel: z.string().min(1, { message: 'This is required' }),
   contactMobile: z.string(),
-  contactEmail: z.string().email({ message: 'This needs to be a valid email address' }).min(1, { message: 'This is required' }),
-  role: z.string()
+  contactEmail: z.string().min(1, { message: 'This is required' }).email({ message: 'This needs to be a valid email address' }),
+  role: z.string().regex(/teacher|student|admin/, 'You must select a role')
 })
 
 
@@ -45,25 +45,11 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
       letters: ''
     },
   })
+
   return (<>
     <Form {...form}>
-      <form onSubmit={e => {
-        e.preventDefault()
-        const formVals = form.getValues()
-        const user: TUser = {
-          title: formVals.title,
-          forename: formVals.forename,
-          middleNames: formVals.middleNames,
-          surname: formVals.surname,
-          letters: formVals.letters,
-          contactDetails: {
-            label: formVals.contactLabel,
-            email: formVals.contactEmail,
-            mobile: formVals.contactMobile
-          }
-        }
-        submitUser?.(user)
-      }} className="max-w-[50rem]">
+      <form onSubmit={
+        form.handleSubmit((values) => { submitUser?.(values as TUser) })} className="max-w-[50rem]">
         <Card className="mx-auto">
           <CardHeader className="text-2xl">General Data</CardHeader>
           <CardContent className="flex flex-col gap-[1rem]">
@@ -84,7 +70,6 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                       <FormControl>
                         <Input placeholder="title" {...field} disabled={disabled} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -94,11 +79,10 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                   name="forename"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel></FormLabel>
+                      <FormMessage />
                       <FormControl>
                         <Input placeholder="forename" {...field} disabled={disabled} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -108,7 +92,7 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                   name="surname"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel></FormLabel>
+                      <FormMessage />
                       <FormControl>
                         <Input placeholder="surname" {...field} disabled={disabled} />
                       </FormControl>
@@ -116,8 +100,8 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                   )}
                 />
                 {/* The trigger to show/hide the extra fields */}
-                <CollapsibleTrigger>
-                  <Button type="button" size="icon" variant={"ghost"}>
+                <CollapsibleTrigger size="icon" variant="ghost" asChild>
+                  <Button type="button" aria-label="edit toggle for middle names and end of name letters">
                     {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                   </Button>
                 </CollapsibleTrigger>
@@ -154,22 +138,10 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
               </CollapsibleContent>
 
             </Collapsible>
+
             <Separator />
 
             <div className="grid grid-cols-2 gap-4">
-              {/* Contact's 'label' input */}
-              <FormField
-                control={form.control}
-                name="contactLabel"
-                render={({ field }) => (
-                  <FormItem className="col-span-full">
-                    <FormLabel>Contact</FormLabel>
-                    <FormControl>
-                      <Input placeholder="name" {...field} disabled={disabled} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
               {/* Contact's 'email' input */}
               <FormField
                 control={form.control}
@@ -197,10 +169,33 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                   </FormItem>
                 )} />
             </div>
+            {/* 'role' input */}
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role for the user" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="teacher">Teacher</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
           </CardContent>
           <CardFooter>
-            <Button type="submit" style={{ width: '100%' }} disabled={disabled}>Create user</Button>
+            <Button type="submit" className="w-full" disabled={disabled}>Create user</Button>
           </CardFooter>
         </Card>
       </form>
