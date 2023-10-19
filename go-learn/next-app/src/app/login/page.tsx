@@ -24,24 +24,8 @@ const formSchema = z.object({
 })
 
 const LoginPage = () => {
-  const { user, login } = useAuth()
-
-  const [alert, setAlert] = useState({
-    open: false,
-    title: '',
-    message: ''
-  })
-
+  const { login } = useAuth()
   const router = useRouter()
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      rememberMe: false
-    },
-  })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     login?.(values.username, values.password, values.rememberMe)
@@ -57,6 +41,21 @@ const LoginPage = () => {
         })
       })
   }
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      rememberMe: false
+    },
+  })
+
+  const [alert, setAlert] = useState({
+    open: false,
+    title: '',
+    message: ''
+  })
 
   return (<>
     <Form {...form}>
