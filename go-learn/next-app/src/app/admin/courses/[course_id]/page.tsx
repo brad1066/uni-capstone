@@ -14,7 +14,7 @@ export default function CoursesAdminPage() {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
+      setLoading(false)
     })()
-    setLoading(false)
   }, [])
 }

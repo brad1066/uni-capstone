@@ -22,8 +22,8 @@ export default function UsersAdminPage() {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
+      setLoading(false)
     })()
-    setLoading(false)
   }, [])
 
   useEffect(() => {

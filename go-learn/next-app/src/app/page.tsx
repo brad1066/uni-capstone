@@ -11,11 +11,14 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
-      if (!loggedIn) router.replace('/login')
+    (async () => {
+      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
+        if (!loggedIn) router.replace('/login')
+      })
       setLoading(false)
-    })
+    })()
   }, [])
+  
   return (
     <>
     </>
