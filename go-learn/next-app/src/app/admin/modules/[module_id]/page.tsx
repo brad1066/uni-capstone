@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
-export default function SingleCourseAdminPage() {
+export default function SingleModuleAdminPage() {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)

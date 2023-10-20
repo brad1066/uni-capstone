@@ -35,7 +35,7 @@ export default function CoursesAdminPage() {
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Courses
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary"><PlusIcon /></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1"/></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {

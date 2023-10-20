@@ -51,24 +51,23 @@ export function UserDropdown({ className }: UserDropdownProps) {
           {/* Stuff Admin can do in this group */}
           {(user?.role == 'admin') && (<>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Manage users</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger>Users</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
+                  <DropdownMenuItem><Link href="/admin/users" className="w-full">All</Link></DropdownMenuItem>
                   <DropdownMenuItem><Link href="/admin/users?filter=teachers" className="w-full">Teachers</Link></DropdownMenuItem>
                   <DropdownMenuItem><Link href="/admin/users?filter=students" className="w-full">Students</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link href="/admin/users" className="w-full">All</Link></DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem><Link href="/admin/users/new" className="w-full">New user</Link></DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Manage courses</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link href="/admin/classes" className="w-full">Manage classes</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Courses</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/admin/classes" className="w-full">Classes</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Teachers can do in this group */}
           {(user?.role == 'teacher') && (<>
             <DropdownMenuItem><Link href="/teacher/courses" className="w-full">My courses</Link></DropdownMenuItem>
             <DropdownMenuItem><Link href="/teacher/classes" className="w-full">My classes</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/" className="w-full">Dashboard</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Students can do in this group */}
           {(user?.role == 'student') && (<>

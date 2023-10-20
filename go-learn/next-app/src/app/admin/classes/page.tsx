@@ -36,7 +36,7 @@ export default function ClasssAdminPage() {
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Classes
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary"><PlusIcon /></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1"/></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New class</DialogTitle></DialogHeader>
               <NewClassForm submitClass={async _class => {
