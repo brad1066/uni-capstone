@@ -37,57 +37,49 @@ const NewCourseForm = ({ className, submitCourse, disabled }: NewCourseFormProps
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitCourse?.(values as TCourse) })} className={cn(className, "max-w-[50rem]")}>
-        <Card className="mx-auto">
-          <CardHeader className="text-2xl">General Data</CardHeader>
-          <CardContent className="flex flex-col gap-[1rem]">
-            {/* Course 'title' input */}
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Course Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="title" {...field} disabled={disabled} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            {/* Contact's 'description' input */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="description"
-                      {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-            {/* Course 'websiteURL' input */}
-            <FormField
-              control={form.control}
-              name="websiteURL"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>External link</FormLabel>
-                  <FormControl>
-                    <Input placeholder="website url" {...field} disabled={disabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={disabled}>Create course</Button>
-          </CardFooter>
-        </Card>
+        form.handleSubmit((values) => { submitCourse?.(values as TCourse) })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        {/* Course 'title' input */}
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Course Title</FormLabel>
+              <FormControl>
+                <Input placeholder="title" {...field} disabled={disabled} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        {/* Contact's 'description' input */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="description"
+                  {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} />
+        {/* Course 'websiteURL' input */}
+        <FormField
+          control={form.control}
+          name="websiteURL"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>External link</FormLabel>
+              <FormControl>
+                <Input placeholder="website url" {...field} disabled={disabled} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} />
+        <Button type="submit" className="w-full" disabled={disabled}>Create course</Button>
       </form>
     </Form >
   </>)
