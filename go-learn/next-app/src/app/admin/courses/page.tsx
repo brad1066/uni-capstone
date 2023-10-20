@@ -14,21 +14,24 @@ export default function CoursesAdminPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
-      if (!loggedIn) router.replace('/login')
-      setLoading(false)
-    })
+    (async () => {
+      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
+        if (!loggedIn) router.replace('/login')
+      })
+    })()
+    setLoading(false)
   }, [])
+
   return (
     <>
       {(!loading && user?.role != 'admin') && <>
         Sorry, but you cannot access this resource. <Link href='/'>Go Home</Link>
       </>}
       {!loading && user?.role == 'admin' && <>
-        <h1 className="mb-[1rem]">Courses</h1>
+        <h1 className="mb-[1rem]">All Courses</h1>
         {courses?.length > 0 && <div className="grid grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <AdminCourseItem course={course} key={course.id} onDelete={async () => {}}/>
+            <AdminCourseItem course={course} key={course.id} onDelete={async () => { }} />
           ))}
         </div>}
       </>}

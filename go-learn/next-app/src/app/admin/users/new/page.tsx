@@ -16,10 +16,12 @@ export default function NewUserAdminPage() {
   const [formDisabled, setFormDisabled] = useState(false)
 
   useEffect(() => {
-    if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
-      if (!loggedIn) router.replace('/login')
-      setLoading(false)
-    })
+    (async () => {
+      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
+        if (!loggedIn) router.replace('/login')
+      })
+    })()
+    setLoading(false)
   }, [])
 
   return (<>

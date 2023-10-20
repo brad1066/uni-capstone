@@ -5,19 +5,19 @@ import { student1, student2 } from "./students";
 
 export const class1: TClass = {
     id: '0000-0000-0000-0005',
-    title: 'Class 1',
-    module: module1,
-    students: [student1],
-    teachers: [teacher1],
+    title: 'CE301 - Individual Capstone Project',
+    // module: module1,
+    // students: [student1],
+    // teachers: [teacher1],
 
 }
 
 export const class2: TClass = {
     id: '0000-0000-0000-0006',
-    title: 'Class 2',
-    module: module2,
-    students: [student2],
-    teachers: [teacher2],
+    title: 'EL101 - Reading',
+    // module: module2,
+    // students: [student2],
+    // teachers: [teacher2],
 }
 
 

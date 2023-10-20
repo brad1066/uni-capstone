@@ -6,18 +6,18 @@ import { useEffect, useState } from "react"
 
 const ProfilePage = () => {
 
-    const {user, validateLoggedIn} = useAuth()
-    const router = useRouter()
-    const [loading, setLoading] = useState(true)
+  const { user, validateLoggedIn } = useAuth()
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-      if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
+  useEffect(() => {
+    (async () => {
+      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
-        setLoading(false)
       })
-    }, [])
-    return (<>
-    </>)
+    })()
+    setLoading(false)
+  }, [])
 }
 
 export default ProfilePage

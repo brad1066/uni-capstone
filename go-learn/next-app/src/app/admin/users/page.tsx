@@ -18,10 +18,12 @@ export default function UsersAdminPage() {
   const [filter, setFilter] = useState<string | undefined>()
 
   useEffect(() => {
-    if (!user) validateLoggedIn?.().then(({ loggedIn }) => {
-      if (!loggedIn) router.replace('/login')
-      setLoading(false)
-    })
+    (async () => {
+      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
+        if (!loggedIn) router.replace('/login')
+      })
+    })()
+    setLoading(false)
   }, [])
 
   useEffect(() => {
