@@ -9,7 +9,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -19,7 +18,6 @@ import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { ThemeToggler } from "../ui/ThemeToggler"
 import Link from "next/link"
-import { useEffect } from "react"
 
 type UserDropdownProps = {
   className?: string
@@ -60,8 +58,9 @@ export function UserDropdown({ className }: UserDropdownProps) {
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Courses</Link></DropdownMenuItem>
             <DropdownMenuItem><Link href="/admin/classes" className="w-full">Classes</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Courses</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/admin/modules" className="w-full">Modules</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Teachers can do in this group */}
           {(user?.role == 'teacher') && (<>

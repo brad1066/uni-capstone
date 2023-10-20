@@ -78,7 +78,7 @@
   }
 
   .site-header > .site-icon {
-    @apply rounded-md object-cover cursor-pointer m-4;
+    @apply rounded-full object-cover cursor-pointer m-4 border-[var(--accent)] border-solid border-2;
     grid-area: icon;
   }
 
