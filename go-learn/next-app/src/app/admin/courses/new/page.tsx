@@ -1,7 +1,8 @@
 'use client'
 
+import NewCourseForm from "@/components/forms/NewCourseForm"
 import { useAuth } from "@/hooks/useAuth"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function AdminNewCoursePage() {
@@ -17,4 +18,12 @@ export default function AdminNewCoursePage() {
       setLoading(false)
     })()
   }, [])
+
+  return (<>
+    {!loading && <>
+      <NewCourseForm className="w-[30rem]" submitCourse={async course => {
+        console.log(course)
+      }}/>
+    </>}
+  </>)
 }
