@@ -13,6 +13,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons"
 import { Separator } from "../ui/separator"
 import { TUser } from "@/lib/types"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { cn } from "@/lib/utils"
 
 type NewUserFormProps = {
   className?: string
@@ -49,155 +50,147 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitUser?.(values as TUser) })} className="max-w-[50rem]">
-        <Card className="mx-auto">
-          <CardHeader className="text-2xl">General Data</CardHeader>
-          <CardContent className="flex flex-col gap-[1rem]">
-            {/* Name Entries */}
-            <Collapsible
-              open={nameEntryOpen}
-              onOpenChange={setNameEntryOpen}
-              className="newUserNameEntries space-y-2"
-            >
-              <div className="alwaysShown">
-                {/* Name's 'title' input */}
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="title" {...field} disabled={disabled} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                {/* Name's 'forename' input */}
-                <FormField
-                  control={form.control}
-                  name="forename"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormMessage />
-                      <FormControl>
-                        <Input placeholder="forename" {...field} disabled={disabled} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                {/* Name's 'surname' input */}
-                <FormField
-                  control={form.control}
-                  name="surname"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormMessage />
-                      <FormControl>
-                        <Input placeholder="surname" {...field} disabled={disabled} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                {/* The trigger to show/hide the extra fields */}
-                <CollapsibleTrigger size="icon" variant="ghost" asChild>
-                  <Button type="button" aria-label="edit toggle for middle names and end of name letters">
-                    {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-              {/* Name's 'middleNames' and 'letters' inputs */}
-              <CollapsibleContent className="grid grid-cols-2 gap-x-4">
-                {/* Name's 'middleNames' input */}
-                <FormField
-                  control={form.control}
-                  name="middleNames"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Middle Names</FormLabel>
-                      <FormControl>
-                        <Input placeholder="middle names" {...field} disabled={disabled} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Name's 'letters' input */}
-                <FormField
-                  control={form.control}
-                  name="letters"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Letters</FormLabel>
-                      <FormControl>
-                        <Input placeholder="letters" {...field} disabled={disabled} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </CollapsibleContent>
-
-            </Collapsible>
-
-            <Separator />
-
-            <div className="grid grid-cols-2 gap-4">
-              {/* Contact's 'email' input */}
-              <FormField
-                control={form.control}
-                name="contactEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="email" {...field} disabled={disabled} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              {/* Contact's 'mobile' input */}
-              <FormField
-                control={form.control}
-                name="contactMobile"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mobile</FormLabel>
-                    <FormControl>
-                      <Input placeholder="mobile" {...field} disabled={disabled} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-            </div>
-            {/* 'role' input */}
+        form.handleSubmit((values) => { submitUser?.(values as TUser) })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        {/* Name Entries */}
+        <Collapsible
+          open={nameEntryOpen}
+          onOpenChange={setNameEntryOpen}
+          className="newUserNameEntries space-y-2"
+        >
+          <div className="alwaysShown">
+            {/* Name's 'title' input */}
             <FormField
               control={form.control}
-              name="role"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role for the user" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="student">Student</SelectItem>
-                      <SelectItem value="teacher">Teacher</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="title" {...field} disabled={disabled} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {/* Name's 'forename' input */}
+            <FormField
+              control={form.control}
+              name="forename"
+              render={({ field }) => (
+                <FormItem>
+                  <FormMessage />
+                  <FormControl>
+                    <Input placeholder="forename" {...field} disabled={disabled} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {/* Name's 'surname' input */}
+            <FormField
+              control={form.control}
+              name="surname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormMessage />
+                  <FormControl>
+                    <Input placeholder="surname" {...field} disabled={disabled} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {/* The trigger to show/hide the extra fields */}
+            <CollapsibleTrigger size="icon" variant="ghost" asChild>
+              <Button type="button" aria-label="edit toggle for middle names and end of name letters">
+                {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          {/* Name's 'middleNames' and 'letters' inputs */}
+          <CollapsibleContent className="grid grid-cols-2 gap-x-4">
+            {/* Name's 'middleNames' input */}
+            <FormField
+              control={form.control}
+              name="middleNames"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Middle Names</FormLabel>
+                  <FormControl>
+                    <Input placeholder="middle names" {...field} disabled={disabled} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {/* Name's 'letters' input */}
+            <FormField
+              control={form.control}
+              name="letters"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Letters</FormLabel>
+                  <FormControl>
+                    <Input placeholder="letters" {...field} disabled={disabled} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </CollapsibleContent>
 
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={disabled}>Create user</Button>
-          </CardFooter>
-        </Card>
+        </Collapsible>
+
+        <Separator />
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* Contact's 'email' input */}
+          <FormField
+            control={form.control}
+            name="contactEmail"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="email" {...field} disabled={disabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+          {/* Contact's 'mobile' input */}
+          <FormField
+            control={form.control}
+            name="contactMobile"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mobile</FormLabel>
+                <FormControl>
+                  <Input placeholder="mobile" {...field} disabled={disabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+        </div>
+        {/* 'role' input */}
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a role for the user" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="student">Student</SelectItem>
+                  <SelectItem value="teacher">Teacher</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full" disabled={disabled}>Create user</Button>
       </form>
     </Form >
   </>)
