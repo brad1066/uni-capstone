@@ -16,6 +16,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import NoAccessNotice from "@/components/NoAccessNotice";
 
 export default function UsersAdminPage() {
   const router = useRouter()
@@ -43,13 +44,11 @@ export default function UsersAdminPage() {
 
   return (
     <>
-      {(!loading && user?.role != 'admin') && <>
-        Sorry, but you cannot access this resource. <Link href='/'>Go Home</Link>
-      </>}
+      {(!loading && user?.role != 'admin') && <NoAccessNotice />}
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">Users
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1"/></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
               <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {

@@ -13,7 +13,7 @@ export const teacher1: TTeacher = {
         zipPostCode: 'AB1 2CD'
     },
     classes: [class1],
-    students: [student1]
+    // students: [student1]
 }
 
 export const teacher2: TTeacher = {
@@ -26,7 +26,7 @@ export const teacher2: TTeacher = {
         zipPostCode: 'AB1 2CD'
     },
     classes: [class2],
-    students: [student2]
+    // students: [student2]
 }
 
 export default [teacher1, teacher2] as TTeacher[]

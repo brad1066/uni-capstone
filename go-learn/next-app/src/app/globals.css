@@ -59,12 +59,20 @@
   }
 
   main {
-    @apply w-full max-w-[80rem] mx-auto
+    @apply w-full max-w-[80rem] mx-auto;
   }
 
   img {
     width: auto;
     height: auto;
+  }
+
+  ul {
+    @apply list-none flex flex-col gap-2;
+  }
+
+  ul > li {
+    @apply flex gap-[1rem] justify-between p-4 rounded-md items-center;
   }
 }
 
@@ -93,9 +101,9 @@
   }
 }
 
-@layer forms { 
+@layer forms {
   .newUserNameEntries .alwaysShown {
-    @apply grid gap-x-4;
+    @apply grid gap-x-2;
     grid-template-columns: minmax(2rem, 1fr) 2fr 2fr auto;
     align-items: end;
   }
