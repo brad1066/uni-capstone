@@ -2,7 +2,6 @@ import { TUser } from "@/lib/types"
 import users, { adminUser } from '@/dummy-data/users'
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcrypt"
-import { NextApiResponse } from "next"
 
 export type TLoginSuccessResponse = {
   success: true,

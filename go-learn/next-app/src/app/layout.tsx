@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import Header from '@/components/ui/Header'
 import PageWrapper from '@/lib/PageWrapper'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { PrismaClient } from '@prisma/client'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  const prismaClient = new PrismaClient()
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <TooltipProvider>

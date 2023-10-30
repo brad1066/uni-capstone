@@ -4,33 +4,61 @@ services:
   app:
     build: ./next-app
     command: npm run dev
-    container_name: golearn-next
-    environment:
-      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+    container_name: app
+    env_file: ./next-app/.env
     ports:
       - '80:3000'
-    depends_on:
-      - database
     volumes:
       - ./next-app:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.next
     networks:
-      - node-network
-
-  database:
-    image: mongo:6-jammy
-    container_name: golearn-mongodb
-    ports:
-      - '27017:27017'
+      - mongo-network
+    depends_on:
+      - mongo
+      
+  mongo:
+    container_name: mongo
+    image: mongo:4.4
     volumes:
-      - golearndb:/data/db
+      - ./scripts/rs-init.sh:/scripts/rs-init.sh
+      - ./scripts/init.js:/scripts/init.js
+    environment:
+      MONGO_INITDB_DATABASE: test
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
     networks:
-      - node-network
+      - mongo-network
+    ports:
+      - 27017:27017
+    depends_on:
+      - mongo2
+      - mongo3
+    links:
+      - mongo2
+      - mongo3
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
 
-volumes:
-  golearndb:
+  mongo2:
+    container_name: mongo2
+    image: mongo:4.4
+    networks:
+      - mongo-network
+    ports:
+      - 27018:27017
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongo3:
+    container_name: mongo3
+    image: mongo:4.4
+    networks:
+      - mongo-network
+    ports:
+      - 27019:27017
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
 
 networks:
-  node-network:
+  mongo-network:
     driver: bridge

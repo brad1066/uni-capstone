@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb://admin:admin@mongo/golearn?authSource=admin"
+}
+
+model User {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  username       String   @unique
+  password       String
+  title          String
+  forename       String
+  middleNames    String?
+  surname        String
+  letters        String?
+  contactDetails Contact? @relation(fields: [contactId], references: [id])
+  role           UserRole
+  // Auto Gen - leave untouched
+  contactId      String?  @db.ObjectId
+  student        Student?
+  teacher        Teacher?
+}
+
+model Student {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  user               User             @relation(fields: [userId], references: [id])
+  emergencyContact   Contact?         @relation(fields: [emergencyContactId], references: [id])
+  termAddress        Address?         @relation("termAddress", fields: [termAddressId], references: [id])
+  homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id])
+  personalTutor      Teacher?         @relation(fields: [personalTutorId], references: [id])
+  enrolledCourse     Course?          @relation(fields: [courseId], references: [id])
+  enrolledClasses    StudentClasses[]
+  // Auto Gen
+  userId             String           @unique @db.ObjectId
+  emergencyContactId String?          @unique @db.ObjectId
+  termAddressId      String?          @unique @db.ObjectId
+  homeAddressId      String?          @unique @db.ObjectId
+  personalTutorId    String?          @db.ObjectId
+  courseId           String?          @db.ObjectId
+}
+
+model Teacher {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  user      User             @relation(fields: [userId], references: [id])
+  address   Address?         @relation(fields: [addressId], references: [id])
+  students  Student[]
+  classes   TeacherClasses[]
+  // Auto Gen
+  userId    String           @unique @db.ObjectId
+  addressId String           @unique @db.ObjectId
+}
+
+model Class {
+  id       String           @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  module   Module?          @relation(fields: [moduleId], references: [id])
+  students StudentClasses[]
+  teachers TeacherClasses[]
+  // Auto Gen
+  moduleId String?          @db.ObjectId
+}
+
+model Course {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  websiteURL  String
+  students    Student[]
+  modules     CourseModules[]
+}
+
+model Module {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  websiteURL  String?
+  classes     Class[]
+  courses     CourseModules[]
+  units       Unit[]
+}
+
+model Unit {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  module      Module          @relation(fields: [moduleId], references: [id])
+  sections    Section[]
+  resources   UnitResources[]
+  // Auto Gen
+  moduleId    String          @db.ObjectId
+}
+
+model Section {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  unit        Unit               @relation(fields: [unitId], references: [id])
+  resources   SectionResources[]
+  // Auto Gen
+  unitId      String             @db.ObjectId
+}
+
+model Resource {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  content     String
+  units       UnitResources[]
+  sections    SectionResources[]
+}
+
+// Relational Models
+model StudentClasses {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  student   Student @relation(fields: [studentId], references: [id])
+  class     Class   @relation(fields: [classId], references: [id])
+  // Auto Gen
+  studentId String  @db.ObjectId
+  classId   String  @db.ObjectId
+}
+
+model TeacherClasses {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  class     Class   @relation(fields: [classId], references: [id])
+  // Auto Gen
+  teacherId String  @db.ObjectId
+  classId   String  @db.ObjectId
+}
+
+model CourseModules {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  course   Course @relation(fields: [courseId], references: [id])
+  module   Module @relation(fields: [moduleId], references: [id])
+  // Auto Gen
+  courseId String @db.ObjectId
+  moduleId String @db.ObjectId
+}
+
+model SectionResources {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  section    Section  @relation(fields: [sectionId], references: [id])
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  // Auto Gen
+  sectionId  String   @db.ObjectId
+  resourceId String   @db.ObjectId
+}
+
+model UnitResources {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  unit       Unit     @relation(fields: [unitId], references: [id])
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  // Auto Gen
+  unitId     String   @db.ObjectId
+  resourceId String   @db.ObjectId
+}
+
+// Collections
+model Address {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  addressLine1 String?
+  addressLine2 String?
+  town         String?
+  stateCounty  String?
+  zipPostCode  String?
+  studentHome  Student[] @relation("termAddress")
+  studentTerm  Student[] @relation("homeAddress")
+  teachers     Teacher[]
+}
+
+model Contact {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  label            String?
+  email            String?
+  mobile           String?
+  user             User[]
+  studentEmergency Student[]
+}
+
+// Enum for User->role
+enum UserRole {
+  admin
+  teacher
+  student
+  unassigned
+}
