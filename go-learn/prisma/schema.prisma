@@ -12,11 +12,11 @@ datasource db {
 }
 
 model UserSession {
-  id           Int    @id @unique @default(autoincrement())
-  user         User   @relation(fields: [userUsername], references: [username])
-  cookieKey    String
+  id           Int      @id @unique @default(autoincrement())
+  user         User     @relation(fields: [userUsername], references: [username])
   cookieValue  String
   userUsername String
+  created      DateTime @default(now())
 }
 
 model User {

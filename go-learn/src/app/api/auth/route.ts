@@ -1,7 +1,10 @@
 import { TUser } from "@/lib/types"
-import users, { adminUser } from '@/dummy-data/users'
 import { NextRequest, NextResponse } from "next/server"
+import { cookies } from "next/headers"
 import bcrypt from "bcrypt"
+import sha1 from "js-sha1"
+import { env } from "process"
+import prisma from "@/lib/db"
 
 export type TLoginSuccessResponse = {
   success: true,
@@ -18,17 +21,12 @@ export type TLoginErrorResponse = {
  * @param password The provided password to check in the data store
  * @returns TUser if user is found, otherwise null
  */
-export async function checkLoginCredentials(username: string, password: string)//: Promise<TUser | null>
-{
-  // Stand-in function to allow async check of hashed variables. This can be optimised later
-  async function filter(arr: TUser[], callback: (user: TUser) => Promise<boolean>) {
-    return (await Promise.all(arr.map(async item => (await callback(item)) ? item : null))).filter(i => i !== null)
-  }
-  // TODO: replace use of dummy data and check with database check and suitable handling of response
+export async function checkLoginCredentials(username: string, password: string): Promise<TUser | null> {
+  password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
+  const user = await prisma.user
+    .findFirst({ where: { 'username': username, password } })
 
-  const results = await filter(users, async (user) => user.username == username && await bcrypt.compare(password, user.password as string))
-
-  return (results.length == 1) ? { ...results[0] } : null
+  return user as TUser || null
 
 }
 
@@ -47,27 +45,38 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   const { username, password, rememberMe } = await req.json()
 
   // Check those login credentials against those stored
-  const checkResponse = await checkLoginCredentials(username, password)
+  const user = await checkLoginCredentials(username, password) as TUser
 
   // If there is a user returned...
-  if (checkResponse) {
+  if (user) {
+    const cookieValue = sha1(username + user.password + Date.now())
+
     // Remove the password from the user and add it to a new response object
-    delete checkResponse.password
+    delete user.password
     const res = NextResponse.json({
       success: true,
-      user: checkResponse
+      user
     } as TLoginSuccessResponse)
 
-    // The base auth cookie that will be sent on the response
-    let cookie = 'auth-cookie=123; path=/; samesite=lax; httponly; secure;'
+    // Create a new UserSession on the DB
+    const userSession = await prisma.userSession
+      .create({ data: { cookieValue, userUsername: username } })
 
     // If rememberMe is true, set a max-age to 48 hours (otherwise defaults to a session cookie)
-    if (rememberMe) cookie += 'max-age=' + 48 * 3600
+    if (userSession) {
+      // The base auth cookie that will be sent on the response
+      let authCookie = `auth=${cookieValue}; path=/; samesite=lax; httponly; secure;`
+      if (rememberMe) authCookie += 'max-age=' + 48 * 3600
 
-    // Set the response set-cookie header, and return the response
-    res.headers.set('set-cookie', cookie)
+      // Set the response set-cookie header, and return the response
+      res.headers.append('set-cookie', authCookie)
 
-    return res
+      return res
+    }
+    return NextResponse.json({
+      success: false,
+      message: "Failed to create auth session. Please try again"
+    })
   }
 
   // If no user matched, return a error response back to the client
@@ -83,21 +92,36 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
  * @returns A response with a set-cookie header to invalidate any auth-cookies on the client
  */
 export const DELETE = async (req: NextRequest): Promise<NextResponse> => {
-
-  // Generate a new NextResponse object, set an invalidating cookie, then return it
   const res = new NextResponse()
-  res.headers.set('set-cookie', 'auth-cookie=123; path=/; samesite=lax; httponly; secure; expires=' + (new Date(Date.now() - 1000)).toUTCString())
+
+  // If we have an auth cookie, remove it from the DB and invalidate on client
+  if (req.cookies.get('auth')) {
+    prisma.userSession
+      .deleteMany({ where: { cookieValue: req.cookies.get('auth')?.value } })
+
+    cookies().delete('auth')
+  }
   return res
 }
 
 /**
- * An API route to validate an auth-cookie from the client
+ * An API route to validate an auth from the client
  * @param req The client's request data
  * @returns A response to check if the client sent an auth-cookies that was valid
  */
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
-  // If the auth-cookie exists, return a positive response
-  // TODO: check if cookie is a real, valid cookie when DB implemented. Invalidate if not
-  if (req.cookies.has('auth-cookie')) return NextResponse.json({ loggedIn: true, user: adminUser })
+  // If the 'auth' cookie exists, check that it is valid on DB. If it is, return the associated user with that cookie
+  if (req.cookies.has('auth')) {
+    const session = await prisma.userSession.findFirst({
+      where: { cookieValue: req.cookies.get('auth')?.value },
+      include: { user: true }
+    })
+
+    if (session?.user) {
+      return NextResponse.json({ loggedIn: true, user: session.user })
+    }
+  }
+
+  // No cookie stored or is invalid, so return an appropriate state
   return NextResponse.json({ loggedIn: false, user: undefined })
 }

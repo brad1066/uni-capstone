@@ -15,6 +15,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import NoAccessNotice from "@/components/NoAccessNotice";
+import { CreateUser } from "@/actions/userActions";
 
 export default function UsersAdminPage() {
   const router = useRouter()
@@ -51,7 +52,7 @@ export default function UsersAdminPage() {
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
               <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {
                 setFormDisabled(true)
-                const createdUser = await 
+                const createdUser = await CreateUser(user)
                 console.log(createdUser)
                 setFormDisabled(false)
                 router.push(`/users/${createdUser.username}`)
