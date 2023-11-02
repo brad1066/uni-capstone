@@ -11,7 +11,7 @@ export type TUser = {
 }
 
 export type TStudent = {
-    id?: string
+    id?: number
     user?: TUser 
     emergencyContact?: TContact
     termAddress?: TAddress
@@ -22,7 +22,7 @@ export type TStudent = {
 }
 
 export type TTeacher = {
-    id?: string
+    id?: number
     user?: TUser 
     address?: TAddress
     students?: TStudent[]
@@ -30,7 +30,7 @@ export type TTeacher = {
 }
 
 export type TClass = {
-    id?: string
+    id?: number
     title?: string
     students?: TStudent[]
     teachers?: TTeacher[]
@@ -38,7 +38,7 @@ export type TClass = {
 }
 
 export type TCourse = {
-    id?: string
+    id?: number
     title?: string
     description?: string
     websiteURL?: string
@@ -47,7 +47,7 @@ export type TCourse = {
 }
 
 export type TModule = {
-    id?: string
+    id?: number
     title?: string
     description?: string
     websiteURL?: string
@@ -57,7 +57,7 @@ export type TModule = {
 }
 
 export type TUnit = {
-    id?: string
+    id?: number
     title?: string
     description?: string
     sections?: TSection[]
@@ -66,7 +66,7 @@ export type TUnit = {
 }
 
 export type TSection = {
-    id?: string
+    id?: number
     title?: string
     description?: string
     resources?: TResource[]
@@ -74,7 +74,7 @@ export type TSection = {
 }
 
 export type TResource = {
-    id?: string
+    id?: number
     title?: string
     description?: string
     content?: string

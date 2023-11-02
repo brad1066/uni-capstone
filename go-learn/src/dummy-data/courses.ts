@@ -3,7 +3,7 @@ import { student1, student2 } from "./students";
 import { module1, module2 } from "./modules";
 
 export const course1: TCourse = {
-    id: '0000-0000-0000-0007',
+    id: 7,
     title: 'Computer Science (BSc)',
     description: 'Some Description',
     websiteURL: 'https://golearn.ac.uk/courses/0000-0000-0000-0007',
@@ -12,7 +12,7 @@ export const course1: TCourse = {
 }
 
 export const course2: TCourse = {
-    id: '0000-0000-0000-0008',
+    id: 8,
     title: 'English Literature (BA)',
     description: 'Some Description',
     websiteURL: 'https://golearn.ac.uk/courses/0000-0000-0000-0008',

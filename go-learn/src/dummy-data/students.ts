@@ -5,7 +5,7 @@ import { class1, class2 } from "./classes";
 import { course1, course2 } from "./courses";
 
 export const student1: TStudent = {
-    id: '0000-0000-0000-0001',
+    id: 1,
     user: tj000001,
     enrolledCourse: course1,
     enrolledClasses: [class1],
@@ -29,7 +29,7 @@ export const student1: TStudent = {
 }
 
 export const student2: TStudent = {
-    id: '0000-0000-0000-0002',
+    id: 2,
     user: tj000002,
     enrolledCourse: course2,
     enrolledClasses: [class2],

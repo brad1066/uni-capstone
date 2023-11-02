@@ -4,7 +4,7 @@ import { section1, section2 } from "./sections"
 import { resource1, resource2 } from "./resources";
 
 export const unit1: TUnit = {
-    id: '0000-0000-0000-000b',
+    id: 11,
     title: 'Unit 1',
     description: 'Some description',
     module: module1,
@@ -13,7 +13,7 @@ export const unit1: TUnit = {
 }
 
 export const unit2: TUnit = {
-    id: '0000-0000-0000-000c',
+    id: 12,
     title: 'Unit 2',
     description: 'Some description',
     module: module2,

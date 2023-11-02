@@ -4,45 +4,44 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { TClass } from "@/lib/types"
-import { Textarea } from "../ui/textarea"
 import { cn } from "@/lib/utils"
 
-type NewClassFormProps = {
+type NewPasswordFormProps = {
   className?: string
-  submitClass?: (_class: TClass) => Promise<any>
+  submitPassword?: (password: string) => Promise<any>
+  username: string
   disabled?: boolean
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: 'You need to provide a title for the class' }),
+  password: z.string().min(8, { message: 'The password must have at least 8 characters' }),
 })
 
 
-const NewClassForm = ({ className, submitClass, disabled }: NewClassFormProps) => {
+const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewPasswordFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: ''
+      password: ''
     },
   })
 
   return (<>
+  <h3>Change of password for user: {username}</h3>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitClass?.(values as TClass) })} className={cn(className, "max-w-[50rem] flex gap-[1rem] flex-col")}>
-        {/* Class 'title' input */}
+        form.handleSubmit((values) => { submitPassword?.(values.password) })} className={cn(className, "max-w-[50rem] flex gap-[1rem] flex-col")}>
+        {/* New 'password' input */}
         <FormField
           control={form.control}
-          name="title"
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Class Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field} disabled={disabled} />
+                <Input placeholder="password" type="password" {...field} disabled={disabled} />
               </FormControl>
             </FormItem>
           )}
@@ -53,4 +52,4 @@ const NewClassForm = ({ className, submitClass, disabled }: NewClassFormProps) =
   </>)
 }
 
-export default NewClassForm
+export default NewPasswordForm

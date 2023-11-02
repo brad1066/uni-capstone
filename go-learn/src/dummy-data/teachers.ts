@@ -4,7 +4,7 @@ import { student1, student2 } from "./students";
 import { class1, class2 } from "./classes";
 
 export const teacher1: TTeacher = {
-    id: '0000-0000-0000-0003',
+    id: 3,
     user: tjones1,
     address: {
         addressLine1: '1 Homey Home',
@@ -17,7 +17,7 @@ export const teacher1: TTeacher = {
 }
 
 export const teacher2: TTeacher = {
-    id: '0000-0000-0000-0004',
+    id: 4,
     user: tjones2,
     address: {
         addressLine1: '1 Homey Home',

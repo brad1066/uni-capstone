@@ -39,7 +39,6 @@ export default function CoursesAdminPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {
-                console.log(course)
                 setDialogOpen(false)
               }} />
             </DialogContent>

@@ -1,21 +1,18 @@
 'use client'
 
-
-import AdminUserItem from "@/components/admin/AdminUserItem";
-import NewUserForm from "@/components/forms/NewUserForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import users from "@/dummy-data/users";
+import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { PlusIcon } from "@radix-ui/react-icons";import AdminUserItem from "@/components/admin/AdminUserItem";
+import NewUserForm from "@/components/forms/NewUserForm";
+import NoAccessNotice from "@/components/NoAccessNotice";
 import { useAuth } from "@/hooks/useAuth";
 import { TUser } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import NoAccessNotice from "@/components/NoAccessNotice";
-import { CreateUser } from "@/actions/userActions";
+import { CreateUser as createUser, getUsers, getUsersByRole } from "@/actions/userActions";
+import { User } from "@prisma/client";
 
 export default function UsersAdminPage() {
   const router = useRouter()
@@ -25,12 +22,15 @@ export default function UsersAdminPage() {
   const [formDisabled, setFormDisabled] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [filter, setFilter] = useState<string | undefined>()
+  const [users, setUsers] = useState<User[]>()
 
   useEffect(() => {
     (async () => {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
+    const allUsers = await getUsersByRole() as User[]
+      await setUsers([...allUsers])
       setLoading(false)
     })()
   }, [])
@@ -52,10 +52,9 @@ export default function UsersAdminPage() {
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
               <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {
                 setFormDisabled(true)
-                const createdUser = await CreateUser(user)
-                console.log(createdUser)
+                const createdUser = await createUser(user)
                 setFormDisabled(false)
-                router.push(`/users/${createdUser.username}`)
+                router.push(`/profile/${createdUser.username}`)
                 setDialogOpen(false)
               }} />
             </DialogContent>
@@ -67,7 +66,7 @@ export default function UsersAdminPage() {
             <CardContent>
               <ul className="flex flex-col gap-[1rem]">
                 {
-                  users.filter(user => user.role == 'teacher').map(user => (
+                  users && users.filter(user => user.role == 'teacher').map(user => (
                     <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
                   ))
                 }
@@ -81,7 +80,7 @@ export default function UsersAdminPage() {
               <CardContent>
                 <ul className="flex flex-col gap-[1rem]">
                   {
-                    users.filter(user => user.role == 'student').map(user => (
+                    users && users.filter(user => user.role == 'student').map(user => (
                       <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
                     ))
                   }

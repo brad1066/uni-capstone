@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import sha1 from "js-sha1"
 import { env } from "process"
 import prisma from "@/lib/db"
+import { checkLoginCredentials } from "@/actions/userActions"
 
 export type TLoginSuccessResponse = {
   success: true,
@@ -14,20 +15,6 @@ export type TLoginSuccessResponse = {
 export type TLoginErrorResponse = {
   success: false,
   message: string
-}
-/**
- * Performs a check on some provided credentials to try and log someone in
- * @param username The provided username to check in the data store
- * @param password The provided password to check in the data store
- * @returns TUser if user is found, otherwise null
- */
-export async function checkLoginCredentials(username: string, password: string): Promise<TUser | null> {
-  password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
-  const user = await prisma.user
-    .findFirst({ where: { 'username': username, password } })
-
-  return user as TUser || null
-
 }
 
 /**

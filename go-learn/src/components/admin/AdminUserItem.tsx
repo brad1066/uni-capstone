@@ -1,11 +1,11 @@
-import { TUser } from "@/lib/types"
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { User } from "@prisma/client"
 
 type AdminUserItemProps = {
-  user: TUser
+  user: User
   onDelete?: () => Promise<any>
 }
 

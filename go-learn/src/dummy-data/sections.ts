@@ -3,7 +3,7 @@ import { unit1, unit2 } from "./units"
 import { resource3, resource4 } from "./resources"
 
 export const section1: TSection = {
-    id: '0000-0000-0000-000e',
+    id: 14,
     title: 'Section 1',
     description: 'Some description',
     resources: [resource3],
@@ -11,7 +11,7 @@ export const section1: TSection = {
 }
 
 export const section2: TSection = {
-    id: '0000-0000-0000-000f',
+    id: 15,
     title: 'Section 2',
     description: 'Some description',
     resources: [resource4],

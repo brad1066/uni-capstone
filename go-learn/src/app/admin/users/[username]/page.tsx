@@ -1,16 +1,19 @@
 'use client'
 
+import { getStudent } from "@/actions/studentActions"
+import { getTeacher } from "@/actions/teacherActions"
+import { changePassword, getUser } from "@/actions/userActions"
 import NoAccessNotice from "@/components/NoAccessNotice"
+import NewPasswordForm from "@/components/forms/ChangePasswordForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getTeacher } from "@/dummy-api/teachers"
-import { getUser } from "@/dummy-api/user"
 import { useAuth } from "@/hooks/useAuth"
-import { TTeacher, TUser } from "@/lib/types"
-import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from "@radix-ui/react-icons"
+import { TStudent, TTeacher, TUser } from "@/lib/types"
+import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon, PlusIcon } from "@radix-ui/react-icons"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -26,9 +29,12 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<TUser>()
   const [teacher, setTeacher] = useState<TTeacher>()
+  const [student, setStudent] = useState<TStudent>()
+
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false)
+  const [passwordDialogDisabled, setPasswordDialogDisabled] = useState<boolean>(false)
 
   const [nameEntryOpen, setNameEntryOpen] = useState(false)
-  const [addressEntryOpen, setAddressEntryOpen] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -43,8 +49,11 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
     (async () => {
       const user = await getUser(username)
       setUser(user)
-      if (user?.role === 'teacher') {
+      if (user?.role == 'teacher') {
         setTeacher(await getTeacher(username))
+      }
+      if (user?.role == 'student') {
+        setStudent(await getStudent(username))
       }
     })()
 
@@ -59,15 +68,29 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         {username} could not be found in the database. <Button variant={"secondary"} onClick={router?.back}>Go Back</Button>
       </>}
       {user && <>
-        <h1 className="mb-[2rem]">{user.username}</h1>
-        <div className="flex gap-[2rem] w-full">
+        <h1 className="mb-[2rem]">{user?.title} {user.forename} {user.surname}</h1>
+        <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
           {/* User Data Card */}
           <Card className="flex-1">
             <CardHeader><CardTitle>User data</CardTitle></CardHeader>
             <CardContent>
               <ul>
                 <li className="hover:bg-accent">Username <span>{user.username}</span></li>
-                <li className="hover:bg-accent">Password <Button>Change Password <Pencil2Icon className="ml-1" /></Button></li>
+                <li className="hover:bg-accent">Password
+                  <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                    <DialogTrigger asChild><Button>Change Password <Pencil2Icon className="ml-1" /></Button></DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
+                      <NewPasswordForm disabled={loading || passwordDialogDisabled} username={user.username as string} submitPassword={async (password) => {
+                        setPasswordDialogDisabled(true)
+                        await changePassword(user.username as string, password).then(user => {
+                          if (user) setUser(user)
+                        })
+                        setPasswordDialogDisabled(false)
+                        setPasswordDialogOpen(false)
+                      }} />
+                    </DialogContent>
+                  </Dialog></li>
                 <li className="flex-col items-start">
                   Name
                   <Collapsible
@@ -87,7 +110,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
 
                       {/* The trigger to show/hide the extra fields */}
                       <CollapsibleTrigger asChild>
-                        <Button type="button" aria-label="edit toggle for middle names and end of name letters">
+                        <Button type="button" variant="ghost" aria-label="edit toggle for middle names and end of name letters">
                           {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                         </Button>
                       </CollapsibleTrigger>
@@ -123,9 +146,24 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
             </CardContent>
           </Card>
 
+          {user.role == 'admin' && <Card className="flex-1">
+            <CardHeader><CardTitle>Admin actions</CardTitle></CardHeader>
+            <CardContent className="flex flex-col gap-[1rem]">
+
+            </CardContent>
+          </Card>}
+
           {/* Teacher Info Card */}
-          {teacher && <Card className="flex-1">
+          {user.role == 'teacher' && <Card className="flex-1">
             <CardHeader><CardTitle>Teacher data</CardTitle></CardHeader>
+            <CardContent className="flex flex-col gap-[1rem]">
+
+            </CardContent>
+          </Card>}
+
+          {/* Student Info Card */}
+          {student && <Card className="flex-1">
+            <CardHeader><CardTitle>Student data</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
 
             </CardContent>

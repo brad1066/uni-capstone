@@ -62,7 +62,7 @@ model Teacher {
   classes   TeacherClasses[]
   // Auto Gen
   username  String           @unique
-  addressId Int              @unique
+  addressId Int?             @unique
 }
 
 model Class {

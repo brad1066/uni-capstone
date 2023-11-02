@@ -40,7 +40,6 @@ export default function ClasssAdminPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New class</DialogTitle></DialogHeader>
               <NewClassForm submitClass={async _class => {
-                console.log(_class)
                 setDialogOpen(false)
               }} />
             </DialogContent>

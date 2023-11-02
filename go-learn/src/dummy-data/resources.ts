@@ -3,7 +3,7 @@ import { section1, section2 } from "./sections"
 import { unit1, unit2 } from "./units"
 
 export const resource1: TResource = {
-    id: '0000-0000-0000-0010',
+    id: 16,
     title: 'Resource 1',
     description: 'Some description',
     content: '',
@@ -12,7 +12,7 @@ export const resource1: TResource = {
 }
 
 export const resource2: TResource = {
-    id: '0000-0000-0000-0011',
+    id: 17,
     title: 'Resource 2',
     description: 'Some description',
     content: '',
@@ -21,7 +21,7 @@ export const resource2: TResource = {
 }
 
 export const resource3: TResource = {
-    id: '0000-0000-0000-0012',
+    id: 18,
     title: 'Resource 3',
     description: 'Some description',
     content: '',
@@ -30,7 +30,7 @@ export const resource3: TResource = {
 }
 
 export const resource4: TResource = {
-    id: '0000-0000-0000-0013',
+    id: 19,
     title: 'Resource 1',
     description: 'Some description',
     content: '',

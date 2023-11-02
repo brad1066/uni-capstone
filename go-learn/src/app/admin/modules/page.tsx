@@ -39,7 +39,6 @@ export default function ModulesAdminPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
               <NewModuleForm submitModule={async module => {
-                console.log(module)
                 setDialogOpen(false)
               }} />
             </DialogContent>
