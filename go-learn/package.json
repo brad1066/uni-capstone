@@ -27,6 +27,7 @@
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "js-sha1": "^0.6.0",
     "mongodb": "^6.2.0",
     "mongoose": "^7.6.3",
     "next": "13.5.4",
@@ -39,10 +40,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/bcrypt": "^5.0.0",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
