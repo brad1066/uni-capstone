@@ -11,20 +11,29 @@ datasource db {
   directUrl = env("SUPABASE_URL")
 }
 
+model UserSession {
+  id           Int    @id @unique @default(autoincrement())
+  user         User   @relation(fields: [userUsername], references: [username])
+  cookieKey    String
+  cookieValue  String
+  userUsername String
+}
+
 model User {
-  username       String   @id @unique
+  username       String        @id @unique
   password       String
   title          String
   forename       String
   middleNames    String?
   surname        String
   letters        String?
-  contactDetails Contact? @relation(fields: [contactId], references: [id])
+  contactDetails Contact?      @relation(fields: [contactId], references: [id])
   role           UserRole
   // Auto Gen - leave untouched
   contactId      Int?
   student        Student?
   teacher        Teacher?
+  UserSession    UserSession[]
 }
 
 model Student {
