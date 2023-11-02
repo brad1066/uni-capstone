@@ -4,7 +4,6 @@ import NoAccessNotice from "@/components/NoAccessNotice"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { FormControl, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { getTeacher } from "@/dummy-api/teachers"
@@ -12,7 +11,6 @@ import { getUser } from "@/dummy-api/user"
 import { useAuth } from "@/hooks/useAuth"
 import { TTeacher, TUser } from "@/lib/types"
 import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from "@radix-ui/react-icons"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -88,7 +86,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                       <Input placeholder="surname" value={user.surname} onChange={({ target: { value: surname } }) => (setUser(user => ({ ...user, surname })))} />
 
                       {/* The trigger to show/hide the extra fields */}
-                      <CollapsibleTrigger size="icon" variant="ghost" asChild>
+                      <CollapsibleTrigger asChild>
                         <Button type="button" aria-label="edit toggle for middle names and end of name letters">
                           {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                         </Button>

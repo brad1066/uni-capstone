@@ -6,3 +6,4 @@
 *.dtmp
 
 node_modules/
+.env*

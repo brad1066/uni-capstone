@@ -27,7 +27,7 @@ const formSchema = z.object({
   middleNames: z.string().optional(),
   surname: z.string().min(2, { message: 'Surname is required' }),
   letters: z.string().optional(),
-  contactMobile: z.string(),
+  contactMobile: z.string().optional(),
   contactEmail: z.string().min(1, { message: 'This is required' }).email({ message: 'This needs to be a valid email address' }),
   role: z.string().regex(/teacher|student|admin/, 'You must select a role')
 })
@@ -50,7 +50,19 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitUser?.(values as TUser) })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        form.handleSubmit((values) => {
+          const newUser: TUser = {
+            forename: values.forename,
+            surname: values.surname,
+            letters: values.letters,
+            middleNames: values.middleNames,
+            role: values.role as 'student' | 'teacher' | 'admin',
+            title: values.title,
+            contactDetails: {mobile: values.contactMobile, email: values.contactEmail},
+          }
+          
+          submitUser?.(newUser as TUser)
+        })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
         {/* Name Entries */}
         <Collapsible
           open={nameEntryOpen}
@@ -98,8 +110,8 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
               )}
             />
             {/* The trigger to show/hide the extra fields */}
-            <CollapsibleTrigger size="icon" variant="ghost" asChild>
-              <Button type="button" aria-label="edit toggle for middle names and end of name letters">
+            <CollapsibleTrigger asChild>
+              <Button type="button" aria-label="edit toggle for middle names and end of name letters" size="icon" variant="ghost" >
                 {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
               </Button>
             </CollapsibleTrigger>

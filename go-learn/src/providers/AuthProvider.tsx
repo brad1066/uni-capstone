@@ -1,7 +1,6 @@
-import { Context, ReactNode, useContext, useState } from "react"
+import { ReactNode, useContext, useState } from "react"
 import { AuthContext } from "@/hooks/useAuth"
 import { TUser } from "@/lib/types"
-import { useRouter } from "next/router"
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 

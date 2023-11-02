@@ -6,14 +6,12 @@ import NewUserForm from "@/components/forms/NewUserForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
-import { newUser } from "@/dummy-api/user";
 import users from "@/dummy-data/users";
 import { useAuth } from "@/hooks/useAuth";
 import { TUser } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import NoAccessNotice from "@/components/NoAccessNotice";
@@ -53,7 +51,7 @@ export default function UsersAdminPage() {
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
               <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {
                 setFormDisabled(true)
-                const createdUser = await newUser(user)
+                const createdUser = await 
                 console.log(createdUser)
                 setFormDisabled(false)
                 router.push(`/users/${createdUser.username}`)
