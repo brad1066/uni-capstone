@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { ThemeToggler } from "../ui/ThemeToggler"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 type UserDropdownProps = {
   className?: string
@@ -30,7 +31,7 @@ export function UserDropdown({ className }: UserDropdownProps) {
   return (
     <DropdownMenu>
       {user && <DropdownMenuTrigger asChild>
-        <Button variant="outline" className={className}>Hi {user?.forename}</Button>
+        <Button variant="outline" className={cn(className, 'bg-card')}>Hi {user?.forename}</Button>
       </DropdownMenuTrigger>
       }
       <DropdownMenuContent className="w-56">
