@@ -15,8 +15,8 @@ model UserSession {
   id           Int      @id @unique @default(autoincrement())
   user         User     @relation(fields: [userUsername], references: [username])
   cookieValue  String
-  userUsername String
   created      DateTime @default(now())
+  userUsername String
 }
 
 model User {
@@ -27,7 +27,7 @@ model User {
   middleNames    String?
   surname        String
   letters        String?
-  contactDetails Contact?      @relation(fields: [contactId], references: [id])
+  contactDetails Contact?      @relation(fields: [contactId], references: [id], onDelete: Cascade)
   role           UserRole
   // Auto Gen - leave untouched
   contactId      Int?
@@ -38,12 +38,12 @@ model User {
 
 model Student {
   id                 Int              @id @default(autoincrement()) @map("_id")
-  user               User             @relation(fields: [username], references: [username])
-  emergencyContact   Contact?         @relation(fields: [emergencyContactId], references: [id])
-  termAddress        Address?         @relation("termAddress", fields: [termAddressId], references: [id])
-  homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id])
-  personalTutor      Teacher?         @relation(fields: [personalTutorId], references: [id])
-  enrolledCourse     Course?          @relation(fields: [courseId], references: [id])
+  user               User             @relation(fields: [username], references: [username], onDelete: Cascade)
+  emergencyContact   Contact?         @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  termAddress        Address?         @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
+  homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
+  personalTutor      Teacher?         @relation(fields: [personalTutorId], references: [id], onDelete: SetNull)
+  enrolledCourse     Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
   enrolledClasses    StudentClasses[]
   // Auto Gen
   username           String           @unique
@@ -56,8 +56,8 @@ model Student {
 
 model Teacher {
   id        Int              @id @default(autoincrement()) @map("_id")
-  user      User             @relation(fields: [username], references: [username])
-  address   Address?         @relation(fields: [addressId], references: [id])
+  user      User             @relation(fields: [username], references: [username], onDelete: Cascade)
+  address   Address?         @relation(fields: [addressId], references: [id], onDelete: Cascade)
   students  Student[]
   classes   TeacherClasses[]
   // Auto Gen
@@ -68,7 +68,7 @@ model Teacher {
 model Class {
   id       Int              @id @default(autoincrement()) @map("_id")
   title    String
-  module   Module?          @relation(fields: [moduleId], references: [id])
+  module   Module?          @relation(fields: [moduleId], references: [id], onDelete: SetNull)
   students StudentClasses[]
   teachers TeacherClasses[]
   // Auto Gen
@@ -98,7 +98,7 @@ model Unit {
   id          Int             @id @default(autoincrement()) @map("_id")
   title       String
   description String?
-  module      Module          @relation(fields: [moduleId], references: [id])
+  module      Module          @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   sections    Section[]
   resources   UnitResources[]
   // Auto Gen
@@ -109,7 +109,7 @@ model Section {
   id          Int                @id @default(autoincrement()) @map("_id")
   title       String
   description String?
-  unit        Unit               @relation(fields: [unitId], references: [id])
+  unit        Unit               @relation(fields: [unitId], references: [id], onDelete: Cascade)
   resources   SectionResources[]
   // Auto Gen
   unitId      Int
@@ -127,8 +127,8 @@ model Resource {
 // Relational Models
 model StudentClasses {
   id        Int     @id @default(autoincrement()) @map("_id")
-  student   Student @relation(fields: [studentId], references: [id])
-  class     Class   @relation(fields: [classId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
   // Auto Gen
   studentId Int
   classId   Int
@@ -136,8 +136,8 @@ model StudentClasses {
 
 model TeacherClasses {
   id        Int     @id @default(autoincrement()) @map("_id")
-  teacher   Teacher @relation(fields: [teacherId], references: [id])
-  class     Class   @relation(fields: [classId], references: [id])
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
   // Auto Gen
   teacherId Int
   classId   Int
@@ -145,8 +145,8 @@ model TeacherClasses {
 
 model CourseModules {
   id       Int    @id @default(autoincrement()) @map("_id")
-  course   Course @relation(fields: [courseId], references: [id])
-  module   Module @relation(fields: [moduleId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   // Auto Gen
   courseId Int
   moduleId Int
@@ -154,8 +154,8 @@ model CourseModules {
 
 model SectionResources {
   id         Int      @id @default(autoincrement()) @map("_id")
-  section    Section  @relation(fields: [sectionId], references: [id])
-  resource   Resource @relation(fields: [resourceId], references: [id])
+  section    Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   // Auto Gen
   sectionId  Int
   resourceId Int
@@ -163,8 +163,8 @@ model SectionResources {
 
 model UnitResources {
   id         Int      @id @default(autoincrement()) @map("_id")
-  unit       Unit     @relation(fields: [unitId], references: [id])
-  resource   Resource @relation(fields: [resourceId], references: [id])
+  unit       Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   // Auto Gen
   unitId     Int
   resourceId Int
