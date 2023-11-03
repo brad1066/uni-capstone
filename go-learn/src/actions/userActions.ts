@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db"
 import { TStudent, TTeacher, TUser } from "@/lib/types"
-import { UserRole } from "@prisma/client"
+import { User, UserRole } from "@prisma/client"
 import bcrypt from "bcrypt"
 import { cookies } from "next/headers"
 import { env } from "process"
@@ -127,8 +127,14 @@ export async function getUsersByRole(roles: UserRole[] = []) {
 export async function checkLoginCredentials(username: string, password: string): Promise<TUser | null> {
     password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
     const user = await prisma.user
-      .findFirst({ where: { 'username': username, password } })
-  
+        .findFirst({ where: { 'username': username, password } })
+
     return user as TUser || null
-  
-  }
+
+}
+
+export async function deleteUser(user: User) {
+    const resp = await prisma.user.delete({ where: { username: user.username } })
+    console.log(resp)
+    return resp
+}
