@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { PlusIcon } from "@radix-ui/react-icons";import AdminUserItem from "@/components/admin/AdminUserItem";
+import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { PlusIcon } from "@radix-ui/react-icons"; import AdminUserItem from "@/components/admin/AdminUserItem";
 import NewUserForm from "@/components/forms/NewUserForm";
 import NoAccessNotice from "@/components/NoAccessNotice";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,8 +11,9 @@ import { TUser } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { CreateUser as createUser, getUsers, getUsersByRole } from "@/actions/userActions";
+import { createUser as createUser, deleteUser, getUsers, getUsersByRole } from "@/actions/userActions";
 import { User } from "@prisma/client";
+import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 export default function UsersAdminPage() {
   const router = useRouter()
@@ -23,13 +24,20 @@ export default function UsersAdminPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [filter, setFilter] = useState<string | undefined>()
   const [users, setUsers] = useState<User[]>()
+  const [userToDelete, setUserToDelete] = useState<User>()
+  const [userDeleteConfirmOpen, setUserDeleteConfirmOpen] = useState<boolean>(false)
+
+  const confirmUserDelete = (user: User) => {
+    setUserToDelete(user)
+    setUserDeleteConfirmOpen(true)
+  }
 
   useEffect(() => {
     (async () => {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
-    const allUsers = await getUsersByRole() as User[]
+      const allUsers = await getUsersByRole() as User[]
       await setUsers([...allUsers])
       setLoading(false)
     })()
@@ -47,7 +55,7 @@ export default function UsersAdminPage() {
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">Users
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="outline" className="bg-accent">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
               <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {
@@ -66,8 +74,8 @@ export default function UsersAdminPage() {
             <CardContent>
               <ul className="flex flex-col gap-[1rem]">
                 {
-                  users && users.filter(user => user.role == 'teacher').map(user => (
-                    <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
+                  users && users.filter(user => user.role == 'teacher').map((user: User) => (
+                    <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                   ))
                 }
               </ul>
@@ -81,7 +89,7 @@ export default function UsersAdminPage() {
                 <ul className="flex flex-col gap-[1rem]">
                   {
                     users && users.filter(user => user.role == 'student').map(user => (
-                      <AdminUserItem user={user} key={user.username} onDelete={async () => { }} />
+                      <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
                 </ul>
@@ -89,8 +97,24 @@ export default function UsersAdminPage() {
             </Card>
           }
         </div>
-
       </>
+      }
+      {
+        userToDelete && <AlertDialog open={userDeleteConfirmOpen} onOpenChange={setUserDeleteConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogHeader>Confirm user deletion</AlertDialogHeader>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the account
+                and remove their data.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteUser(userToDelete)}>Confirm</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       }
     </>
   )
