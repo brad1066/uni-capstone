@@ -125,6 +125,26 @@ export async function checkLoginCredentials(username: string, password: string):
 
 }
 
+export async function updateUser(user: User) {
+  if (!user) return
+  const resp = await prisma.user.update({ where: { username: user.username }, data: { ...user } })
+}
+
+export async function changePassword(username: string, password: string): Promise<User | undefined> {
+  const authCookie = cookies().get('auth')
+  if (authCookie) {
+    const [session, user] = await prisma.$transaction([
+      prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
+      prisma.user.update({
+        where: { username },
+        data: {
+          password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
+        }
+      })])
+    return user
+  } else return undefined
+}
+
 export async function deleteUser(user: User) {
   const resp = await prisma.user.delete({ where: { username: user.username } })
   return resp
