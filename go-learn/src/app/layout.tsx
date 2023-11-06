@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import Header from '@/components/ui/Header'
 import PageWrapper from '@/lib/PageWrapper'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <main className='flex flex-col items-center px-24 min-h-[100%]'>
               {children}
             </main>
+            <Toaster />
           </body>
         </PageWrapper>
       </TooltipProvider>
