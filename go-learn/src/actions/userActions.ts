@@ -18,7 +18,7 @@ export async function CreateUser(userInfo: TUser): Promise<TUser> {
             middleNames: userInfo.middleNames || '',
             letters: userInfo.letters || '',
             role: userInfo?.role || 'unassigned',
-            password: bcrypt.hashSync(userInfo.password || 'changeme', env.PASSWORD_HASH as string)
+      password: bcrypt.hashSync(userInfo.password || genRandomPassword(), env.PASSWORD_HASH as string)
         }
     })
     if (userInfo.contactDetails?.email || userInfo.contactDetails?.mobile) {
