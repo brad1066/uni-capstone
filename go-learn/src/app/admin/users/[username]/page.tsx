@@ -2,18 +2,16 @@
 
 import { getStudent } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
-import { changePassword, getUser } from "@/actions/userActions"
+import { changePassword, getUser, updateUser } from "@/actions/userActions"
 import NoAccessNotice from "@/components/NoAccessNotice"
-import NewPasswordForm from "@/components/forms/ChangePasswordForm"
+import UserEditForm from "@/components/forms/UserEditForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { TStudent, TTeacher, TUser } from "@/lib/types"
-import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon, PlusIcon } from "@radix-ui/react-icons"
+import { User } from "@prisma/client"
+import { ToastAction } from "@radix-ui/react-toast"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -23,18 +21,26 @@ type UserAdminPageProps = {
 
 export default function UserAdminPage({ params: { username } }: UserAdminPageProps) {
 
+  const { toast } = useToast()
+
   const { user: loggedInUser, validateLoggedIn } = useAuth()
   const router = useRouter()
   const urlParams = useSearchParams()
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<TUser>()
+  const [user, setUser] = useState<User>()
   const [teacher, setTeacher] = useState<TTeacher>()
   const [student, setStudent] = useState<TStudent>()
+  const [initialUser, setInitialUser] = useState<User | undefined>()
 
-  const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false)
-  const [passwordDialogDisabled, setPasswordDialogDisabled] = useState<boolean>(false)
+  const [userUpdated, setUserUpdated] = useState(false)
 
-  const [nameEntryOpen, setNameEntryOpen] = useState(false)
+  const userUpdateSuccess = () => toast({ title: "Updated", description: "Your details have been updated" })
+  const userUpdateFailed = () => toast({
+    title: "Not updated",
+    description: "There was an issue updating your account details",
+    variant: "destructive",
+    action: <ToastAction altText="Try again" onClick={() => user && updateUser(user)}>Try again</ToastAction>
+  })
 
   useEffect(() => {
     (async () => {
@@ -48,7 +54,10 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   useEffect(() => {
     (async () => {
       const user = await getUser(username)
-      setUser(user)
+      // Use of initialUser state allows stops the initial definition of user at runtime on client
+      setUser(() => { setInitialUser(user); return user })
+
+      console.log
       if (user?.role == 'teacher') {
         setTeacher(await getTeacher(username))
       }
@@ -58,6 +67,10 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
     })()
 
   }, [urlParams])
+
+  useEffect(() => {
+    if (!userUpdated && !loading && user != initialUser) setUserUpdated(true)
+  }, [user])
 
   return (<>
     {!loading && !(loggedInUser?.role == 'admin') && <>
@@ -71,80 +84,9 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         <h1 className="mb-[2rem]">{user?.title} {user.forename} {user.surname}</h1>
         <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
           {/* User Data Card */}
-          <Card className="flex-1">
-            <CardHeader><CardTitle>User data</CardTitle></CardHeader>
-            <CardContent>
-              <ul>
-                <li className="hover:bg-accent">Username <span>{user.username}</span></li>
-                <li className="hover:bg-accent">Password
-                  <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
-                    <DialogTrigger asChild><Button>Change Password <Pencil2Icon className="ml-1" /></Button></DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
-                      <NewPasswordForm disabled={loading || passwordDialogDisabled} username={user.username as string} submitPassword={async (password) => {
-                        setPasswordDialogDisabled(true)
-                        await changePassword(user.username as string, password).then(user => {
-                          if (user) setUser(user)
-                        })
-                        setPasswordDialogDisabled(false)
-                        setPasswordDialogOpen(false)
-                      }} />
-                    </DialogContent>
-                  </Dialog></li>
-                <li className="flex-col items-start">
-                  Name
-                  <Collapsible
-                    open={nameEntryOpen}
-                    onOpenChange={setNameEntryOpen}
-                    className="newUserNameEntries space-y-4"
-                  >
-                    <div className="alwaysShown">
-                      {/* Name's 'title' input */}
-                      <Input placeholder="title" value={user.title} onChange={({ target: { value: title } }) => (setUser(user => ({ ...user, title })))} />
-
-                      {/* Name's 'forename' input */}
-                      <Input placeholder="forename" value={user.forename} onChange={({ target: { value: forename } }) => (setUser(user => ({ ...user, forename })))} />
-
-                      {/* Name's 'surname' input */}
-                      <Input placeholder="surname" value={user.surname} onChange={({ target: { value: surname } }) => (setUser(user => ({ ...user, surname })))} />
-
-                      {/* The trigger to show/hide the extra fields */}
-                      <CollapsibleTrigger asChild>
-                        <Button type="button" variant="ghost" aria-label="edit toggle for middle names and end of name letters">
-                          {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                        </Button>
-                      </CollapsibleTrigger>
-                    </div>
-                    {/* Name's 'middleNames' and 'letters' inputs */}
-                    <CollapsibleContent className="grid grid-cols-2 gap-x-4">
-                      {/* Name's 'middleNames' input */}
-                      <Label className="flex flex-col gap-4">Middle names
-                        <Input placeholder="middle names" value={user.middleNames} onChange={({ target: { value: middleNames } }) => (setUser(user => ({ ...user, middleNames })))} />
-                      </Label>
-
-                      {/* Name's 'letters' input */}
-                      <Label className="flex flex-col gap-4">Letters
-                        <Input placeholder="letters" value={user.letters} onChange={({ target: { value: letters } }) => (setUser(user => ({ ...user, letters })))} />
-                      </Label>
-                    </CollapsibleContent>
-                  </Collapsible>
-                </li>
-                <li>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Contact's 'email' input */}
-                    <Label className="flex-1 flex flex-col gap-4">Email
-                      <Input type="email" placeholder="email" />
-                    </Label>
-
-                    {/* Contact's 'mobile' input */}
-                    <Label className="flex-1 flex flex-col gap-4">Mobile
-                      <Input placeholder="mobile" />
-                    </Label>
-                  </div>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+          <UserEditForm user={user as User} setUser={setUser} onUpdateSave={(user) => {
+            if (userUpdated) updateUser(user).then(validateLoggedIn).then(userUpdateSuccess).then(() => { setUserUpdated(false) }).catch(userUpdateFailed)
+          }} />
 
           {user.role == 'admin' && <Card className="flex-1">
             <CardHeader><CardTitle>Admin actions</CardTitle></CardHeader>
