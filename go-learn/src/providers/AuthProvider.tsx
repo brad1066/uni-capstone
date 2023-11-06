@@ -1,10 +1,11 @@
 import { ReactNode, useContext, useState } from "react"
 import { AuthContext } from "@/hooks/useAuth"
 import { TUser } from "@/lib/types"
+import { User } from "@prisma/client"
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
-  const [user, setUser] = useState<TUser>()
+  const [user, setUser] = useState<User>()
   const context = useContext(AuthContext)
 
   const login = async (username: string, password: string, rememberMe: boolean) => {

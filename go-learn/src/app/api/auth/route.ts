@@ -1,15 +1,14 @@
 import { TUser } from "@/lib/types"
 import { NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import bcrypt from "bcrypt"
 import sha1 from "js-sha1"
-import { env } from "process"
 import prisma from "@/lib/db"
 import { checkLoginCredentials } from "@/actions/userActions"
+import { User } from "@prisma/client"
 
 export type TLoginSuccessResponse = {
   success: true,
-  user: TUser
+  user: User
 }
 
 export type TLoginErrorResponse = {

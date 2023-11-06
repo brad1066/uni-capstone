@@ -1,11 +1,12 @@
 import { TUser } from "@/lib/types"
+import { User } from "@prisma/client"
 import { createContext, useContext } from "react"
 
 export const AuthContext = createContext<{
-    user?: TUser,
-    login?: (username: string, password: string, rememberMe: boolean) => Promise<{ user?: TUser, success: boolean, message?: string }>,
+    user?: User,
+    login?: (username: string, password: string, rememberMe: boolean) => Promise<{ user?: User, success: boolean, message?: string }>,
     logout?: () => Promise<void>,
-    validateLoggedIn?: () => Promise<{loggedIn: Boolean, user?: TUser}>
+    validateLoggedIn?: () => Promise<{ loggedIn: Boolean, user?: User }>
 }>({})
 
 export const useAuth = () => {
