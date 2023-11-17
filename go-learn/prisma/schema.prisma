@@ -44,7 +44,6 @@ model Student {
   homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
   personalTutor      Teacher?         @relation(fields: [personalTutorId], references: [id], onDelete: SetNull)
   enrolledCourse     Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
-  enrolledClasses    StudentClasses[]
   // Auto Gen
   username           String           @unique
   emergencyContactId Int?             @unique
@@ -59,20 +58,9 @@ model Teacher {
   user      User             @relation(fields: [username], references: [username], onDelete: Cascade)
   address   Address?         @relation(fields: [addressId], references: [id], onDelete: Cascade)
   students  Student[]
-  classes   TeacherClasses[]
   // Auto Gen
   username  String           @unique
   addressId Int?             @unique
-}
-
-model Class {
-  id       Int              @id @default(autoincrement()) @map("_id")
-  title    String
-  module   Module?          @relation(fields: [moduleId], references: [id], onDelete: SetNull)
-  students StudentClasses[]
-  teachers TeacherClasses[]
-  // Auto Gen
-  moduleId Int?
 }
 
 model Course {
@@ -89,7 +77,6 @@ model Module {
   title       String
   description String?
   websiteURL  String?
-  classes     Class[]
   courses     CourseModules[]
   units       Unit[]
 }
@@ -125,24 +112,6 @@ model Resource {
 }
 
 // Relational Models
-model StudentClasses {
-  id        Int     @id @default(autoincrement()) @map("_id")
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-  // Auto Gen
-  studentId Int
-  classId   Int
-}
-
-model TeacherClasses {
-  id        Int     @id @default(autoincrement()) @map("_id")
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-  // Auto Gen
-  teacherId Int
-  classId   Int
-}
-
 model CourseModules {
   id       Int    @id @default(autoincrement()) @map("_id")
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
