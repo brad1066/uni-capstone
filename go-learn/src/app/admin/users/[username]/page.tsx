@@ -81,12 +81,12 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         {username} could not be found in the database. <Button variant={"secondary"} onClick={router?.back}>Go Back</Button>
       </>}
       {user && <>
-        <h1 className="mb-[2rem]">{user?.title} {user.forename} {user.surname}</h1>
+        <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>
         <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
           {/* User Data Card */}
           <UserEditForm user={user as User} setUser={setUser} onUpdateSave={(user) => {
             if (userUpdated) updateUser(user).then(validateLoggedIn).then(userUpdateSuccess).then(() => { setUserUpdated(false) }).catch(userUpdateFailed)
-          }} />
+          }} canEdit/>
 
           {user.role == 'admin' && <Card className="flex-1">
             <CardHeader><CardTitle>Admin actions</CardTitle></CardHeader>
