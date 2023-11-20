@@ -26,7 +26,6 @@ export async function getCourse(id: number, roles: UserRole[] = []): Promise<Cou
             prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
             prisma.course.findUnique({ where: { id } })
         ])
-        console.log(course)
         if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && course) {
             return course
         }

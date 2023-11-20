@@ -56,8 +56,6 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
       const user = await getUser(username)
       // Use of initialUser state allows stops the initial definition of user at runtime on client
       setUser(() => { setInitialUser(user); return user })
-
-      console.log
       if (user?.role == 'teacher') {
         setTeacher(await getTeacher(username))
       }
