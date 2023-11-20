@@ -59,7 +59,6 @@ export function UserDropdown({ className }: UserDropdownProps) {
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-            <DropdownMenuItem><Link href="/admin/classes" className="w-full">Classes</Link></DropdownMenuItem>
             <DropdownMenuItem><Link href="/admin/courses" className="w-full">Courses</Link></DropdownMenuItem>
             <DropdownMenuItem><Link href="/admin/modules" className="w-full">Modules</Link></DropdownMenuItem>
           </>)}
