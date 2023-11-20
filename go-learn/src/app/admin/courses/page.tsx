@@ -1,12 +1,13 @@
 'use client'
 
 
+import { createCourse, getCourses } from "@/actions/courseActions";
 import AdminCourseItem from "@/components/admin/AdminCourseItem";
 import NewCourseForm from "@/components/forms/NewCourseForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import courses from "@/dummy-data/courses";
 import { useAuth } from "@/hooks/useAuth";
+import { Course } from "@prisma/client";
 import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,12 +18,16 @@ export default function CoursesAdminPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [courses, setCourses] = useState<Course[]>([])
 
   useEffect(() => {
     (async () => {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
+
+      const courses = await getCourses();
+      if (courses) setCourses(courses)
       setLoading(false)
     })()
   }, [])
@@ -39,6 +44,7 @@ export default function CoursesAdminPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {
+                createCourse(course)
                 setDialogOpen(false)
               }} />
             </DialogContent>
