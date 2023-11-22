@@ -1,11 +1,11 @@
-import { TModule } from "@/lib/types"
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { Module } from "@prisma/client"
 
 type AdminModuleItemProps = {
-  module: TModule
+  module: Module
   onDelete?: () => Promise<any>
 }
 
