@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User } from "@prisma/client"
+import { Contact, User } from "@prisma/client"
 import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import { Dispatch, SetStateAction, useState } from "react"
 
@@ -16,11 +16,13 @@ type UserEditFormProps = {
   loading?: boolean
   user: User
   setUser: Dispatch<SetStateAction<User | undefined>>
+  contact?: Contact,
+  setContact?: Dispatch<SetStateAction<Contact>>
   canEdit?: boolean
   onUpdateSave?: (user: User) => void
 }
 
-const UserEditForm = ({ loading, user, setUser, onUpdateSave, canEdit }: UserEditFormProps) => {
+const UserEditForm = ({ loading, user, setUser, contact, setContact, onUpdateSave, canEdit }: UserEditFormProps) => {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false)
   const [passwordDialogDisabled, setPasswordDialogDisabled] = useState<boolean>(false)
 
@@ -96,12 +98,12 @@ const UserEditForm = ({ loading, user, setUser, onUpdateSave, canEdit }: UserEdi
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Contact's 'email' input */}
                 <Label className="flex-1 flex flex-col gap-4">Email
-                  <Input disabled={!canEdit} type="email" placeholder="email" />
+                  <Input disabled={!canEdit} type="email" placeholder="email" value={contact?.email ?? ''} onChange={(e) => {setContact?.(contact => ({...contact, email: e.target.value}))}}/>
                 </Label>
 
                 {/* Contact's 'mobile' input */}
                 <Label className="flex-1 flex flex-col gap-4">Mobile
-                  <Input disabled={!canEdit} placeholder="mobile" />
+                  <Input disabled={!canEdit} placeholder="mobile" value={contact?.mobile ?? ''} onChange={e => {setContact?.(contact => ({...contact, mobile: e.target.value}))}}/>
                 </Label>
               </div>
             </li>

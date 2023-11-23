@@ -68,15 +68,18 @@ export default function UsersAdminPage() {
             </DialogContent>
           </Dialog>
         </h1>
-        <div className={cn('w-full', !filter ? `grid grid-cols-2 gap-x-[1rem]` : '')}>
+        {users ? <div className={cn('w-full', !filter ? `grid grid-cols-2 gap-x-[1rem]` : '')}>
           {(!filter || filter == 'teachers') && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>
               <ul className="flex flex-col gap-[1rem]">
                 {
-                  users && users.filter(user => user.role == 'teacher').map((user: User) => (
+                  users.filter(user => user.role == 'teacher').map((user: User) => (
                     <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                   ))
+                }
+                {
+                  users.filter(user => user.role == 'teacher').length == 0 && 'No teachers found'
                 }
               </ul>
             </CardContent>
@@ -92,11 +95,15 @@ export default function UsersAdminPage() {
                       <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
+                  {
+                    users.filter(user => user.role == 'student').length == 0 && 'No students found'
+                  }
                 </ul>
               </CardContent>
             </Card>
           }
-        </div>
+        </div> : 'No users found'
+        }
       </>
       }
       {
@@ -111,7 +118,7 @@ export default function UsersAdminPage() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => deleteUser(userToDelete)}>Confirm</AlertDialogAction>
+              <AlertDialogAction onClick={async () => { await deleteUser(userToDelete); router.replace('/admin/users') }}>Confirm</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
