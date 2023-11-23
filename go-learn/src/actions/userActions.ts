@@ -7,6 +7,8 @@ import { User, UserRole } from "@prisma/client"
 import bcrypt from "bcrypt"
 import { cookies } from "next/headers"
 import { env } from "process"
+import { getCurrentUserSession } from "./authActions"
+import { createContactForUser } from "./contactActions"
 
 /**
  * Creates a user with a default password
@@ -28,28 +30,27 @@ export async function createUser(userInfo: TUser): Promise<User> {
     }
   })
   if (userInfo.contactDetails?.email || userInfo.contactDetails?.mobile) {
-    const contact = await prisma.contact.create({
-      data: {
-        label: 'primary',
-        email: userInfo?.contactDetails?.email || '',
-        mobile: userInfo?.contactDetails?.mobile || '',
-      }
-    })
-
-    user = await prisma.user.update({
-      where: { username: user.username },
-      data: { contactId: contact.id },
-    })
+    const contact = await createContactForUser({
+      label: 'primary',
+      email: userInfo?.contactDetails?.email || '',
+      mobile: userInfo?.contactDetails?.mobile || '',
+    }, user.username
+    )
+    if (contact)
+      user = await prisma.user.update({
+        where: { username: user.username },
+        data: { contactId: contact.id },
+      })
   }
 
-  if (user.role == 'teacher') {
+  if (user?.role == 'teacher') {
     await prisma.teacher.create({
       data: { username: user.username },
       select: { user: true }
     }).then(teacher => { user = teacher.user })
   }
 
-  if (user.role == 'student') {
+  if (user?.role == 'student') {
     await prisma.student.create({
       data: { username: user.username },
       select: { user: true }
@@ -60,7 +61,7 @@ export async function createUser(userInfo: TUser): Promise<User> {
 }
 
 // GET actions for User[]
-export async function getUsers(roles: UserRole[] = []): Promise<TUser[]> {
+export async function getUsers(roles: UserRole[] = []): Promise<User[]> {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, users] = await prisma.$transaction([
@@ -68,36 +69,41 @@ export async function getUsers(roles: UserRole[] = []): Promise<TUser[]> {
       prisma.user.findMany()
     ])
     if (roles.length == 0 || roles.includes(session?.user.role as UserRole))
-      return users as TUser[]
+      return users as User[]
   }
   return []
 }
 
 export async function getUsersByRole(roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
-  if (authCookie) {
-    const [session, admin, teachers, students] = await prisma.$transaction([
-      prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.user.findMany({
-        where: { role: 'admin' },
-        take: 5
-      }),
-      prisma.user.findMany({
-        where: { role: 'teacher' },
-        take: 5
-      }),
-      prisma.user.findMany({
-        where: { role: 'student' },
-        take: 5
-      })
-    ])
-    if (session?.user.role == 'admin') {
-      return [...admin, ...teachers, ...students]
-    }
-  } else return undefined
+  if (!authCookie) return undefined
+
+  const [session, admin, teachers, students] = await prisma.$transaction([
+    prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
+    prisma.user.findMany({
+      where: { role: 'admin' },
+      take: 5
+    }),
+    prisma.user.findMany({
+      where: { role: 'teacher' },
+      take: 5
+    }),
+    prisma.user.findMany({
+      where: { role: 'student' },
+      take: 5
+    })
+  ])
+  if (!session) return undefined
+
+  let users = []
+  if (roles.length == 0) return [...admin, ...teachers, ...students]
+  if ('admin' in roles) users.push(...admin)
+  if ('teacher' in roles) users.push(...teachers)
+  if ('student' in roles) users.push(...students)
+  return roles
 }
 
-export async function getUser(username: string, roles: UserRole[] = []): Promise<User | undefined> {
+export async function getUser(username: string, roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, user] = await prisma.$transaction([
@@ -114,38 +120,45 @@ export async function getUser(username: string, roles: UserRole[] = []): Promise
  * Performs a check on some provided credentials to try and log someone in
  * @param username The provided username to check in the data store
  * @param password The provided password to check in the data store
- * @returns TUser if user is found, otherwise null
+ * @returns User if user is found, otherwise null
  */
-export async function checkLoginCredentials(username: string, password: string): Promise<TUser | null> {
+export async function checkLoginCredentials(username: string, password: string): Promise<User | null> {
   password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
   const user = await prisma.user
     .findFirst({ where: { 'username': username, password } })
 
-  return user as TUser || null
+  return user as User
 
 }
 
 export async function updateUser(user: User) {
   if (!user) return
-  const resp = await prisma.user.update({ where: { username: user.username }, data: { ...user } })
+  const session = await getCurrentUserSession()
+  if (!(session?.user?.role == 'admin')) return null
+
+  return await prisma.user.update({ where: { username: user.username }, data: { ...user } })
 }
 
 export async function changePassword(username: string, password: string): Promise<User | undefined> {
-  const authCookie = cookies().get('auth')
-  if (authCookie) {
-    const [session, user] = await prisma.$transaction([
-      prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.user.update({
-        where: { username },
-        data: {
-          password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
-        }
-      })])
-    return user
-  } else return undefined
+  const session = await getCurrentUserSession()
+  if (!session || session.user?.username != username || session.user?.role != 'admin') return undefined
+
+  const user = prisma.user.update({
+    where: { username },
+    data: {
+      password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
+    }
+  })
+  return user
 }
 
 export async function deleteUser(user: User) {
-  const resp = await prisma.user.delete({ where: { username: user.username } })
-  return resp
+  const session = await getCurrentUserSession()
+  console.log(user.username)
+  if (!(session?.user?.role == 'admin')) return undefined
+
+  return await prisma.$transaction([
+    prisma.userSession.deleteMany({ where: { userUsername: user.username } }),
+    prisma.user.delete({ where: { username: user.username } })
+  ])
 }

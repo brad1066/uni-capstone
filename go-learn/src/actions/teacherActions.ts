@@ -1,12 +1,11 @@
 'use server'
 
 import prisma from "@/lib/db"
-import { TTeacher } from "@/lib/types"
-import { UserRole } from "@prisma/client"
+import { Teacher, UserRole } from "@prisma/client"
 import { cookies } from "next/headers"
 
 
-export async function getTeachers(roles: UserRole[] = []): Promise<TTeacher[]> {
+export async function getTeachers(roles: UserRole[] = []): Promise<Teacher[]> {
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, teachers] = await prisma.$transaction([
@@ -14,13 +13,13 @@ export async function getTeachers(roles: UserRole[] = []): Promise<TTeacher[]> {
             prisma.teacher.findMany()
         ])
         if (roles.length == 0 || roles.includes(session?.user.role as UserRole)) {
-            return teachers as TTeacher[]
+            return teachers
         }
     }
     return []
 }
 
-export async function getTeacher(username: string, roles: UserRole[] = []): Promise<TTeacher | undefined> {
+export async function getTeacher(username: string, roles: UserRole[] = []): Promise<Teacher | undefined> {
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, teacher] = await prisma.$transaction([
@@ -28,7 +27,7 @@ export async function getTeacher(username: string, roles: UserRole[] = []): Prom
             prisma.teacher.findUnique({ where: { username } })
         ])
         if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && teacher) {
-            return teacher as TTeacher
+            return teacher
         }
     }
     return undefined

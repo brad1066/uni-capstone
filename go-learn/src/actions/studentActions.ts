@@ -1,12 +1,11 @@
 'use server'
 
 import prisma from "@/lib/db"
-import { TStudent } from "@/lib/types"
-import { UserRole } from "@prisma/client"
+import { Student, UserRole } from "@prisma/client"
 import { cookies } from "next/headers"
 
 
-export async function getStudents(roles: UserRole[] = []): Promise<TStudent[]> {
+export async function getStudents(roles: UserRole[] = []): Promise<Student[]> {
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, students] = await prisma.$transaction([
@@ -14,13 +13,13 @@ export async function getStudents(roles: UserRole[] = []): Promise<TStudent[]> {
             prisma.student.findMany()
         ])
         if (roles.length == 0 || roles.includes(session?.user.role as UserRole)) {
-            return students as TStudent[]
+            return students
         }
     }
     return []
 }
 
-export async function getStudent(username: string, roles: UserRole[] = []): Promise<TStudent | undefined> {
+export async function getStudent(username: string, roles: UserRole[] = []): Promise<Student | undefined> {
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, student] = await prisma.$transaction([
@@ -28,7 +27,7 @@ export async function getStudent(username: string, roles: UserRole[] = []): Prom
             prisma.student.findUnique({ where: { username } })
         ])
         if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && student) {
-            return student as TStudent
+            return student as Student
         }
     }
     return undefined
