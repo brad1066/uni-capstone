@@ -105,11 +105,11 @@ model Resource {
   title          String
   description    String
   content        String
-  author         User               @relation(fields: [authorUsername], references: [username])
+  author         User?               @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   units          UnitResources[]
   sections       SectionResources[]
   // Auto Gen
-  authorUsername String
+  authorUsername String?
 }
 
 // Relational Models
