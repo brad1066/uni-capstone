@@ -21,12 +21,12 @@ import { getCourses } from "@/actions/courseActions"
 
 export function CoursesSelectCombobox({value, setValue}: {value: number, setValue: (prevState: number) => void}) {
   const [open, setOpen] = useState(false)
-  const [courses, setCourses] = useState<{id: number, label:string}[]>()
+  const [courses, setCourses] = useState<{id: number, value: string, label:string}[]>()
 
   useEffect(() => {
     (async () => {
-      setCourses(await getCourses().then(vals => vals.map(val => ({id: val.id, label: val.title}))))
-      setCourses(courses => ([{id: -1, label: "Select a course"}, ...(courses ?? []), ]))
+      setCourses(await getCourses().then(vals => vals.map(val => ({id: val.id, value: val.title.toLowerCase(), label: val.title}))))
+      setCourses(courses => ([{id: -1, label: "Select a course", value:"-1"}, ...(courses ?? []), ]))
     })()
   })
 
@@ -47,15 +47,16 @@ export function CoursesSelectCombobox({value, setValue}: {value: number, setValu
       </PopoverTrigger>
       <PopoverContent className="w-[100%] p-0">
         <Command>
-          <CommandInput placeholder="Search courses..." />
+          <CommandInput placeholder="Search courses..."/>
           <CommandEmpty>No course found.</CommandEmpty>
           <CommandGroup>
             {courses?.map((course) => (
               <CommandItem
                 key={course.id}
-                value={course.id.toString()}
+                value={course.value}
                 onSelect={(currentValue) => {
-                  setValue(course.id === value ? -1 : parseInt(currentValue))
+                  const currentId = courses.find(course => course.value == currentValue)?.id
+                  setValue(course.id === value ? -1 : currentId ?? -1)
                   setOpen(false)
                 }}
               >
