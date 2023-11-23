@@ -1,7 +1,7 @@
 'use client'
 
 
-import { createCourse, getCourses } from "@/actions/courseActions";
+import { createCourse, deleteCourse, getCourses } from "@/actions/courseActions";
 import AdminCourseItem from "@/components/admin/AdminCourseItem";
 import NewCourseForm from "@/components/forms/NewCourseForm";
 import { Button } from "@/components/ui/button";
@@ -40,19 +40,20 @@ export default function CoursesAdminPage() {
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Courses
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1"/></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {
-                createCourse(course)
+                await createCourse(course)
                 setDialogOpen(false)
+                router.refresh()
               }} />
             </DialogContent>
           </Dialog>
         </h1>
         {courses?.length > 0 && <div className="grid grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <AdminCourseItem course={course} key={course.id} onDelete={async () => { }} />
+            <AdminCourseItem course={course} key={course.id} onDelete={async () => { deleteCourse(course.id); router.refresh() }} />
           ))}
         </div>}
       </>}

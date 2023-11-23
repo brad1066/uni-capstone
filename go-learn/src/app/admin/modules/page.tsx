@@ -1,7 +1,7 @@
 'use client'
 
 
-import { createModule, getModules } from "@/actions/moduleActions";
+import { createModule, deleteModule, getModules } from "@/actions/moduleActions";
 import AdminModuleItem from "@/components/admin/AdminModuleItem";
 import NewModuleForm from "@/components/forms/NewModuleForm";
 import { Button } from "@/components/ui/button";
@@ -42,15 +42,16 @@ export default function ModulesAdminPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
               <NewModuleForm submitModule={async (module: Module, course) => {
-                createModule(module, course)
+                await createModule(module, course)
                 setDialogOpen(false)
+                router.refresh()
               }} />
             </DialogContent>
           </Dialog>
         </h1>
         {modules && modules.length > 0 && <div className="grid grid-cols-3 w-full gap-5">
           {modules.map(module => (
-            <AdminModuleItem module={module} key={module.id} onDelete={async () => { }} />
+            <AdminModuleItem module={module} key={module.id} onDelete={async () => { await deleteModule(module.id); router.refresh()}} />
           ))}
         </div>}
       </>}
