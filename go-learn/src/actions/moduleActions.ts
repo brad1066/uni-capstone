@@ -32,9 +32,8 @@ export async function getModule(id: number, roles: UserRole[] = []): Promise<Mod
     return undefined
 }
 
-export async function createModule({ title, description, websiteURL}: Module, courseId=-1, roles: UserRole[] = []) {
-    if (!title || !description) return undefined
-    console.log(courseId)
+export async function createModule({ title, description="", websiteURL=""}: Module, courseId=-1, roles: UserRole[] = []) {
+    if (!title) return undefined
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, module, course] = await prisma.$transaction([
@@ -49,4 +48,15 @@ export async function createModule({ title, description, websiteURL}: Module, co
         }
     }
     return undefined
+}
+
+export async function deleteModule(id: number) {
+    const authCookie = cookies().get('auth')
+    if (!authCookie) return null
+    const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true }})
+    if (!session || session.user.role != 'admin') return null
+
+    const deleted = await prisma.module.delete({where: {id}})
+
+    return deleted
 }

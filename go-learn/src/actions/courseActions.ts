@@ -33,8 +33,8 @@ export async function getCourse(id: number, roles: UserRole[] = []): Promise<Cou
     return undefined
 }
 
-export async function createCourse({title, description, websiteURL}: TCourse, roles: UserRole[] = []) {
-    if (!title || !description || !websiteURL) return undefined
+export async function createCourse({title, description="", websiteURL=""}: TCourse, roles: UserRole[] = []) {
+    if (!title) return undefined
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, course] = await prisma.$transaction([
@@ -46,4 +46,15 @@ export async function createCourse({title, description, websiteURL}: TCourse, ro
         }
     }
     return undefined
+}
+
+export async function deleteCourse(id: number) {
+    const authCookie = cookies().get('auth')
+    if (!authCookie) return null
+    const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true }})
+    if (!session || session.user.role != 'admin') return null
+
+    const deleted = await prisma.course.delete({where: {id}})
+
+    return deleted
 }
