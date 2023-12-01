@@ -2,11 +2,12 @@
 
 import { createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
-import { getStudent } from "@/actions/studentActions"
+import { getStudent, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
 import { getUser, updateUser } from "@/actions/userActions"
 import NoAccessNotice from "@/components/NoAccessNotice"
 import ResourcesAuthoredCard from "@/components/ResourcesAuthoredCard"
+import AdminModuleItem from "@/components/admin/AdminModuleItem"
 import EditAddressForm from "@/components/forms/EditAddressForm"
 import UserEditForm from "@/components/forms/UserEditForm"
 import { Button } from "@/components/ui/button"
@@ -15,7 +16,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { EMPTY_ADDRESS, EMPTY_CONTACT } from "@/lib/utils"
-import { Address, Contact, Student, Teacher, User } from "@prisma/client"
+import { Address, Contact, Module, Student, Teacher, User } from "@prisma/client"
+import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { ToastAction } from "@radix-ui/react-toast"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -35,7 +37,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const [user, setUser] = useState<User>()
   const [address, setAddress] = useState<Address>(EMPTY_ADDRESS)
   const [teacher, setTeacher] = useState<Teacher>()
-  const [student, setStudent] = useState<Student>()
+  const [student, setStudent] = useState<Student & {modules: {module: Module}[]}>()
   const [initialUser, setInitialUser] = useState<User | undefined>()
 
   const [addressEntryOpen, setAddressEntryOpen] = useState<boolean>(false)
@@ -76,7 +78,8 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         setAddress(address ?? EMPTY_ADDRESS)
       }
       if (user?.role == 'student') {
-        await setStudent(await getStudent(username))
+        const student = await getStudent(username)
+        await setStudent(student)
       }
     })()
 
@@ -144,7 +147,15 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
           {student && <Card className="flex-1">
             <CardHeader><CardTitle>Student data</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
-
+              <ScrollArea className="h-1/2">
+                {student.modules.map(({module}) => {
+                  return <>
+                  <AdminModuleItem module={module} onDelete={async () => {
+                    removeStudentModule(student.id, module.id);
+                  }}/>
+                  </>
+                })}
+              </ScrollArea>
             </CardContent>
           </Card>}
         </div>

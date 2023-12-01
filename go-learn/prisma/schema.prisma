@@ -6,17 +6,20 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("SUPABASE_URL")
-  directUrl = env("SUPABASE_URL")
+  provider     = "postgresql"
+  url          = env("SUPABASE_URL")
+  directUrl    = env("SUPABASE_URL")
+  relationMode = "prisma"
 }
 
 model UserSession {
   id           Int      @id @unique @default(autoincrement())
-  user         User     @relation(fields: [userUsername], references: [username])
+  user         User     @relation(fields: [userUsername], references: [username], onDelete: Cascade)
   cookieValue  String
   created      DateTime @default(now())
   userUsername String
+
+  @@index([userUsername], name: "userUsername")
 }
 
 model User {
@@ -35,22 +38,26 @@ model User {
   teacher        Teacher?
   userSessions   UserSession[]
   resources      Resource[]
+
+  @@index([contactId], name: "contactId")
 }
 
 model Student {
-  id                 Int              @id @default(autoincrement()) @map("_id")
-  user               User             @relation(fields: [username], references: [username], onDelete: Cascade)
-  emergencyContact   Contact?         @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
-  termAddress        Address?         @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
-  homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
-  enrolledCourse     Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
-  modules            StudentModules[]
+  id                 Int             @id @default(autoincrement()) @map("_id")
+  user               User            @relation(fields: [username], references: [username], onDelete: Cascade)
+  emergencyContact   Contact?        @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  termAddress        Address?        @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
+  homeAddress        Address?        @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
+  enrolledCourse     Course?         @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  modules            StudentModule[]
   // Auto Gen
-  username           String           @unique
-  emergencyContactId Int?             @unique
-  termAddressId      Int?             @unique
-  homeAddressId      Int?             @unique
+  username           String          @unique
+  emergencyContactId Int?            @unique
+  termAddressId      Int?            @unique
+  homeAddressId      Int?            @unique
   courseId           Int?
+
+  @@index([courseId])
 }
 
 model Teacher {
@@ -63,92 +70,110 @@ model Teacher {
 }
 
 model Course {
-  id          Int             @id @default(autoincrement()) @map("_id")
+  id          Int            @id @default(autoincrement()) @map("_id")
   title       String
   description String
   websiteURL  String
   students    Student[]
-  modules     CourseModules[]
+  modules     CourseModule[]
 }
 
 model Module {
-  id          Int              @id @default(autoincrement()) @map("_id")
-  title       String
-  description String?
-  websiteURL  String?
-  courses     CourseModules[]
-  units       Unit[]
-  students    StudentModules[]
-}
-
-model Unit {
   id          Int             @id @default(autoincrement()) @map("_id")
   title       String
   description String?
-  module      Module          @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  websiteURL  String?
+  courses     CourseModule[]
+  units       Unit[]
+  students    StudentModule[]
+}
+
+model Unit {
+  id          Int            @id @default(autoincrement()) @map("_id")
+  title       String
+  description String?
+  module      Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   sections    Section[]
-  resources   UnitResources[]
+  resources   UnitResource[]
   // Auto Gen
   moduleId    Int
+
+  @@index([moduleId])
 }
 
 model Section {
-  id          Int                @id @default(autoincrement()) @map("_id")
+  id          Int               @id @default(autoincrement()) @map("_id")
   title       String
   description String?
-  unit        Unit               @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  resources   SectionResources[]
+  unit        Unit              @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  resources   SectionResource[]
   // Auto Gen
   unitId      Int
+
+  @@index([unitId])
 }
 
 model Resource {
-  id             Int                @id @default(autoincrement()) @map("_id")
+  id             Int               @id @default(autoincrement()) @map("_id")
   title          String
   description    String
   content        String
-  author         User?              @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
-  units          UnitResources[]
-  sections       SectionResources[]
+  author         User?             @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
+  units          UnitResource[]
+  sections       SectionResource[]
   // Auto Gen
   authorUsername String?
+
+  @@index([authorUsername])
 }
 
 // Relational Models
-model CourseModules {
-  id       Int    @id @default(autoincrement()) @map("_id")
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+model CourseModule {
+  course   Course @relation(fields: [courseId], references: [id])
+  module   Module @relation(fields: [moduleId], references: [id])
   // Auto Gen
   courseId Int
   moduleId Int
+
+  @@id([courseId, moduleId])
+  @@index([courseId])
+  @@index([moduleId])
 }
 
-model StudentModules {
-  id        Int     @id @default(autoincrement()) @map("_id")
+model StudentModule {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   module    Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   // Auto Gen
   studentId Int
   moduleId  Int
+
+  @@id([studentId, moduleId])
+  @@index([studentId])
+  @@index([moduleId])
 }
 
-model SectionResources {
-  id         Int      @id @default(autoincrement()) @map("_id")
+model SectionResource {
   section    Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   // Auto Gen
   sectionId  Int
   resourceId Int
+
+  @@id([sectionId, resourceId])
+  @@index([sectionId])
+  @@index([resourceId])
 }
 
-model UnitResources {
-  id         Int      @id @default(autoincrement()) @map("_id")
+model UnitResource {
   unit       Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
   resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   // Auto Gen
   unitId     Int
   resourceId Int
+
+  @@id([unitId, resourceId])
+  @@index([unitId])
+  @@index([resourceId])
 }
 
 // Collections
