@@ -33,32 +33,33 @@ model User {
   contactId      Int?
   student        Student?
   teacher        Teacher?
-  userSessions    UserSession[]
-  resources       Resource[]
+  userSessions   UserSession[]
+  resources      Resource[]
 }
 
 model Student {
-  id                 Int      @id @default(autoincrement()) @map("_id")
-  user               User     @relation(fields: [username], references: [username], onDelete: Cascade)
-  emergencyContact   Contact? @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
-  termAddress        Address? @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
-  homeAddress        Address? @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
-  enrolledCourse     Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  id                 Int              @id @default(autoincrement()) @map("_id")
+  user               User             @relation(fields: [username], references: [username], onDelete: Cascade)
+  emergencyContact   Contact?         @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  termAddress        Address?         @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
+  homeAddress        Address?         @relation("homeAddress", fields: [homeAddressId], references: [id], onDelete: Cascade)
+  enrolledCourse     Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  modules            StudentModules[]
   // Auto Gen
-  username           String   @unique
-  emergencyContactId Int?     @unique
-  termAddressId      Int?     @unique
-  homeAddressId      Int?     @unique
+  username           String           @unique
+  emergencyContactId Int?             @unique
+  termAddressId      Int?             @unique
+  homeAddressId      Int?             @unique
   courseId           Int?
 }
 
 model Teacher {
-  id        Int       @id @default(autoincrement()) @map("_id")
-  user      User      @relation(fields: [username], references: [username], onDelete: Cascade)
-  address   Address?  @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement()) @map("_id")
+  user      User     @relation(fields: [username], references: [username], onDelete: Cascade)
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
   // Auto Gen
-  username  String    @unique
-  addressId Int?      @unique
+  username  String   @unique
+  addressId Int?     @unique
 }
 
 model Course {
@@ -71,12 +72,13 @@ model Course {
 }
 
 model Module {
-  id          Int             @id @default(autoincrement()) @map("_id")
+  id          Int              @id @default(autoincrement()) @map("_id")
   title       String
   description String?
   websiteURL  String?
   courses     CourseModules[]
   units       Unit[]
+  students    StudentModules[]
 }
 
 model Unit {
@@ -105,7 +107,7 @@ model Resource {
   title          String
   description    String
   content        String
-  author         User?               @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
+  author         User?              @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   units          UnitResources[]
   sections       SectionResources[]
   // Auto Gen
@@ -120,6 +122,15 @@ model CourseModules {
   // Auto Gen
   courseId Int
   moduleId Int
+}
+
+model StudentModules {
+  id        Int     @id @default(autoincrement()) @map("_id")
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  module    Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  // Auto Gen
+  studentId Int
+  moduleId  Int
 }
 
 model SectionResources {
