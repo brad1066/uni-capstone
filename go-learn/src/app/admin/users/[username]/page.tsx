@@ -2,7 +2,7 @@
 
 import { createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
-import { addStudentCourse, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
+import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
 import { getUser, updateUser } from "@/actions/userActions"
 import NoAccessNotice from "@/components/NoAccessNotice"
@@ -10,10 +10,11 @@ import ResourcesAuthoredCard from "@/components/ResourcesAuthoredCard"
 import AdminCourseItem from "@/components/admin/AdminCourseItem"
 import AdminModuleItem from "@/components/admin/AdminModuleItem"
 import { AssignStudentCourseForm } from "@/components/forms/AssignStudentCourseForm"
+import { AssignStudentModuleForm } from "@/components/forms/AssignStudentModuleForm"
 import EditAddressForm from "@/components/forms/EditAddressForm"
 import UserEditForm from "@/components/forms/UserEditForm"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
@@ -46,6 +47,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const [newAddress, setNewAddress] = useState<boolean>(false)
 
   const [addingCourse, setAddingCourse] = useState<boolean>(false)
+  const [addingModule, setAddingModule] = useState<boolean>(false)
 
   const [contact, setContact] = useState<Contact>(EMPTY_CONTACT)
 
@@ -148,13 +150,14 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
           </Card>}
 
           {/* Student Info Card */}
-          {student && <Card className="flex-1">
+          {student && <Card className="flex flex-col flex-1">
             <CardHeader><CardTitle>Student data</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
               {
                 student?.enrolledCourse
                   ? <AdminCourseItem course={student.enrolledCourse} onDelete={async () => {
-                    removeStudentCourse(student.id)
+                    const updatedStudent = await removeStudentCourse(student.id)
+                    if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                   }} />
                   : <span className="flex flex-row items-center justify-center">
                     This student is not enrolled on a course
@@ -163,9 +166,10 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                         <Button className="ml-auto">Enrol on Course</Button></DialogTrigger>
                       <DialogContent>
                         <DialogHeader><DialogTitle>Enrol on Course</DialogTitle></DialogHeader>
-                        <AssignStudentCourseForm student={student} onSave={async (courseId: number) => {
-                          const updatedStudent = await addStudentCourse(student.id, courseId)
-                          if (updatedStudent) await setStudent({ ...student, ...updatedStudent })
+                        <AssignStudentCourseForm student={student} onSave={async (course: Course) => {
+                          const updatedStudent = await addStudentCourse(student.id, course.id)
+                          if (updatedStudent) setStudent({ ...student, ...updatedStudent })
+                          setAddingCourse(false)
                         }} />
                       </DialogContent>
                     </Dialog>
@@ -174,18 +178,33 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
               {student?.modules.length == 0 && <p>This student is not enrolled on any modules</p>}
               {student?.modules.length > 0 && <>
                 <h3>Modules</h3>
-                <ScrollArea className="h-1/2">
+                <div className="flex flex-col gap-2">
                   {student.modules.map(({ module }) => {
                     return <>
                       <AdminModuleItem module={module} onDelete={async () => {
-                        removeStudentModule(student.id, module.id);
+                        const updatedStudent = await removeStudentModule(student.id, module.id)
+                        if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                       }} />
                     </>
                   })}
-                </ScrollArea>
-                <hr />
+                </div>
               </>}
             </CardContent>
+
+            <CardFooter className="mt-auto">
+              <Dialog open={addingModule} onOpenChange={setAddingModule}>
+                <DialogTrigger asChild>
+                  <Button className="ml-auto w-full">Add module</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Add Module</DialogTitle></DialogHeader>
+                  <AssignStudentModuleForm student={student} exclude={student.modules.map(mod => mod.module.id)} onSave={async (module: Module) => {
+                    const updatedStudent = await addStudentModule(student.id, module.id)
+                    if (updatedStudent) setStudent({ ...student, ...updatedStudent })
+                    setAddingModule(false)
+                  }} />
+                </DialogContent>
+              </Dialog>
+            </CardFooter>
           </Card>}
         </div>
       </>}

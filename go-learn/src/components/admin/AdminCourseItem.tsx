@@ -40,7 +40,7 @@ const AdminCourseItem = ({ course, onDelete }: AdminCourseItemProps) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { console.log('Deletion of course: ' + course.id); onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove course</TooltipContent>

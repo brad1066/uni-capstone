@@ -40,7 +40,7 @@ const AdminModuleItem = ({ module, onDelete }: AdminModuleItemProps) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { console.log('Deletion of module: ' + module.id); onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove module</TooltipContent>

@@ -154,7 +154,6 @@ export async function changePassword(username: string, password: string): Promis
 
 export async function deleteUser(user: User) {
   const session = await getCurrentUserSession()
-  console.log(user.username)
   if (!(session?.user?.role == 'admin')) return undefined
 
   return await prisma.$transaction([

@@ -2,7 +2,7 @@
 
 import { getCourses } from "@/actions/courseActions"
 import { Course, Student } from "@prisma/client"
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { CoursesSelectCombobox } from "../CoursesSelectCombobox"
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
@@ -28,6 +28,7 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
       course: -1
     }
   })
+  const valWatcher = form.watch
 
   useEffect(() => {
     (async () => {
@@ -38,7 +39,7 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
 
   return (
     <Form {...form}>
-      <form onSubmit={(e) => course && onSave?.(course)}>
+      <form onSubmit={(e) => {e.preventDefault(); course && onSave?.(course);}}>
         <FormField
           control={form.control}
           name="course"
@@ -46,7 +47,13 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
             <FormItem>
               <FormLabel>Course</FormLabel>
               <FormControl>
-                <CoursesSelectCombobox value={field.value} setValue={field.onChange} />
+                <CoursesSelectCombobox value={field.value} setValue={(prevState) => {
+                  field.onChange(prevState)
+                  if (prevState <= 0) return
+                  const filteredCourses = courses.filter(_course => _course.id == prevState)
+                  if (filteredCourses.length == 0) return
+                  setCourse(filteredCourses[0])
+                }} />
               </FormControl>
             </FormItem>
           )} />

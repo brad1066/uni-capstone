@@ -39,7 +39,10 @@ export async function removeStudentModule(studentId: number, moduleId: number) {
         const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
         if (session?.user.role == UserRole.admin) {
             const val = await prisma.studentModule.delete({ where: { studentId_moduleId: { studentId, moduleId } } })
-            console.log(val)
+            const student = await prisma.student.findUnique({ where: { id: studentId }, include: { modules: { include: { module: true } } } })
+            if (student) {
+                return student
+            }
         }
     }
 }
@@ -50,7 +53,10 @@ export async function addStudentModule(studentId: number, moduleId: number) {
         const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
         if (session?.user.role == UserRole.admin) {
             const val = await prisma.studentModule.create({ data: { studentId, moduleId } })
-            console.log(val)
+            const student = await prisma.student.findUnique({ where: { id: studentId }, include: { modules: { include: { module: true } } } })
+            if (student) {
+                return student
+            }
         }
     }
 }
@@ -60,7 +66,10 @@ export async function removeStudentCourse(studentId: number) {
     if (authCookie) {
         const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
         if (session?.user.role == UserRole.admin) {
-            await prisma.student.update({ where: { id: studentId }, data: {courseId: null} })
+            const student = await prisma.student.update({ where: { id: studentId }, data: {courseId: null}, include: { enrolledCourse: true } })
+            if (student) {
+                return student
+            }
         }
     }
 }
@@ -70,8 +79,10 @@ export async function addStudentCourse(studentId: number, courseId: number) {
     if (authCookie) {
         const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
         if (session?.user.role == UserRole.admin) {
-            const student = await prisma.student.update({ where: { id: studentId }, data: {courseId} })
-            return student
+            const student = await prisma.student.update({ where: { id: studentId }, data: {courseId}, include: { enrolledCourse: true } })
+            if (student) {
+                return student
+            }
         }
     }
 }
