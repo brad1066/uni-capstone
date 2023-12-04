@@ -1,6 +1,6 @@
 'use client'
 
-import { createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
+import { createStudentAddress, createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
 import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
@@ -12,6 +12,7 @@ import AdminModuleItem from "@/components/admin/AdminModuleItem"
 import { AssignStudentCourseForm } from "@/components/forms/AssignStudentCourseForm"
 import { AssignStudentModuleForm } from "@/components/forms/AssignStudentModuleForm"
 import EditAddressForm from "@/components/forms/EditAddressForm"
+import EditStudentAddressForm from "@/components/forms/EditStudentAddressForm"
 import UserEditForm from "@/components/forms/UserEditForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,7 +21,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { EMPTY_ADDRESS, EMPTY_CONTACT } from "@/lib/utils"
 import { Address, Contact, Course, Module, Student, StudentModule, Teacher, User } from "@prisma/client"
-import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { ToastAction } from "@radix-ui/react-toast"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -151,7 +151,23 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
 
           {/* Student Info Card */}
           {student && <Card className="flex flex-col flex-1">
-            <CardHeader><CardTitle>Student data</CardTitle></CardHeader>
+            <CardHeader><CardTitle>
+              <Dialog open={addressEntryOpen} onOpenChange={setAddressEntryOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full">Edit Address</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Edit Address</DialogTitle></DialogHeader>
+                  <EditStudentAddressForm address={address} setAddress={setAddress}/>
+                  <DialogFooter>
+                    <Button onClick={async () => {
+                      if (student && newAddress) { await createStudentAddress(student.id, address) }
+                      if (student && !newAddress) { await updateAddress(address) }
+
+                      setAddressEntryOpen(false)
+                    }}>Save</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog></CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
               {
                 student?.enrolledCourse

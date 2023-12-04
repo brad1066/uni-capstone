@@ -39,3 +39,20 @@ export async function updateAddress(address: Address, roles: UserRole[] = []) {
 
     return await prisma.address.update({where: {id: address.id}, data: {...address}})
 }
+
+export async function createStudentAddress(studentId: number, address: Address, isTermAddress?: boolean, isHomeAddres?: boolean, roles: UserRole[] = []) {
+    const session = await getCurrentUserSession()
+    if (!session?.user || (roles.length > 0 && !roles.includes(session?.user.role as UserRole))) return
+    const {id: addressId} = await prisma.address.create({data: {
+        addressLine1: address.addressLine1,
+        addressLine2: address.addressLine2,
+        town: address.town,
+        stateCounty: address.stateCounty,
+        zipPostCode: address.zipPostCode,
+    }})
+    if (!addressId) return
+    let updatedStudent = undefined
+    if (isTermAddress) updatedStudent = await prisma.student.update({where: {id: studentId}, data: {termAddressId: addressId}})
+    if (isHomeAddres) updatedStudent = await prisma.student.update({where: {id: studentId}, data: {homeAddressId: addressId}})
+    return updatedStudent
+}
