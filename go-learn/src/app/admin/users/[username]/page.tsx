@@ -2,12 +2,14 @@
 
 import { createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
-import { getStudent, removeStudentModule } from "@/actions/studentActions"
+import { addStudentCourse, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
 import { getUser, updateUser } from "@/actions/userActions"
 import NoAccessNotice from "@/components/NoAccessNotice"
 import ResourcesAuthoredCard from "@/components/ResourcesAuthoredCard"
+import AdminCourseItem from "@/components/admin/AdminCourseItem"
 import AdminModuleItem from "@/components/admin/AdminModuleItem"
+import { AssignStudentCourseForm } from "@/components/forms/AssignStudentCourseForm"
 import EditAddressForm from "@/components/forms/EditAddressForm"
 import UserEditForm from "@/components/forms/UserEditForm"
 import { Button } from "@/components/ui/button"
@@ -16,7 +18,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { EMPTY_ADDRESS, EMPTY_CONTACT } from "@/lib/utils"
-import { Address, Contact, Module, Student, Teacher, User } from "@prisma/client"
+import { Address, Contact, Course, Module, Student, StudentModule, Teacher, User } from "@prisma/client"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { ToastAction } from "@radix-ui/react-toast"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -37,11 +39,13 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const [user, setUser] = useState<User>()
   const [address, setAddress] = useState<Address>(EMPTY_ADDRESS)
   const [teacher, setTeacher] = useState<Teacher>()
-  const [student, setStudent] = useState<Student & {modules: {module: Module}[]}>()
+  const [student, setStudent] = useState<(Student & { modules: { module: Module }[] } & { enrolledCourse: Course | null }) | undefined>()
   const [initialUser, setInitialUser] = useState<User | undefined>()
 
   const [addressEntryOpen, setAddressEntryOpen] = useState<boolean>(false)
   const [newAddress, setNewAddress] = useState<boolean>(false)
+
+  const [addingCourse, setAddingCourse] = useState<boolean>(false)
 
   const [contact, setContact] = useState<Contact>(EMPTY_CONTACT)
 
@@ -101,7 +105,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
             updateUser(user).then(async (user) => {
               if (user?.contactId == null) {
                 const newContact = await createContactForUser(contact, user?.username)
-                if (newContact?.id && user) await setUser(user => ({...(user as User), contactId: newContact.id}))
+                if (newContact?.id && user) await setUser(user => ({ ...(user as User), contactId: newContact.id }))
               }
               else if (user?.contactId) await updateContact(contact)
             })
@@ -139,7 +143,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                 </DialogContent>
               </Dialog></CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
-              <ResourcesAuthoredCard author={user} className="border-none shadow-none"/>
+              <ResourcesAuthoredCard author={user} className="border-none shadow-none" />
             </CardContent>
           </Card>}
 
@@ -147,15 +151,40 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
           {student && <Card className="flex-1">
             <CardHeader><CardTitle>Student data</CardTitle></CardHeader>
             <CardContent className="flex flex-col gap-[1rem]">
-              <ScrollArea className="h-1/2">
-                {student.modules.map(({module}) => {
-                  return <>
-                  <AdminModuleItem module={module} onDelete={async () => {
-                    removeStudentModule(student.id, module.id);
-                  }}/>
-                  </>
-                })}
-              </ScrollArea>
+              {
+                student?.enrolledCourse
+                  ? <AdminCourseItem course={student.enrolledCourse} onDelete={async () => {
+                    removeStudentCourse(student.id)
+                  }} />
+                  : <span className="flex flex-row items-center justify-center">
+                    This student is not enrolled on a course
+                    <Dialog open={addingCourse} onOpenChange={setAddingCourse}>
+                      <DialogTrigger asChild>
+                        <Button className="ml-auto">Enrol on Course</Button></DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader><DialogTitle>Enrol on Course</DialogTitle></DialogHeader>
+                        <AssignStudentCourseForm student={student} onSave={async (courseId: number) => {
+                          const updatedStudent = await addStudentCourse(student.id, courseId)
+                          if (updatedStudent) await setStudent({ ...student, ...updatedStudent })
+                        }} />
+                      </DialogContent>
+                    </Dialog>
+                  </span>
+              }
+              {student?.modules.length == 0 && <p>This student is not enrolled on any modules</p>}
+              {student?.modules.length > 0 && <>
+                <h3>Modules</h3>
+                <ScrollArea className="h-1/2">
+                  {student.modules.map(({ module }) => {
+                    return <>
+                      <AdminModuleItem module={module} onDelete={async () => {
+                        removeStudentModule(student.id, module.id);
+                      }} />
+                    </>
+                  })}
+                </ScrollArea>
+                <hr />
+              </>}
             </CardContent>
           </Card>}
         </div>

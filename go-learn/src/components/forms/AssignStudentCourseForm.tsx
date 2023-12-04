@@ -1,0 +1,58 @@
+"use client"
+
+import { getCourses } from "@/actions/courseActions"
+import { Course, Student } from "@prisma/client"
+import { use, useEffect, useState } from "react"
+import { CoursesSelectCombobox } from "../CoursesSelectCombobox"
+import { z } from "zod"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { Button } from "../ui/button"
+
+type AssignStudentCourseFormProps = {
+  student: Student,
+  onSave: (course: Course) => void
+}
+
+const formSchema = z.object({
+  course: z.coerce.number().min(0, "You need to select a course")
+})
+
+export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourseFormProps) {
+  const [course, setCourse] = useState<Course>()
+  const [courses, setCourses] = useState<Course[]>([])
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      course: -1
+    }
+  })
+
+  useEffect(() => {
+    (async () => {
+      const courses = await getCourses()
+      setCourses(courses)
+    })()
+  }, [])
+
+  return (
+    <Form {...form}>
+      <form onSubmit={(e) => course && onSave?.(course)}>
+        <FormField
+          control={form.control}
+          name="course"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Course</FormLabel>
+              <FormControl>
+                <CoursesSelectCombobox value={field.value} setValue={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )} />
+        <Button type="submit" className="w-full" >Set Course</Button>
+      </form>
+    </Form>
+
+  )
+}

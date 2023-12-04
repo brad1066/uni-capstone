@@ -39,9 +39,9 @@ const NewModuleForm = ({ className, submitModule, disabled }: NewModuleFormProps
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit(({course, title, description, websiteURL}) => {
-          submitModule?.({title, description, websiteURL} as Module, course) 
-          })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        form.handleSubmit(({ course, title, description, websiteURL }) => {
+          submitModule?.({ title, description, websiteURL } as Module, course)
+        })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
         {/* Module 'title' input */}
         <FormField
           control={form.control}
@@ -83,16 +83,16 @@ const NewModuleForm = ({ className, submitModule, disabled }: NewModuleFormProps
               <FormMessage />
             </FormItem>
           )} />
-          <FormField
+        <FormField
           control={form.control}
           name="course"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Course</FormLabel>
               <FormControl>
-                <CoursesSelectCombobox value={field.value} setValue={field.onChange}/>
+                <CoursesSelectCombobox value={field.value} setValue={field.onChange} />
               </FormControl>
-              </FormItem>
+            </FormItem>
 
           )} />
         <Button type="submit" className="w-full" disabled={disabled}>Create module</Button>
