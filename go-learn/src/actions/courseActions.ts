@@ -20,12 +20,17 @@ export async function getCourses(roles: UserRole[] = []): Promise<Course[]> {
     return []
 }
 
-export async function getCourse(id: number, roles: UserRole[] = []): Promise<Course | undefined> {
+export async function getCourse(id: number, extraFields: string[] = [], roles: UserRole[] = []) {
     const authCookie = cookies().get('auth')
     if (authCookie) {
         const [session, course] = await prisma.$transaction([
             prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-            prisma.course.findUnique({ where: { id } })
+            prisma.course.findUnique({
+                where: { id },
+                include: {
+                    modules: extraFields.includes('modules'),
+                }
+            })
         ])
         if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && course) {
             return course
@@ -34,20 +39,34 @@ export async function getCourse(id: number, roles: UserRole[] = []): Promise<Cou
     return undefined
 }
 
-export async function createCourse({title, description="", websiteURL=""}: TCourse, roles: UserRole[] = []) {
+export async function createCourse({ title, description = "", websiteURL = "" }: TCourse, roles: UserRole[] = []) {
     if (!title) return undefined
-    
+
     const session = await getCurrentUserSession()
     if (!session || (roles.length != 0 && !roles.includes(session.user?.role as UserRole))) return undefined
 
-    return await prisma.course.create({ data: {title, description, websiteURL}  })
+    return await prisma.course.create({ data: { title, description, websiteURL } })
 }
 
 export async function deleteCourse(id: number) {
     const session = await getCurrentUserSession()
     if (!session || session.user?.role != 'admin') return null
 
-    const deleted = await prisma.course.delete({where: {id}})
+    const deleted = await prisma.course.delete({ where: { id } })
 
     return deleted
+}
+
+export async function removeCourseModule(courseId: number, moduleId: number) {
+    const authCookie = cookies().get('auth')
+    if (authCookie) {
+        const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
+        if (session?.user.role == UserRole.admin) {
+            const val = await prisma.course.update({ where: { id: courseId }, data: { modules: { disconnect: { id: moduleId } } }, include: { modules: true } })
+            const course = await prisma.course.findUnique({ where: { id: courseId }, include: { modules: true } })
+            if (course) {
+                return course
+            }
+        }
+    }
 }

@@ -44,7 +44,7 @@ export async function createModule({ title, description = "", websiteURL = "" }:
         prisma.course.findFirst({ where: { id: courseId } })
     ])
     if (module && course)
-        await prisma.courseModule.create({ data: { moduleId: module.id, courseId: course.id } })
+        await prisma.course.update({ where: { id: courseId }, data: { modules: { connect: { id: module.id } } } })
     return module as Module
 }
 

@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { EMPTY_ADDRESS, EMPTY_CONTACT } from "@/lib/utils"
-import { Address, Contact, Course, Module, Student, StudentModule, Teacher, User } from "@prisma/client"
+import { Address, Contact, Course, Module, Student, Teacher, User } from "@prisma/client"
 import { ToastAction } from "@radix-ui/react-toast"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -41,8 +41,12 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const [homeAddress, setHomeAddress] = useState<Address>(EMPTY_ADDRESS)
   const [termAddress, setTermAddress] = useState<Address>(EMPTY_ADDRESS)
   const [teacher, setTeacher] = useState<Teacher & { address: Address | null } | undefined>()
-  const [student, setStudent] = useState<any>()
-  // const [student, setStudent] = useState<(Student & { modules?: { module: Module }[] | null, enrolledCourse?: Course | null, homeAddress?: Address | null, termAddress?: Address | null }) | undefined>()
+  const [student, setStudent] = useState<(Student & {
+    modules?: Module[] | null,
+    enrolledCourse?: Course | null,
+    homeAddress?: Address | null,
+    termAddress?: Address | null
+  }) | undefined>()
   const [initialUser, setInitialUser] = useState<User | undefined>()
 
   const [addressEntryOpen, setAddressEntryOpen] = useState<boolean>(false)
@@ -202,7 +206,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
               {student?.modules && student.modules.length > 0 && <>
                 <h3>Modules</h3>
                 <div className="flex flex-col gap-2">
-                  {student.modules.map(({ module }: { module: Module }) => {
+                  {student.modules.map((module) => {
                     return <>
                       <AdminModuleItem module={module} onDelete={async () => {
                         const updatedStudent = await removeStudentModule(student.id, module.id)
@@ -220,7 +224,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                   <Button className="ml-auto w-full">Add module</Button></DialogTrigger>
                 <DialogContent>
                   <DialogHeader><DialogTitle>Add Module</DialogTitle></DialogHeader>
-                  <AssignStudentModuleForm student={student} exclude={student.modules?.map?.((mod: { module: Module }) => mod.module.id)} onSave={async (module: Module) => {
+                  <AssignStudentModuleForm student={student} exclude={student.modules?.map?.(module=> module.id)} onSave={async (module: Module) => {
                     const updatedStudent = await addStudentModule(student.id, module.id)
                     if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                     setAddingModule(false)

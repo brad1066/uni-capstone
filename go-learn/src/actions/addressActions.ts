@@ -56,8 +56,8 @@ export async function createStudentAddress(studentId: number, address: Address, 
   })
   if (!addressId) return
   let updatedStudent = undefined
-  if (isHomeAddress) updatedStudent = await prisma.student.update({ where: { id: studentId }, data: { termAddressId: addressId } })
-  else updatedStudent = await prisma.student.update({ where: { id: studentId }, data: { homeAddressId: addressId } })
+  if (isHomeAddress) updatedStudent = await prisma.student.update({ where: { id: studentId }, data: { homeAddressId: addressId } })
+  else updatedStudent = await prisma.student.update({ where: { id: studentId }, data: { termAddressId: addressId } })
   return updatedStudent
 }
 

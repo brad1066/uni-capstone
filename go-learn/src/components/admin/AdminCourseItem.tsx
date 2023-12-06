@@ -1,11 +1,11 @@
-import { TCourse } from "@/lib/types"
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
+import { Course } from "@prisma/client"
 
 type AdminCourseItemProps = {
-  course: TCourse
+  course: Course
   onDelete?: () => Promise<any>
 }
 
