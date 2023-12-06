@@ -39,7 +39,7 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
 
   return (
     <Form {...form}>
-      <form onSubmit={(e) => {e.preventDefault(); course && onSave?.(course);}}>
+      <form target="" onSubmit={(e) => {e.preventDefault(); course && onSave?.(course);}}>
         <FormField
           control={form.control}
           name="course"

@@ -68,7 +68,7 @@ export default function UsersAdminPage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {users ? <div className={cn('w-full', !filter ? `grid grid-cols-2 gap-x-[1rem]` : '')}>
+        {users ? <div className={cn('w-full', !filter ? `grid md:grid-cols-2 gap-[1rem]` : '')}>
           {(!filter || filter == 'teachers') && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>

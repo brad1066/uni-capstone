@@ -51,7 +51,7 @@ export default function CoursesAdminPage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {courses?.length > 0 && <div className="grid grid-cols-3 w-full gap-5">
+        {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
             <AdminCourseItem course={course} key={course.id} onDelete={async () => { deleteCourse(course.id); router.refresh() }} />
           ))}

@@ -49,7 +49,7 @@ export default function ModulesAdminPage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {modules && modules.length > 0 && <div className="grid grid-cols-3 w-full gap-5">
+        {modules && modules.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {modules.map(module => (
             <AdminModuleItem module={module} key={module.id} onDelete={async () => { await deleteModule(module.id); router.refresh()}} />
           ))}

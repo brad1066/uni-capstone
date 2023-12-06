@@ -11,7 +11,7 @@ type SingleCourseAdminPageProps = {
   params: { course_id: string }
 }
 
-export default function SingleCourseAdminPage({params: {course_id}}:SingleCourseAdminPageProps) {
+export default function SingleCourseAdminPage({ params: { course_id } }: SingleCourseAdminPageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -22,17 +22,24 @@ export default function SingleCourseAdminPage({params: {course_id}}:SingleCourse
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
-    if (user && course_id) {
-      const course = await getCourse(parseInt(course_id))
-      if (course) {
-        setCourse(course);
-      }
-    }
-      setLoading(false)
     })()
   }, [])
 
+  useEffect(() => {
+    (async () => {
+      console.log(user, course_id)
+      if (user && course_id) {
+        const course = await getCourse(parseInt(course_id))
+        console.log(course)
+        if (course) {
+          setCourse(course);
+        }
+      }
+      setLoading(false)
+    })()
+  }, [user, course_id])
+
   return (<>
-  {course && <span>{course.title}</span>}
+    {!loading && course && <h1>{course.title}</h1>}
   </>)
 }
