@@ -1,6 +1,6 @@
 'use client'
 
-import { createStudentAddress, createTeacherAddress, getTeacherAddress, updateAddress } from "@/actions/addressActions"
+import { createStudentAddress, createTeacherAddress, getTeacherAddress, updateAddress, updateAddresses } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
 import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
@@ -38,13 +38,14 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const urlParams = useSearchParams()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User>()
-  const [address, setAddress] = useState<Address>(EMPTY_ADDRESS)
-  const [teacher, setTeacher] = useState<Teacher>()
-  const [student, setStudent] = useState<(Student & { modules: { module: Module }[] } & { enrolledCourse: Course | null }) | undefined>()
+  const [homeAddress, setHomeAddress] = useState<Address>(EMPTY_ADDRESS)
+  const [termAddress, setTermAddress] = useState<Address>(EMPTY_ADDRESS)
+  const [teacher, setTeacher] = useState<Teacher & { address: Address | null } | undefined>()
+  const [student, setStudent] = useState<any>()
+  // const [student, setStudent] = useState<(Student & { modules?: { module: Module }[] | null, enrolledCourse?: Course | null, homeAddress?: Address | null, termAddress?: Address | null }) | undefined>()
   const [initialUser, setInitialUser] = useState<User | undefined>()
 
   const [addressEntryOpen, setAddressEntryOpen] = useState<boolean>(false)
-  const [newAddress, setNewAddress] = useState<boolean>(false)
 
   const [addingCourse, setAddingCourse] = useState<boolean>(false)
   const [addingModule, setAddingModule] = useState<boolean>(false)
@@ -76,15 +77,14 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
       await setUser(() => { setInitialUser(user); return user })
       if (user) setContact(await getContact(user.contactId ?? -1) ?? EMPTY_CONTACT)
       if (user?.role == 'teacher') {
-        const teacher = await getTeacher(username)
+        const teacher = await getTeacher(username, ['address'])
         await setTeacher(teacher)
-
-        const address = await getTeacherAddress(teacher?.addressId ?? -1)
-        if (!address) setNewAddress(true)
-        setAddress(address ?? EMPTY_ADDRESS)
+        setHomeAddress(teacher?.address ?? EMPTY_ADDRESS)
       }
       if (user?.role == 'student') {
-        const student = await getStudent(username)
+        const student = await getStudent(username, ['homeAddress', 'termAddress', 'enrolledCourse', 'modules'])
+        setHomeAddress(student?.homeAddress ?? EMPTY_ADDRESS)
+        setTermAddress(student?.termAddress ?? EMPTY_ADDRESS)
         await setStudent(student)
       }
     })()
@@ -133,11 +133,12 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                   <Button className="w-full">Edit Address</Button></DialogTrigger>
                 <DialogContent>
                   <DialogHeader><DialogTitle>Edit Address</DialogTitle></DialogHeader>
-                  <EditAddressForm address={address} setAddress={setAddress} />
+                  <EditAddressForm address={homeAddress} setAddress={setHomeAddress} />
                   <DialogFooter>
                     <Button onClick={async () => {
-                      if (teacher && newAddress) { await createTeacherAddress(teacher.id, address) }
-                      if (teacher && !newAddress) { await updateAddress(address) }
+                      if (!teacher) return
+                      if (!teacher.addressId) { await createTeacherAddress(teacher.id, homeAddress) }
+                      else { await updateAddress(homeAddress) }
 
                       setAddressEntryOpen(false)
                     }}>Save</Button>
@@ -155,13 +156,19 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
               <Dialog open={addressEntryOpen} onOpenChange={setAddressEntryOpen}>
                 <DialogTrigger asChild>
                   <Button className="w-full">Edit Address</Button></DialogTrigger>
-                <DialogContent>
+                <DialogContent className="md:min-w-[45rem]">
                   <DialogHeader><DialogTitle>Edit Address</DialogTitle></DialogHeader>
-                  <EditStudentAddressForm address={address} setAddress={setAddress}/>
+                  <EditStudentAddressForm homeAddress={homeAddress} setHomeAddress={setHomeAddress} termAddress={termAddress} setTermAddress={setTermAddress} />
                   <DialogFooter>
                     <Button onClick={async () => {
-                      if (student && newAddress) { await createStudentAddress(student.id, address) }
-                      if (student && !newAddress) { await updateAddress(address) }
+                      if (!student) return
+                      if (!student.homeAddressId) { await createStudentAddress(student.id, homeAddress, true) }
+                      if (!student.termAddressId) { await createStudentAddress(student.id, termAddress, false) }
+
+                      let updatedAddresses: Address[] = []
+                      if (student.homeAddressId) updatedAddresses = [...updatedAddresses, homeAddress]
+                      if (student.termAddressId) updatedAddresses = [...updatedAddresses, termAddress]
+                      updateAddresses(updatedAddresses)
 
                       setAddressEntryOpen(false)
                     }}>Save</Button>
@@ -191,11 +198,11 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                     </Dialog>
                   </span>
               }
-              {student?.modules.length == 0 && <p>This student is not enrolled on any modules</p>}
-              {student?.modules.length > 0 && <>
+              {student?.modules?.length == 0 && <p>This student is not enrolled on any modules</p>}
+              {student?.modules && student.modules.length > 0 && <>
                 <h3>Modules</h3>
                 <div className="flex flex-col gap-2">
-                  {student.modules.map(({ module }) => {
+                  {student.modules.map(({ module }: { module: Module }) => {
                     return <>
                       <AdminModuleItem module={module} onDelete={async () => {
                         const updatedStudent = await removeStudentModule(student.id, module.id)
@@ -213,7 +220,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
                   <Button className="ml-auto w-full">Add module</Button></DialogTrigger>
                 <DialogContent>
                   <DialogHeader><DialogTitle>Add Module</DialogTitle></DialogHeader>
-                  <AssignStudentModuleForm student={student} exclude={student.modules.map(mod => mod.module.id)} onSave={async (module: Module) => {
+                  <AssignStudentModuleForm student={student} exclude={student.modules?.map?.((mod: { module: Module }) => mod.module.id)} onSave={async (module: Module) => {
                     const updatedStudent = await addStudentModule(student.id, module.id)
                     if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                     setAddingModule(false)
