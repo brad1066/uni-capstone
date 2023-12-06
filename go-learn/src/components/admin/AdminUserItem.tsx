@@ -32,7 +32,7 @@ const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { console.log('Deletion of user: ' + user.username); onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove user</TooltipContent>
