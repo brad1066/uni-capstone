@@ -44,7 +44,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
-    --input: 0 5% 10%;
+    --input: 0 5% 12%;
     --ring: 0 72.2% 50.6%;
   }
 }
@@ -53,6 +53,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground grid;
     grid-template-rows: auto 1fr;
@@ -71,7 +72,7 @@
     @apply list-none flex flex-col gap-2;
   }
 
-  ul > li {
+  ul>li {
     @apply flex gap-[1rem] justify-between p-4 rounded-md items-center;
   }
 }
@@ -85,17 +86,17 @@
     gap: 1rem;
   }
 
-  .site-header > .site-icon {
+  .site-header>.site-icon {
     @apply rounded-full object-cover cursor-pointer m-4 border-[var(--accent)] border-solid border-2;
     grid-area: icon;
   }
 
-  .site-header > .navbar {
+  .site-header>.navbar {
     @apply m-4 my-auto;
     grid-area: navigation;
   }
 
-  .site-header > .account-button {
+  .site-header>.account-button {
     @apply m-4 my-auto;
     grid-area: account;
   }
@@ -107,6 +108,7 @@
     grid-template-columns: minmax(2rem, 1fr) 2fr 2fr auto;
     align-items: end;
   }
+
   .newUserContactEntries .alwaysShown {
     @apply grid gap-x-4;
     grid-template-columns: 1fr auto;

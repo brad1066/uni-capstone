@@ -32,10 +32,18 @@ export default function EditStudentAddressForm({ homeAddress, termAddress, setHo
 
     <div className="flex flex-col md:flex-row gap-4">
       {/* Home address & Both Address*/}
-      <EditAddressForm address={homeAddress} setAddress={setHomeAddress} className="flex-1"/>
+      <div className="flex flex-col flex-1 gap-2">
+        {!studentTermSameAsHome && <h2 className="text-xl font-bold">Home Address</h2>}
+        <EditAddressForm address={homeAddress} setAddress={setHomeAddress} />
+      </div>
 
       {/* Term address */}
-      {!studentTermSameAsHome && <EditAddressForm address={termAddress} setAddress={setTermAddress} className="flex-1"/>}
+      {!studentTermSameAsHome && <>
+        <div className="flex flex-col flex-1 gap-2">
+          <h2 className="text-xl font-bold">Term Address</h2>
+          {!studentTermSameAsHome && <EditAddressForm address={termAddress} setAddress={setTermAddress} className="flex-1" />}
+        </div>
+      </>}
     </div>
   </div>
 

@@ -1,11 +1,10 @@
 'use client'
-import { ThemeToggler } from "./ThemeToggler"
+
 import Navbar from "../navigation/Navbar"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import UserDropdown from "../navigation/UserDropdown"
 import Link from "next/link"
-
 
 type HeaderProps = {
 }
