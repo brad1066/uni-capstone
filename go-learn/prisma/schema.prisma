@@ -124,6 +124,7 @@ model Resource {
   author         User?     @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   units          Unit[]
   sections       Section[]
+  uploads        String[]
   // Auto Gen
   authorUsername String?
 
