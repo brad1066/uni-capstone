@@ -1,4 +1,3 @@
-import { TUser } from "@/lib/types"
 import { User } from "@prisma/client"
 import { createContext, useContext } from "react"
 

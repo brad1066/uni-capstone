@@ -14,7 +14,7 @@ const Header = ({ }: HeaderProps) => {
 
   return <header className="site-header">
     <Link href="/" className="site-icon" >
-      <Image src="/icon.png" height="50" width="50" alt="Image" />
+      <Image src="/icon.png" height="50" width="50" alt="Image" priority/>
     </Link>
     <Navbar className="navbar" />
     <UserDropdown className="account-button" />

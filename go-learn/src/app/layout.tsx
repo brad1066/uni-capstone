@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'Learning Resources Manager for Teachers and their Students',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -21,15 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <TooltipProvider>
-        <PageWrapper>
-          <body className={inter.className + ' min-h-screen'}>
-            <Header />
-            <main className='flex flex-col items-center px-24 min-h-[100%]'>
-              {children}
-            </main>
-            <Toaster />
-          </body>
-        </PageWrapper>
+          <PageWrapper>
+            <body className={inter.className + ' min-h-screen'}>
+              <Header />
+              <main className='flex flex-col items-center px-24 min-h-[100%]'>
+                {children}
+              </main>
+              <Toaster />
+            </body>
+          </PageWrapper>
       </TooltipProvider>
     </html>
   )
