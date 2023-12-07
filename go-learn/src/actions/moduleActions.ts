@@ -19,14 +19,29 @@ export async function getModules(roles: UserRole[] = []): Promise<Module[]> {
   return []
 }
 
-export async function getModule(id: number, roles: UserRole[] = []): Promise<Module | undefined> {
+export async function getModule(id: number, extraFields: string[] = [], roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, module] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.module.findUnique({ where: { id } })
+      prisma.module.findUnique({
+        where: { id }, include: {
+          course: extraFields.includes('course'),
+          students: extraFields.includes('students') ? {
+            include: {
+              user: extraFields.includes('students.user') ? {
+                include: {
+                  contactDetails: extraFields.includes('students.user.contactDetails') ? true : false
+                }
+              } : false,
+
+            }
+          } : false,
+        }
+      })
     ])
     if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && module) {
+      console.log(module)
       return module
     }
   }
@@ -55,4 +70,11 @@ export async function deleteModule(id: number) {
   const deleted = await prisma.module.delete({ where: { id } })
 
   return deleted
+}
+
+export async function updateModule(module: Module, roles: UserRole[] = []) {
+  const session = await getCurrentUserSession()
+  if (!session || (roles.length != 0 && !roles.includes(session.user.role as UserRole))) return null
+
+  return await prisma.module.update({ where: { id: module.id }, data: { ...module } })
 }

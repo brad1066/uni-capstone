@@ -83,9 +83,12 @@ model Module {
   title       String
   description String?
   websiteURL  String?
-  courses     Course[]
+  course      Course?   @relation(fields: [courseId], references: [id])
   units       Unit[]
   students    Student[]
+  courseId    Int?
+
+  @@index([courseId])
 }
 
 model Unit {
