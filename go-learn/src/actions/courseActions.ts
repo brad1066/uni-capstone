@@ -88,3 +88,17 @@ export async function updateCourse(course: Course, roles: UserRole[] = []) {
 
   return await prisma.course.update({ where: { id: course.id }, data: { ...course } })
 }
+
+export async function addCourseModule(courseId: number, moduleId: number) {
+  const authCookie = cookies().get('auth')
+  if (authCookie) {
+    const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
+    if (session?.user.role == UserRole.admin) {
+      const val = await prisma.course.update({ where: { id: courseId }, data: { modules: { connect: { id: moduleId } } }, include: { modules: true } })
+      const course = await prisma.course.findUnique({ where: { id: courseId }, include: { modules: true } })
+      if (course) {
+        return course
+      }
+    }
+  }
+}

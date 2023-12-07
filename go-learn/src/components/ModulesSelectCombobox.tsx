@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react"
 import { getModules } from "@/actions/moduleActions"
 
-export function ModulesSelectCombobox({ value, setValue, exclusions }: { value: number, setValue: (prevState: number) => void, exclusions?: number[] }) {
+export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedOnly }: { value: number, setValue: (prevState: number) => void, exclusions?: number[], unassignedOnly?: boolean }) {
   const [open, setOpen] = useState(false)
   const [modules, setModules] = useState<{ id: number, value: string, label: string }[]>()
 
@@ -27,7 +27,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions }: { value: 
     (async () => {
       // Get modules, filter out modules with ids in filterIds, and map to { id, value, label }
       const modules = await getModules()
-        .then((modules) => modules.filter(module => !exclusions?.includes(module.id)))
+        .then((modules) => modules.filter(module => !exclusions?.includes(module.id) && (unassignedOnly ? module.courseId === null : true)))
         .then(modules => modules.map(module => ({ id: module.id, value: module.id.toString(), label: module.title })))
 
       // Set modules with a default value of -1

@@ -1,14 +1,16 @@
 'use client'
 
-import { getCourse, removeCourseModule, updateCourse } from "@/actions/courseActions"
+import { addCourseModule, getCourse, removeCourseModule, updateCourse } from "@/actions/courseActions"
+import { createModule } from "@/actions/moduleActions"
 import { removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
+import { ModulesSelectCombobox } from "@/components/ModulesSelectCombobox"
 import AdminModuleItem from "@/components/admin/AdminModuleItem"
 import AdminStudentListItem from "@/components/admin/AdminStudentListItem"
 import EditCourseForm from "@/components/forms/EditCourseForm"
 import NewModuleForm from "@/components/forms/NewModuleForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog"
 import { useAuth } from "@/hooks/useAuth"
 import prisma from "@/lib/db"
 import { Course, Module, Student } from "@prisma/client"
@@ -31,17 +33,13 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
     students: Student[] | null
   }>()
 
+  const [newModuleId, setNewModuleId] = useState<number>(-1)
+
   const refreshCourseData = async () => {
-    const wasLoading = loading;
-    if (!wasLoading) setLoading(true)
     if (user && course_id) {
       const course = await getCourse(parseInt(course_id), ['modules', 'students', 'students.user', 'student.contactDetails'])
-      console.log(course)
-      if (course) {
-        setCourse(course);
-      }
+      if (course) setCourse(course);
     }
-    if (!wasLoading) setLoading(false)
   }
 
   useEffect(() => {
@@ -54,7 +52,6 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
 
   useEffect(() => {
     (async () => {
-      console.log(user, course_id)
       refreshCourseData()
       setLoading(false)
     })()
@@ -72,10 +69,10 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Course</DialogTitle></DialogHeader>
                 <EditCourseForm course={course} onUpdateSave={updatedCourse => {
-                  updateCourse({id: course.id, ...updatedCourse}).then(async (updatedCourse) => {
+                  updateCourse({ id: course.id, ...updatedCourse }).then(async (updatedCourse) => {
                     await refreshCourseData()
                   })
-                }}/>
+                }} />
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -84,10 +81,10 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
                 <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                {course.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async() => {
-                  await removeStudentCourse(student.id)
-                  await refreshCourseData()
-                }}/>)}
+                  {course.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
+                    await removeStudentCourse(student.id)
+                    await refreshCourseData()
+                  }} />)}
                 </ul>
               </DialogContent>
             </Dialog>
@@ -99,19 +96,35 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
         <Card className="w-full xl:w-1/2">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0">
             <CardTitle>Modules</CardTitle>
+
+            {/* Add Existing Module */}
             <Dialog>
               <DialogTrigger asChild><Button className="ml-auto">Add</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add existing Module</DialogTitle></DialogHeader>
+                Pick a module to add to this course:
+                <ModulesSelectCombobox unassignedOnly value={newModuleId} setValue={setNewModuleId} exclusions={course.modules?.map(mod => mod.id)} />
+                <DialogFooter>
+                  <Button className="ml-auto" onClick={async () => {
+                    if (newModuleId !== -1) {
+                      await addCourseModule(course.id, newModuleId)
+                      await refreshCourseData()
+                      setNewModuleId(-1)
+                    }
+                  }}>Add</Button>
+                </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            {/* Create new Module for course */}
             <Dialog>
               <DialogTrigger asChild><Button>New</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
-                <NewModuleForm courseId={course.id} submitModule={async () => {
+                <NewModuleForm courseId={course.id} submitModule={async (module) => {
+                  await createModule(module, course.id)
                   await refreshCourseData()
-                }}/>
+                }} />
               </DialogContent>
             </Dialog>
           </CardHeader>

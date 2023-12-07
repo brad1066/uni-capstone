@@ -34,14 +34,13 @@ export async function getModule(id: number, extraFields: string[] = [], roles: U
                   contactDetails: extraFields.includes('students.user.contactDetails') ? true : false
                 }
               } : false,
-
             }
           } : false,
+          units: extraFields.includes('units')
         }
       })
     ])
     if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && module) {
-      console.log(module)
       return module
     }
   }
