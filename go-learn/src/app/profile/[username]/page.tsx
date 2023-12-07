@@ -1,7 +1,7 @@
 'use client'
 
 import { getUser, updateUser } from "@/actions/userActions"
-import UserEditForm from "@/components/forms/UserEditForm"
+import EditUserForm from "@/components/forms/EditUserForm"
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { User } from "@prisma/client"
@@ -51,7 +51,7 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
   return <>
     <h1 className="mb-[2rem]">Hi {user?.forename} {user?.surname}</h1>
     <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
-      <UserEditForm user={user as User} setUser={setUser} canEdit={user?.username == signedInUser?.username || signedInUser?.role == 'admin'} onUpdateSave={(user) => {
+      <EditUserForm user={user as User} setUser={setUser} canEdit={user?.username == signedInUser?.username || signedInUser?.role == 'admin'} onUpdateSave={(user) => {
         if (updated) updateUser(user).then(validateLoggedIn).then(userUpdateSuccess).then(() => { setUpdated(false) }).catch(userUpdateFailed)
       }} />
     </div>

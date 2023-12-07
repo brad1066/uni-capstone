@@ -12,7 +12,7 @@ import { Contact, User } from "@prisma/client"
 import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import { Dispatch, SetStateAction, useState } from "react"
 
-type UserEditFormProps = {
+type EditUserFormProps = {
   loading?: boolean
   user: User
   setUser: Dispatch<SetStateAction<User | undefined>>
@@ -22,7 +22,7 @@ type UserEditFormProps = {
   onUpdateSave?: (user: User) => void
 }
 
-const UserEditForm = ({ loading, user, setUser, contact, setContact, onUpdateSave, canEdit }: UserEditFormProps) => {
+const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSave, canEdit }: EditUserFormProps) => {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false)
   const [passwordDialogDisabled, setPasswordDialogDisabled] = useState<boolean>(false)
 
@@ -115,4 +115,4 @@ const UserEditForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
   </>
 }
 
-export default UserEditForm
+export default EditUserForm

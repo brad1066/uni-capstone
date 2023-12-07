@@ -1,6 +1,6 @@
 'use client'
 
-import { createStudentAddress, createTeacherAddress, getTeacherAddress, updateAddress, updateAddresses } from "@/actions/addressActions"
+import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from "@/actions/addressActions"
 import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
 import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
 import { getTeacher } from "@/actions/teacherActions"
@@ -13,7 +13,7 @@ import { AssignStudentCourseForm } from "@/components/forms/AssignStudentCourseF
 import { AssignStudentModuleForm } from "@/components/forms/AssignStudentModuleForm"
 import EditAddressForm from "@/components/forms/EditAddressForm"
 import EditStudentAddressForm from "@/components/forms/EditStudentAddressForm"
-import UserEditForm from "@/components/forms/UserEditForm"
+import EditUserForm from "@/components/forms/EditUserForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -107,7 +107,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>
         <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
           {/* User Data Card */}
-          <UserEditForm user={user} setUser={setUser} contact={contact} setContact={setContact} onUpdateSave={async (user) => {
+          <EditUserForm user={user} setUser={setUser} contact={contact} setContact={setContact} onUpdateSave={async (user) => {
             updateUser(user).then(async (user) => {
               if (user?.contactId == null) {
                 const newContact = await createContactForUser(contact, user?.username)

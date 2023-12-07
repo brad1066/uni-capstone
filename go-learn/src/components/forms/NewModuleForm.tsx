@@ -14,7 +14,8 @@ import { Module } from "@prisma/client"
 type NewModuleFormProps = {
   className?: string
   submitModule?: (module: Module, course: number) => Promise<any>
-  disabled?: boolean
+  disabled?: boolean,
+  courseId?: number
 }
 
 const formSchema = z.object({
@@ -25,14 +26,14 @@ const formSchema = z.object({
 })
 
 
-const NewModuleForm = ({ className, submitModule, disabled }: NewModuleFormProps) => {
+const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModuleFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
       description: '',
       websiteURL: '',
-      course: -1
+      course: courseId ?? -1
     },
   })
 
@@ -83,7 +84,7 @@ const NewModuleForm = ({ className, submitModule, disabled }: NewModuleFormProps
               <FormMessage />
             </FormItem>
           )} />
-        <FormField
+        {!courseId && <FormField
           control={form.control}
           name="course"
           render={({ field }) => (
@@ -92,9 +93,11 @@ const NewModuleForm = ({ className, submitModule, disabled }: NewModuleFormProps
               <FormControl>
                 <CoursesSelectCombobox value={field.value} setValue={field.onChange} />
               </FormControl>
-            </FormItem>
+            </FormItem>)} />
+        }
 
-          )} />
+
+
         <Button type="submit" className="w-full" disabled={disabled}>Create module</Button>
       </form>
     </Form>
