@@ -44,7 +44,7 @@ const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
               <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
                 <DialogTrigger asChild><Button>Change Password <Pencil2Icon className="ml-1" /></Button></DialogTrigger>
                 <DialogContent>
-                  <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
+                  <DialogHeader><DialogTitle>New Password</DialogTitle></DialogHeader>
                   <NewPasswordForm disabled={loading || passwordDialogDisabled} username={user?.username} submitPassword={async (password) => {
                     setPasswordDialogDisabled(true)
                     await changePassword(user?.username, password).then(user => {
@@ -98,12 +98,12 @@ const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Contact's 'email' input */}
                 <Label className="flex-1 flex flex-col gap-4">Email
-                  <Input disabled={!canEdit} type="email" placeholder="email" value={contact?.email ?? ''} onChange={(e) => {setContact?.(contact => ({...contact, email: e.target.value}))}}/>
+                  <Input disabled={!canEdit} type="email" placeholder="email" value={contact?.email ?? ''} onChange={(e) => { setContact?.(contact => ({ ...contact, email: e.target.value })) }} />
                 </Label>
 
                 {/* Contact's 'mobile' input */}
                 <Label className="flex-1 flex flex-col gap-4">Mobile
-                  <Input disabled={!canEdit} placeholder="mobile" value={contact?.mobile ?? ''} onChange={e => {setContact?.(contact => ({...contact, mobile: e.target.value}))}}/>
+                  <Input disabled={!canEdit} placeholder="mobile" value={contact?.mobile ?? ''} onChange={e => { setContact?.(contact => ({ ...contact, mobile: e.target.value })) }} />
                 </Label>
               </div>
             </li>

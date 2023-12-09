@@ -46,7 +46,7 @@ const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewP
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={disabled}>Create class</Button>
+        <Button type="submit" className="w-full" disabled={disabled}>Update Password</Button>
       </form>
     </Form >
   </>)

@@ -141,7 +141,7 @@ export async function updateUser(user: User) {
 
 export async function changePassword(username: string, password: string): Promise<User | undefined> {
   const session = await getCurrentUserSession()
-  if (!session || session.user?.username != username || session.user?.role != 'admin') return undefined
+  if (!session || (session.user?.username != username && session.user?.role != 'admin')) return undefined
 
   const user = prisma.user.update({
     where: { username },
