@@ -25,7 +25,7 @@ const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="secondary">
-              <Link href={`/admin/users/${user.username}`}><Pencil2Icon /></Link>
+              <Link href={`/manage/users/${user.username}`}><Pencil2Icon /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Edit user</TooltipContent>

@@ -32,7 +32,7 @@ const AdminCourseItem = ({ course, onDelete }: AdminCourseItemProps) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/admin/courses/${course.id}`} className="">
+            <Link href={`/manage/courses/${course.id}`} className="">
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
             </Link>
           </TooltipTrigger>

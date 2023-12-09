@@ -17,7 +17,7 @@ export default function ModulesAdminPage() {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [newModuleDialogOpen, setNewModuleDialogOpen] = useState(false)
   const [modules, setModules] = useState<Module[]>()
 
   useEffect(() => {
@@ -37,13 +37,13 @@ export default function ModulesAdminPage() {
       </>}
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Modules
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog open={newModuleDialogOpen} onOpenChange={setNewModuleDialogOpen}>
             <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1"/></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
               <NewModuleForm submitModule={async (module: Module, course) => {
                 await createModule(module, course)
-                setDialogOpen(false)
+                setNewModuleDialogOpen(false)
                 router.refresh()
               }} />
             </DialogContent>

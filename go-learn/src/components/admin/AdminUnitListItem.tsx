@@ -28,7 +28,7 @@ export default function AdminUnitListItem({ unit, onDelete }: AdminUnitListItemP
         {/* Edit Action */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/admin/units/${unit.id}`}>
+            <Link href={`/manage/units/${unit.id}`}>
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
             </Link>
           </TooltipTrigger>

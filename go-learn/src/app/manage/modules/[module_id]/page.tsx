@@ -97,7 +97,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
             </Dialog>
           </CardHeader>
           <CardContent>
-            <pre className="inline-block font-[inherit]">{module.description || 'No Description'}</pre>
+            <pre className="inline-block font-[inherit] whitespace-pre">{module.description || 'No Description'}</pre>
           </CardContent>
         </Card>
 

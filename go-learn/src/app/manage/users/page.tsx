@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { PlusIcon } from "@radix-ui/react-icons"; import AdminUserItem from "@/components/admin/AdminUserItem";
+import { PlusIcon } from "@radix-ui/react-icons";
+import AdminUserItem from "@/components/admin/AdminUserItem";
 import NewUserForm from "@/components/forms/NewUserForm";
 import NoAccessNotice from "@/components/NoAccessNotice";
 import { useAuth } from "@/hooks/useAuth";
@@ -118,7 +119,7 @@ export default function UsersAdminPage() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={async () => { await deleteUser(userToDelete); router.replace('/admin/users') }}>Confirm</AlertDialogAction>
+              <AlertDialogAction onClick={async () => { await deleteUser(userToDelete); router.replace('/manage/users') }}>Confirm</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

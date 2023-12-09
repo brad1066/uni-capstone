@@ -24,7 +24,7 @@ export default function AdminStudentListItem({ student, onDelete }: AdminStudent
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/admin/users/${student.username}`} className="">
+              <Link href={`/manage/users/${student.username}`} className="">
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>

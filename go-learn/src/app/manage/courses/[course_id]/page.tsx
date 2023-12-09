@@ -90,7 +90,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
             </Dialog>
           </CardHeader>
           <CardContent>
-            <pre className="inline-block font-[inherit]">{course.description || 'No Description'}</pre>
+            <pre className="inline-block font-[inherit] whitespace-pre-line">{course.description || 'No Description'}</pre>
           </CardContent>
         </Card>
         <Card className="w-full xl:w-1/2">
