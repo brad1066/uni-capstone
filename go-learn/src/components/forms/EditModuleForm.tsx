@@ -75,7 +75,7 @@ export default function EditModuleForm({ module, onUpdateSave, className }: Edit
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full">Create module</Button>
+        <Button type="submit" className="w-full">Update module</Button>
       </form>
     </Form >
   </>)

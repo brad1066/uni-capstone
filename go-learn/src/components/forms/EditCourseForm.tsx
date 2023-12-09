@@ -75,7 +75,7 @@ export default function EditCourseForm({ course, onUpdateSave, className }: Edit
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full">Create course</Button>
+        <Button type="submit" className="w-full">Update course</Button>
       </form>
     </Form >
   </>)
