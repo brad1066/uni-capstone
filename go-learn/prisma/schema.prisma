@@ -122,13 +122,15 @@ model Resource {
   description    String
   content        String
   author         User?     @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
-  units          Unit[]
+  unit           Unit      @relation(fields: [unitId], references: [id])
   sections       Section[]
   uploads        String[]
   // Auto Gen
   authorUsername String?
+  unitId         Int
 
   @@index([authorUsername])
+  @@index([unitId])
 }
 
 // Collections
