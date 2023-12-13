@@ -1,16 +1,16 @@
 'use client'
 
-import { changePassword, getUser, updateUser } from "@/actions/userActions"
-import NewPasswordForm from "@/components/forms/ChangePasswordForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Contact, User } from "@prisma/client"
-import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from "@radix-ui/react-icons"
-import { Dispatch, SetStateAction, useState } from "react"
+import { changePassword } from '@/actions/userActions'
+import NewPasswordForm from '@/components/forms/ChangePasswordForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Contact, User } from '@prisma/client'
+import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from '@radix-ui/react-icons'
+import { Dispatch, SetStateAction, useState } from 'react'
 
 type EditUserFormProps = {
   loading?: boolean

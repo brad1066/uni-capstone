@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +13,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/hooks/useAuth"
-import { useRouter } from "next/navigation"
-import { ThemeToggler } from "../ui/ThemeToggler"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/dropdown-menu'
+import { useAuth } from '@/hooks/useAuth'
+import { useRouter } from 'next/navigation'
+import { ThemeToggler } from '../ui/ThemeToggler'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 type UserDropdownProps = {
   className?: string
@@ -53,14 +53,14 @@ export function UserDropdown({ className }: UserDropdownProps) {
               <DropdownMenuSubTrigger>Users</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
-                  <DropdownMenuItem><Link href="/admin/users" className="w-full">All</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link href="/admin/users?filter=teachers" className="w-full">Teachers</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link href="/admin/users?filter=students" className="w-full">Students</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users" className="w-full">All</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users?filter=teachers" className="w-full">Teachers</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users?filter=students" className="w-full">Students</Link></DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-            <DropdownMenuItem><Link href="/admin/courses" className="w-full">Courses</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link href="/admin/modules" className="w-full">Modules</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/manage/courses" className="w-full">Courses</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href="/manage/modules" className="w-full">Modules</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Teachers can do in this group */}
           {(user?.role == 'teacher') && (<>

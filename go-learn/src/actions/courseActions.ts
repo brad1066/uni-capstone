@@ -1,11 +1,10 @@
 'use server'
 
-import prisma from "@/lib/db"
-import { TCourse } from "@/lib/types"
-import { Course, UserRole } from "@prisma/client"
-import { cookies } from "next/headers"
-import { getCurrentUserSession } from "./authActions"
-import { update } from "js-sha1"
+import prisma from '@/lib/db'
+import { TCourse } from '@/lib/types'
+import { Course, UserRole } from '@prisma/client'
+import { cookies } from 'next/headers'
+import { getCurrentUserSession } from './authActions'
 
 export async function getCourses(roles: UserRole[] = []): Promise<Course[]> {
   const authCookie = cookies().get('auth')
@@ -50,7 +49,7 @@ export async function getCourse(id: number, extraFields: string[] = [], roles: U
   return undefined
 }
 
-export async function createCourse({ title, description = "", websiteURL = "" }: TCourse, roles: UserRole[] = []) {
+export async function createCourse({ title, description = '', websiteURL = '' }: TCourse, roles: UserRole[] = []) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()
@@ -73,8 +72,7 @@ export async function removeCourseModule(courseId: number, moduleId: number) {
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
     if (session?.user.role == UserRole.admin) {
-      const val = await prisma.course.update({ where: { id: courseId }, data: { modules: { disconnect: { id: moduleId } } }, include: { modules: true } })
-      const course = await prisma.course.findUnique({ where: { id: courseId }, include: { modules: true } })
+      const course = await prisma.course.update({ where: { id: courseId }, data: { modules: { disconnect: { id: moduleId } } }, include: { modules: true } })
       if (course) {
         return course
       }
@@ -94,8 +92,7 @@ export async function addCourseModule(courseId: number, moduleId: number) {
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
     if (session?.user.role == UserRole.admin) {
-      const val = await prisma.course.update({ where: { id: courseId }, data: { modules: { connect: { id: moduleId } } }, include: { modules: true } })
-      const course = await prisma.course.findUnique({ where: { id: courseId }, include: { modules: true } })
+      const course = await prisma.course.update({ where: { id: courseId }, data: { modules: { connect: { id: moduleId } } }, include: { modules: true } })
       if (course) {
         return course
       }

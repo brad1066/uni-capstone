@@ -1,15 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { getSection, updateSection } from "@/actions/sectionActions"
-import AdminUnitListItem from "@/components/admin/AdminUnitListItem"
-import EditSectionForm from "@/components/forms/EditSectionForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useAuth } from "@/hooks/useAuth"
-import { Resource, Section, Unit, User } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { getSection, updateSection } from '@/actions/sectionActions'
+import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
+import EditSectionForm from '@/components/forms/EditSectionForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Resource, Section, Unit, User } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type SingleSectionAdminPageProps = {
   params: { section_id: string }
@@ -29,7 +30,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
   const refreshSectionData = async () => {
     if (user && section_id) {
       const section = await getSection(parseInt(section_id), ['unit', 'resources'])
-      if (section) setSection(section);
+      if (section) setSection(section)
     }
   }
 
@@ -61,7 +62,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Module</DialogTitle></DialogHeader>
                 <EditSectionForm section={section} onUpdateSave={updatedSection => {
-                  updateSection(updatedSection).then(async (updatedSection) => {
+                  updateSection(updatedSection).then(async () => {
                     await refreshSectionData()
                   })
                 }} />

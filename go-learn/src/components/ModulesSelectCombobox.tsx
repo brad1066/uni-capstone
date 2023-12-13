@@ -1,23 +1,24 @@
-"use client"
+/* eslint-disable react-hooks/exhaustive-deps */
+'use client'
 
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown } from 'lucide-react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from '@/components/ui/command'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { useEffect, useState } from "react"
-import { getModules } from "@/actions/moduleActions"
+} from '@/components/ui/popover'
+import { useEffect, useState } from 'react'
+import { getModules } from '@/actions/moduleActions'
 
 export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedOnly }: { value: number, setValue: (prevState: number) => void, exclusions?: number[], unassignedOnly?: boolean }) {
   const [open, setOpen] = useState(false)
@@ -31,7 +32,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
         .then(modules => modules.map(module => ({ id: module.id, value: module.id.toString(), label: module.title })))
 
       // Set modules with a default value of -1
-      setModules([{ id: -1, label: "Select a module", value: "-1" }, ...modules])
+      setModules([{ id: -1, label: 'Select a module', value: '-1' }, ...modules])
     })()
   }, [])
 
@@ -46,7 +47,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
         >
           {value
             ? modules?.find((module) => module.id === value)?.label
-            : "Select module..."}
+            : 'Select module...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -59,7 +60,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
               <CommandItem
                 key={module.id}
                 value={module.value}
-                onSelect={(currentValue) => {
+                onSelect={(currentValue: string) => {
                   const currentId = modules.find(module => module.value == currentValue)?.id
                   setValue(module.id === value ? -1 : currentId ?? -1)
                   setOpen(false)
@@ -67,8 +68,8 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
-                    value === module.id ? "opacity-100" : "opacity-0"
+                    'mr-2 h-4 w-4',
+                    value === module.id ? 'opacity-100' : 'opacity-0'
                   )}
                 />
                 {module.label}

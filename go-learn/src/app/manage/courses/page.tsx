@@ -1,17 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 
-import { createCourse, deleteCourse, getCourses } from "@/actions/courseActions";
-import AdminCourseItem from "@/components/admin/AdminCourseItem";
-import NewCourseForm from "@/components/forms/NewCourseForm";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useAuth } from "@/hooks/useAuth";
-import { Course } from "@prisma/client";
-import { PlusIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createCourse, deleteCourse, getCourses } from '@/actions/courseActions'
+import AdminCourseItem from '@/components/admin/AdminCourseItem'
+import NewCourseForm from '@/components/forms/NewCourseForm'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Course } from '@prisma/client'
+import { PlusIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function CoursesAdminPage() {
   const { user, validateLoggedIn } = useAuth()
@@ -26,7 +27,7 @@ export default function CoursesAdminPage() {
         if (!loggedIn) router.replace('/login')
       })
 
-      const courses = await getCourses();
+      const courses = await getCourses()
       if (courses) setCourses(courses)
       setLoading(false)
     })()

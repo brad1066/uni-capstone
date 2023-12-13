@@ -1,23 +1,22 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
-import { useState } from "react"
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons"
-import { Separator } from "../ui/separator"
-import { TUser } from "@/lib/types"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import { cn } from "@/lib/utils"
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
+import { useState } from 'react'
+import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
+import { Separator } from '../ui/separator'
+import { TUser } from '@/lib/types'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { cn } from '@/lib/utils'
 
 type NewUserFormProps = {
   className?: string
-  submitUser?: (user: TUser) => Promise<any>
+  submitUser?: (user: TUser) => Promise<unknown>
   disabled?: boolean
 }
 
@@ -62,7 +61,7 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
           }
           
           submitUser?.(newUser as TUser)
-        })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Name Entries */}
         <Collapsible
           open={nameEntryOpen}

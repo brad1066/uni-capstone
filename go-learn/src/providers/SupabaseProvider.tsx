@@ -1,6 +1,6 @@
 // SupabaseProvider.tsx
-import { SupabaseContext } from "@/hooks/useSupabase"
-import { ReactNode, useContext } from "react"
+import { SupabaseContext } from '@/hooks/useSupabase'
+import { ReactNode, useContext } from 'react'
 
 export const SupabaseProvider = ({ children }: { children: ReactNode }) => {
 

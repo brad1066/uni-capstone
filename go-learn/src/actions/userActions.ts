@@ -1,14 +1,14 @@
 'use server'
 
-import prisma from "@/lib/db"
-import { TUser } from "@/lib/types"
-import { genRandomPassword } from "@/lib/utils"
-import { User, UserRole } from "@prisma/client"
-import bcrypt from "bcrypt"
-import { cookies } from "next/headers"
-import { env } from "process"
-import { getCurrentUserSession } from "./authActions"
-import { createContactForUser } from "./contactActions"
+import prisma from '@/lib/db'
+import { TUser } from '@/lib/types'
+import { genRandomPassword } from '@/lib/utils'
+import { User, UserRole } from '@prisma/client'
+import bcrypt from 'bcrypt'
+import { cookies } from 'next/headers'
+import { env } from 'process'
+import { getCurrentUserSession } from './authActions'
+import { createContactForUser } from './contactActions'
 
 /**
  * Creates a user with a default password
@@ -95,7 +95,7 @@ export async function getUsersByRole(roles: UserRole[] = []) {
   ])
   if (!session) return undefined
 
-  let users = []
+  const users = []
   if (roles.length == 0) return [...admin, ...teachers, ...students]
   if ('admin' in roles) users.push(...admin)
   if ('teacher' in roles) users.push(...teachers)

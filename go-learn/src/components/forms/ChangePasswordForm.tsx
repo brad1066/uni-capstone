@@ -1,16 +1,16 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type NewPasswordFormProps = {
   className?: string
-  submitPassword?: (password: string) => Promise<any>
+  submitPassword?: (password: string) => Promise<unknown>
   username: string
   disabled?: boolean
 }
@@ -29,10 +29,10 @@ const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewP
   })
 
   return (<>
-  <h3>Change of password for user: {username}</h3>
+    <h3>Change of password for user: {username}</h3>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitPassword?.(values.password) })} className={cn(className, "max-w-[50rem] flex gap-[1rem] flex-col")}>
+        form.handleSubmit((values) => { submitPassword?.(values.password) })} className={cn(className, 'max-w-[50rem] flex gap-[1rem] flex-col')}>
         {/* New 'password' input */}
         <FormField
           control={form.control}
@@ -42,6 +42,7 @@ const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewP
               <FormLabel>Class Title</FormLabel>
               <FormControl>
                 <Input placeholder="password" type="password" {...field} disabled={disabled} />
+                <FormMessage about='password'/>
               </FormControl>
             </FormItem>
           )}

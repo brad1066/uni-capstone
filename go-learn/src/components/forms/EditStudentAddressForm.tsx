@@ -1,11 +1,12 @@
-"use client"
+/* eslint-disable react-hooks/exhaustive-deps */
+'use client'
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import EditAddressForm from "./EditAddressForm"
-import { Address } from "@prisma/client"
-import { cn } from "@/lib/utils"
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import EditAddressForm from './EditAddressForm'
+import { Address } from '@prisma/client'
+import { cn } from '@/lib/utils'
 
 type EditStudentAddressFormProps = {
   homeAddress: Address
@@ -24,7 +25,7 @@ export default function EditStudentAddressForm({ homeAddress, termAddress, setHo
     }
   }, [homeAddress, studentTermSameAsHome])
 
-  return <div className={cn("flex flex-col gap-4", className)}>
+  return <div className={cn('flex flex-col gap-4', className)}>
     {/* Is home same as term */}
     <Label className="flex justify-between items-center">Home and Term address are the same?
       <Input className="w-[1.75rem]" type="checkbox" checked={studentTermSameAsHome} onChange={({ target }) => setStudentTermSameAsHome(target.checked)} />

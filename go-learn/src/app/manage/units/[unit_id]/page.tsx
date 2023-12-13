@@ -1,20 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { createResource, deleteResource } from "@/actions/resourceActions"
-import { createSection, deleteSection } from "@/actions/sectionActions"
-import { getUnit, updateUnit } from "@/actions/unitActions"
-import AdminResourceItem from "@/components/admin/AdminResourceItem"
-import AdminSectionItem from "@/components/admin/AdminSectionItem"
-import EditUnitForm from "@/components/forms/EditUnitForm"
-import NewResourceForm from "@/components/forms/NewResourceForm"
-import NewSectionForm from "@/components/forms/NewSectionForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useAuth } from "@/hooks/useAuth"
-import { Unit, Module, Resource, Section } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { createResource, deleteResource } from '@/actions/resourceActions'
+import { createSection, deleteSection } from '@/actions/sectionActions'
+import { getUnit, updateUnit } from '@/actions/unitActions'
+import AdminResourceItem from '@/components/admin/AdminResourceItem'
+import AdminSectionItem from '@/components/admin/AdminSectionItem'
+import EditUnitForm from '@/components/forms/EditUnitForm'
+import NewResourceForm from '@/components/forms/NewResourceForm'
+import NewSectionForm from '@/components/forms/NewSectionForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Unit, Module, Resource, Section } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type SingleUnitAdminPageProps = {
   params: { unit_id: string }
@@ -38,7 +39,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
     if (user && unit_id) {
       const unit = await getUnit(parseInt(unit_id), ['module', 'resources', 'sections'])
       if (unit) {
-        setUnit(unit);
+        setUnit(unit)
       }
     }
   }
@@ -72,7 +73,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Unit</DialogTitle></DialogHeader>
                 <EditUnitForm unit={unit} onUpdateSave={updatedUnit => {
-                  updateUnit({ id: unit.id, ...updatedUnit }).then(async (updatedUnit) => {
+                  updateUnit({ id: unit.id, ...updatedUnit }).then(async () => {
                     await refreshUnitData()
                   })
                 }} />
@@ -84,37 +85,37 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
           </CardContent>
         </Card>
 
-{/* Sections Card */}
-<Card className="w-full">
-  <CardHeader className="flex flex-row items-center gap-2 space-y-0">
-    <CardTitle>Sections</CardTitle>
-    {/* Add Section Dialog */}
-    <Dialog open={creatingSection} onOpenChange={setCreatingSection}>
-      <DialogTrigger asChild><Button className="ml-auto">New Section</Button></DialogTrigger>
-      <DialogContent>
-        <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
-        <NewSectionForm unitId={unit.id} onSubmit={async (section: Section) => {
-          if (unit) {
-            await createSection(section)
-            await refreshUnitData()
-          }
-          setCreatingSection(false)
-        }} />
-      </DialogContent>
-    </Dialog>
-  </CardHeader>
-  <CardContent>
-    {unit.sections?.length ? <ul className="flex flex-col gap-2">
-      {unit.sections.map(section => <>
-        <AdminSectionItem key={section.id} section={section} onDelete={async () => {
-          const result = await deleteSection(section.id)
-          if (result) await refreshUnitData()
-        }} />
-      </>)}
-    </ul>
-      : 'No Resources'}
-  </CardContent>
-</Card>
+        {/* Sections Card */}
+        <Card className="w-full">
+          <CardHeader className="flex flex-row items-center gap-2 space-y-0">
+            <CardTitle>Sections</CardTitle>
+            {/* Add Section Dialog */}
+            <Dialog open={creatingSection} onOpenChange={setCreatingSection}>
+              <DialogTrigger asChild><Button className="ml-auto">New Section</Button></DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
+                <NewSectionForm unitId={unit.id} onSubmit={async (section: Section) => {
+                  if (unit) {
+                    await createSection(section)
+                    await refreshUnitData()
+                  }
+                  setCreatingSection(false)
+                }} />
+              </DialogContent>
+            </Dialog>
+          </CardHeader>
+          <CardContent>
+            {unit.sections?.length ? <ul className="flex flex-col gap-2">
+              {unit.sections.map(section => <>
+                <AdminSectionItem key={section.id} section={section} onDelete={async () => {
+                  const result = await deleteSection(section.id)
+                  if (result) await refreshUnitData()
+                }} />
+              </>)}
+            </ul>
+              : 'No Resources'}
+          </CardContent>
+        </Card>
 
         {/* Resources Card */}
         <Card className="w-full xl:col-span-2">

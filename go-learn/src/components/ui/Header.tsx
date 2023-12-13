@@ -1,18 +1,17 @@
 'use client'
 
-import Navbar from "../navigation/Navbar"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import UserDropdown from "../navigation/UserDropdown"
-import Link from "next/link"
+import Navbar from '../navigation/Navbar'
+import Image from 'next/image'
+import UserDropdown from '../navigation/UserDropdown'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 type HeaderProps = {
+  className?: string
 }
 
-const Header = ({ }: HeaderProps) => {
-  const router = useRouter()
-
-  return <header className="site-header">
+const Header = ({className }: HeaderProps) => {
+  return <header className={cn('site-header', className)}>
     <Link href="/" className="site-icon" >
       <Image src="/icon.png" height="50" width="50" alt="Image" priority/>
     </Link>

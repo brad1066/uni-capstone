@@ -1,14 +1,14 @@
-"use client"
+'use client'
 
-import { getCourses } from "@/actions/courseActions"
-import { Course, Student } from "@prisma/client"
-import { useEffect, useState } from "react"
-import { CoursesSelectCombobox } from "../CoursesSelectCombobox"
-import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "../ui/button"
+import { getCourses } from '@/actions/courseActions'
+import { Course, Student } from '@prisma/client'
+import { useEffect, useState } from 'react'
+import { CoursesSelectCombobox } from '../CoursesSelectCombobox'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Button } from '../ui/button'
 
 type AssignStudentCourseFormProps = {
   student: Student,
@@ -16,10 +16,10 @@ type AssignStudentCourseFormProps = {
 }
 
 const formSchema = z.object({
-  course: z.coerce.number().min(0, "You need to select a course")
+  course: z.coerce.number().min(0, 'You need to select a course')
 })
 
-export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourseFormProps) {
+export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps) {
   const [course, setCourse] = useState<Course>()
   const [courses, setCourses] = useState<Course[]>([])
   const form = useForm<z.infer<typeof formSchema>>({
@@ -28,7 +28,6 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
       course: -1
     }
   })
-  const valWatcher = form.watch
 
   useEffect(() => {
     (async () => {
@@ -39,7 +38,7 @@ export function AssignStudentCourseForm({ student, onSave }: AssignStudentCourse
 
   return (
     <Form {...form}>
-      <form target="" onSubmit={(e) => {e.preventDefault(); course && onSave?.(course);}}>
+      <form target="" onSubmit={(e) => { e.preventDefault(); course && onSave?.(course) }}>
         <FormField
           control={form.control}
           name="course"

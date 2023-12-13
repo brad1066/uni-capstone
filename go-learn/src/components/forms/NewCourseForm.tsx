@@ -1,18 +1,18 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { TCourse } from "@/lib/types"
-import { Textarea } from "../ui/textarea"
-import { cn } from "@/lib/utils"
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { TCourse } from '@/lib/types'
+import { Textarea } from '../ui/textarea'
+import { cn } from '@/lib/utils'
 
 type NewCourseFormProps = {
   className?: string
-  submitCourse?: (course: TCourse) => Promise<any>
+  submitCourse?: (course: TCourse) => Promise<unknown>
   disabled?: boolean
 }
 
@@ -36,7 +36,7 @@ const NewCourseForm = ({ className, submitCourse, disabled }: NewCourseFormProps
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitCourse?.(values as TCourse) })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        form.handleSubmit((values) => { submitCourse?.(values as TCourse) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Course 'title' input */}
         <FormField
           control={form.control}

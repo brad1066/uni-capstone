@@ -1,9 +1,9 @@
 'use server'
 
-import prisma from "@/lib/db"
-import { Module, UserRole } from "@prisma/client"
-import { cookies } from "next/headers"
-import { getCurrentUserSession } from "./authActions"
+import prisma from '@/lib/db'
+import { Module, UserRole } from '@prisma/client'
+import { cookies } from 'next/headers'
+import { getCurrentUserSession } from './authActions'
 
 export async function getModules(roles: UserRole[] = []): Promise<Module[]> {
   const authCookie = cookies().get('auth')
@@ -47,7 +47,7 @@ export async function getModule(id: number, extraFields: string[] = [], roles: U
   return undefined
 }
 
-export async function createModule({ title, description = "", websiteURL = "" }: Module, courseId = -1, roles: UserRole[] = []) {
+export async function createModule({ title, description = '', websiteURL = '' }: Module, courseId = -1, roles: UserRole[] = []) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()

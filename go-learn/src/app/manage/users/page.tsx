@@ -1,20 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { PlusIcon } from "@radix-ui/react-icons";
-import AdminUserItem from "@/components/admin/AdminUserItem";
-import NewUserForm from "@/components/forms/NewUserForm";
-import NoAccessNotice from "@/components/NoAccessNotice";
-import { useAuth } from "@/hooks/useAuth";
-import { TUser } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { createUser as createUser, deleteUser, getUsers, getUsersByRole } from "@/actions/userActions";
-import { User } from "@prisma/client";
-import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { PlusIcon } from '@radix-ui/react-icons'
+import AdminUserItem from '@/components/admin/AdminUserItem'
+import NewUserForm from '@/components/forms/NewUserForm'
+import NoAccessNotice from '@/components/NoAccessNotice'
+import { useAuth } from '@/hooks/useAuth'
+import { TUser } from '@/lib/types'
+import { cn } from '@/lib/utils'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/userActions'
+import { User } from '@prisma/client'
+import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
 
 export default function UsersAdminPage() {
   const router = useRouter()
@@ -69,7 +70,7 @@ export default function UsersAdminPage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {users ? <div className={cn('w-full', !filter ? `grid md:grid-cols-2 gap-[1rem]` : '')}>
+        {users ? <div className={cn('w-full', !filter ? 'grid md:grid-cols-2 gap-[1rem]' : '')}>
           {(!filter || filter == 'teachers') && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>

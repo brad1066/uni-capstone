@@ -1,23 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { addCourseModule, getCourse, removeCourseModule, updateCourse } from "@/actions/courseActions"
-import { createModule } from "@/actions/moduleActions"
-import { removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
-import { ModulesSelectCombobox } from "@/components/ModulesSelectCombobox"
-import AdminModuleItem from "@/components/admin/AdminModuleItem"
-import AdminStudentListItem from "@/components/admin/AdminStudentListItem"
-import EditCourseForm from "@/components/forms/EditCourseForm"
-import NewModuleForm from "@/components/forms/NewModuleForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog"
-import { useAuth } from "@/hooks/useAuth"
-import prisma from "@/lib/db"
-import { Course, Module, Student } from "@prisma/client"
-import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog"
-import { update } from "js-sha1"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { addCourseModule, getCourse, removeCourseModule, updateCourse } from '@/actions/courseActions'
+import { createModule } from '@/actions/moduleActions'
+import { removeStudentCourse } from '@/actions/studentActions'
+import { ModulesSelectCombobox } from '@/components/ModulesSelectCombobox'
+import AdminModuleItem from '@/components/admin/AdminModuleItem'
+import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
+import EditCourseForm from '@/components/forms/EditCourseForm'
+import NewModuleForm from '@/components/forms/NewModuleForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Course, Module, Student } from '@prisma/client'
+import { DialogTitle, DialogTrigger } from '@radix-ui/react-dialog'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 
 type SingleCourseAdminPageProps = {
@@ -38,7 +37,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
   const refreshCourseData = async () => {
     if (user && course_id) {
       const course = await getCourse(parseInt(course_id), ['modules', 'students', 'students.user', 'student.contactDetails'])
-      if (course) setCourse(course);
+      if (course) setCourse(course)
     }
   }
 
@@ -69,7 +68,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Course</DialogTitle></DialogHeader>
                 <EditCourseForm course={course} onUpdateSave={updatedCourse => {
-                  updateCourse({ id: course.id, ...updatedCourse }).then(async (updatedCourse) => {
+                  updateCourse({ id: course.id, ...updatedCourse }).then(async () => {
                     await refreshCourseData()
                   })
                 }} />
@@ -130,7 +129,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
           </CardHeader>
           <CardContent>
             <ul>
-              {course?.modules?.map(module => <AdminModuleItem module={module} onDelete={async () => {
+              {course?.modules?.map(module => <AdminModuleItem key={module.id} module={module} onDelete={async () => {
                 const resp = await removeCourseModule(course.id, module.id)
                 if (resp) {
                   setCourse(await getCourse(course.id, ['modules']))

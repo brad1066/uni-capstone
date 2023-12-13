@@ -21,15 +21,15 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <TooltipProvider>
-          <PageWrapper>
-            <body className={inter.className + ' min-h-screen'}>
-              <Header />
-              <main className='flex flex-col items-center px-24 min-h-[100%]'>
-                {children}
-              </main>
-              <Toaster />
-            </body>
-          </PageWrapper>
+        <PageWrapper>
+          <body className={inter.className + ' min-h-screen'}>
+            <Header />
+            <main className='flex flex-col items-center px-24 min-h-[100%]'>
+              {children}
+            </main>
+            <Toaster />
+          </body>
+        </PageWrapper>
       </TooltipProvider>
     </html>
   )

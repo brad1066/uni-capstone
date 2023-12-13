@@ -1,19 +1,19 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "../ui/textarea"
-import { CoursesSelectCombobox } from "../CoursesSelectCombobox"
-import { cn } from "@/lib/utils"
-import { Module } from "@prisma/client"
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '../ui/textarea'
+import { CoursesSelectCombobox } from '../CoursesSelectCombobox'
+import { cn } from '@/lib/utils'
+import { Module } from '@prisma/client'
 
 type NewModuleFormProps = {
   className?: string
-  submitModule?: (module: Module, course: number) => Promise<any>
+  submitModule?: (module: Module, course: number) => Promise<unknown>
   disabled?: boolean,
   courseId?: number
 }
@@ -22,7 +22,7 @@ const formSchema = z.object({
   title: z.string().min(1, { message: 'You need to provide a title for the module' }),
   description: z.ostring().optional(),
   websiteURL: z.ostring().optional(),
-  course: z.coerce.number().min(0, "You need to select a course")
+  course: z.coerce.number().min(0, 'You need to select a course')
 })
 
 
@@ -42,7 +42,7 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
       <form onSubmit={
         form.handleSubmit(({ course, title, description, websiteURL }) => {
           submitModule?.({ title, description, websiteURL } as Module, course)
-        })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Module 'title' input */}
         <FormField
           control={form.control}

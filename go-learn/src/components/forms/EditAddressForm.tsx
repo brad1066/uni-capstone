@@ -1,8 +1,8 @@
-import { Label } from "@radix-ui/react-dropdown-menu";
-import { Input } from "../ui/input";
-import { Address } from "@prisma/client";
-import { Dispatch, SetStateAction } from "react";
-import { cn } from "@/lib/utils";
+import { Label } from '@radix-ui/react-dropdown-menu'
+import { Input } from '../ui/input'
+import { Address } from '@prisma/client'
+import { Dispatch, SetStateAction } from 'react'
+import { cn } from '@/lib/utils'
 
 type EditAddressFormProps = {
   address: Address
@@ -12,7 +12,7 @@ type EditAddressFormProps = {
 
 export default function EditAddressForm({ address, setAddress, className }: EditAddressFormProps) {
   return (<>
-    <div className={cn("grid gap-y-4", className,)}>
+    <div className={cn('grid gap-y-4', className,)}>
 
       {/* Address's 'addressLine1' input */}
       <Label className="flex flex-col gap-1">Address Line 1

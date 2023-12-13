@@ -1,12 +1,10 @@
-import { ReactNode, useContext, useState } from "react"
-import { AuthContext } from "@/hooks/useAuth"
-import { TUser } from "@/lib/types"
-import { User } from "@prisma/client"
+import { ReactNode, useState } from 'react'
+import { AuthContext } from '@/hooks/useAuth'
+import { User } from '@prisma/client'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [user, setUser] = useState<User>()
-  const context = useContext(AuthContext)
 
   const login = async (username: string, password: string, rememberMe: boolean) => {
     return await fetch('/api/auth', {
@@ -36,11 +34,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return fetch('/api/auth', {
       method: 'GET'
     })
-    .then(async (response) => {
-      const returnVal = (await response.json())
-      if (returnVal.loggedIn) setUser(returnVal.user)
-      return returnVal
-    })
+      .then(async (response) => {
+        const returnVal = (await response.json())
+        if (returnVal.loggedIn) setUser(returnVal.user)
+        return returnVal
+      })
   }
 
   return <AuthContext.Provider value={{ user, login, logout, validateLoggedIn }}>{children}</AuthContext.Provider>

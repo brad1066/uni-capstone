@@ -1,9 +1,9 @@
-"use server"
+'use server'
 
-import prisma from "@/lib/db"
-import { Address, UserRole } from "@prisma/client"
-import { cookies } from "next/headers"
-import { getCurrentUserSession } from "./authActions"
+import prisma from '@/lib/db'
+import { Address, UserRole } from '@prisma/client'
+import { cookies } from 'next/headers'
+import { getCurrentUserSession } from './authActions'
 
 export async function getTeacherAddress(id: number, roles: UserRole[] = []): Promise<Address | undefined> {
   const authCookie = cookies().get('auth')

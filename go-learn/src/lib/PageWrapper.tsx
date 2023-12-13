@@ -1,11 +1,11 @@
 'use client'
 
-import { AuthProvider } from "@/providers/AuthProvider"
-import { SupabaseProvider } from "@/providers/SupabaseProvider"
-import { ThemeProvider } from "@/providers/ThemeProvider"
-import { ReactNode } from "react"
+import { AuthProvider } from '@/providers/AuthProvider'
+import { SupabaseProvider } from '@/providers/SupabaseProvider'
+import { ThemeProvider } from '@/providers/ThemeProvider'
+import { ReactNode } from 'react'
 
-export default ({ children }: { children: ReactNode }) => {
+export default function PageWrapper({ children }: { children: ReactNode }) {
   return <ThemeProvider
     attribute="class"
     defaultTheme="system"

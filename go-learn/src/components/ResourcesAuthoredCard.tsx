@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { Resource, User } from "@prisma/client";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { useEffect, useState } from "react";
-import { getResources } from "@/actions/resourceActions";
-import { cn } from "@/lib/utils";
-import ResourcesCardItem from "./ResourcesCardItem";
-import { useRouter } from "next/navigation";
-import { ScrollArea } from "./ui/scroll-area";
+import { Resource, User } from '@prisma/client'
+import { Card, CardContent, CardHeader } from './ui/card'
+import { useEffect, useState } from 'react'
+import { getResources } from '@/actions/resourceActions'
+import { cn } from '@/lib/utils'
+import ResourcesCardItem from './ResourcesCardItem'
+import { useRouter } from 'next/navigation'
+import { ScrollArea } from './ui/scroll-area'
 
 type ResourcesAuthoredCardProps = {
   author: User
@@ -23,7 +23,7 @@ export default function ResourcesAuthoredCard({ author, className, noHeader }: R
     (async () => {
       author && await setResources(await getResources(author.username ?? '') ?? [])
     })()
-  }, [])
+  }, [author])
 
   return (
     <Card className={cn(className)}>

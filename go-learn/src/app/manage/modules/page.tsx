@@ -1,17 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 
-import { createModule, deleteModule, getModules } from "@/actions/moduleActions";
-import AdminModuleItem from "@/components/admin/AdminModuleItem";
-import NewModuleForm from "@/components/forms/NewModuleForm";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useAuth } from "@/hooks/useAuth";
-import { Module } from "@prisma/client";
-import { PlusIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createModule, deleteModule, getModules } from '@/actions/moduleActions'
+import AdminModuleItem from '@/components/admin/AdminModuleItem'
+import NewModuleForm from '@/components/forms/NewModuleForm'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Module } from '@prisma/client'
+import { PlusIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function ModulesAdminPage() {
   const { user, validateLoggedIn } = useAuth()
@@ -51,7 +52,7 @@ export default function ModulesAdminPage() {
         </h1>
         {modules && modules.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {modules.map(module => (
-            <AdminModuleItem module={module} key={module.id} onDelete={async () => { await deleteModule(module.id); router.refresh()}} />
+            <AdminModuleItem module={module} key={module.id} onDelete={async () => { await deleteModule(module.id); router.refresh() }} />
           ))}
         </div>}
       </>}

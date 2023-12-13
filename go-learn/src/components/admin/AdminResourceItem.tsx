@@ -1,12 +1,12 @@
-import Link from "next/link"
-import { Button } from "../ui/button"
-import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons"
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { Resource } from "@prisma/client"
+import Link from 'next/link'
+import { Button } from '../ui/button'
+import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import { Resource } from '@prisma/client'
 
 type AdminResourceItemProps = {
   resource: Resource
-  onDelete?: () => Promise<any>
+  onDelete?: () => Promise<unknown>
 }
 
 const AdminResourceItem = ({ resource, onDelete }: AdminResourceItemProps) => {

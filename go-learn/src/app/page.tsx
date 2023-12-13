@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -7,7 +8,7 @@ import { useEffect, useState } from 'react'
 export default function Dashboard() {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true)
 
   useEffect(() => {
     (async () => {

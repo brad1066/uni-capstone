@@ -1,8 +1,8 @@
-"use server"
+'use server'
 
-import { Contact, UserRole } from "@prisma/client";
-import { getCurrentUserSession } from "./authActions";
-import prisma from "@/lib/db";
+import { Contact, UserRole } from '@prisma/client'
+import { getCurrentUserSession } from './authActions'
+import prisma from '@/lib/db'
 
 export async function getContact(id: number, roles: UserRole[] = []) {
   const session = await getCurrentUserSession()

@@ -1,14 +1,15 @@
-"use client"
+/* eslint-disable react-hooks/exhaustive-deps */
+'use client'
 
-import { getModules } from "@/actions/moduleActions"
-import { Module, Student } from "@prisma/client"
-import { useEffect, useState } from "react"
-import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Button } from "../ui/button"
-import { ModulesSelectCombobox } from "../ModulesSelectCombobox"
+import { getModules } from '@/actions/moduleActions'
+import { Module, Student } from '@prisma/client'
+import { useEffect, useState } from 'react'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Button } from '../ui/button'
+import { ModulesSelectCombobox } from '../ModulesSelectCombobox'
 
 type AssignStudentModuleFormProps = {
   student: Student,
@@ -17,10 +18,10 @@ type AssignStudentModuleFormProps = {
 }
 
 const formSchema = z.object({
-  module: z.coerce.number().min(0, "You need to select a module")
+  module: z.coerce.number().min(0, 'You need to select a module')
 })
 
-export function AssignStudentModuleForm({ student, exclude: modExclusions, onSave }: AssignStudentModuleFormProps) {
+export function AssignStudentModuleForm({exclude: modExclusions, onSave }: AssignStudentModuleFormProps) {
   const [module, setModule] = useState<Module>()
   const [modules, setModules] = useState<Module[]>([])
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,15 +33,15 @@ export function AssignStudentModuleForm({ student, exclude: modExclusions, onSav
 
   useEffect(() => {
     (async () => {
-      let modules = await getModules()
+      const modules = await getModules()
       setModules(modules)
-      form.resetField("module")
+      form.resetField('module')
     })()
   }, [])
 
   return (
     <Form {...form}>
-      <form onSubmit={(e) => { e.preventDefault(); module && onSave?.(module); }}>
+      <form onSubmit={(e) => { e.preventDefault(); module && onSave?.(module) }}>
         <FormField
           control={form.control}
           name="module"

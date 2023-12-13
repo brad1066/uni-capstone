@@ -1,22 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { removeCourseModule } from "@/actions/courseActions"
-import { getModule, updateModule } from "@/actions/moduleActions"
-import { removeStudentModule } from "@/actions/studentActions"
-import { createUnit, deleteUnit } from "@/actions/unitActions"
-import { CoursesSelectCombobox } from "@/components/CoursesSelectCombobox"
-import AdminCourseItem from "@/components/admin/AdminCourseItem"
-import AdminStudentListItem from "@/components/admin/AdminStudentListItem"
-import AdminUnitListItem from "@/components/admin/AdminUnitListItem"
-import EditModuleForm from "@/components/forms/EditModuleForm"
-import NewUnitForm from "@/components/forms/NewUnitForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useAuth } from "@/hooks/useAuth"
-import { Course, Module, Student, Unit } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { removeCourseModule } from '@/actions/courseActions'
+import { getModule, updateModule } from '@/actions/moduleActions'
+import { removeStudentModule } from '@/actions/studentActions'
+import { createUnit, deleteUnit } from '@/actions/unitActions'
+import { CoursesSelectCombobox } from '@/components/CoursesSelectCombobox'
+import AdminCourseItem from '@/components/admin/AdminCourseItem'
+import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
+import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
+import EditModuleForm from '@/components/forms/EditModuleForm'
+import NewUnitForm from '@/components/forms/NewUnitForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/useAuth'
+import { Course, Module, Student, Unit } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type SingleModuleAdminPageProps = {
   params: { module_id: string }
@@ -40,9 +41,9 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
 
   const refreshModuleData = async () => {
     if (user && module_id) {
-      const module = await getModule(parseInt(module_id), ['course', 'students', 'students.user', 'student.contactDetails', 'units'])
-      if (module) {
-        setModule(module);
+      const _module = await getModule(parseInt(module_id), ['course', 'students', 'students.user', 'student.contactDetails', 'units'])
+      if (_module) {
+        setModule(_module)
       }
     }
   }
@@ -76,7 +77,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Module</DialogTitle></DialogHeader>
                 <EditModuleForm module={module} onUpdateSave={updatedModule => {
-                  updateModule({ id: module.id, ...updatedModule }).then(async (updatedModule) => {
+                  updateModule({ id: module.id, ...updatedModule }).then(async () => {
                     await refreshModuleData()
                   })
                 }} />

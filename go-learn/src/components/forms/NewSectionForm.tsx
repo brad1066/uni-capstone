@@ -1,18 +1,18 @@
-"use client"
+'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Section } from "@prisma/client"
-import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { cn } from "@/lib/utils"
-import { Input } from "../ui/input"
-import { Textarea } from "../ui/textarea"
-import { useForm } from "react-hook-form"
-import { Button } from "../ui/button"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Section } from '@prisma/client'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { cn } from '@/lib/utils'
+import { Input } from '../ui/input'
+import { Textarea } from '../ui/textarea'
+import { useForm } from 'react-hook-form'
+import { Button } from '../ui/button'
 
 type NewSectionFormProps = {
   unitId: number
-  onSubmit?: (section: Section, unitId?: number, seectionId?: number) => Promise<void>
+  onSubmit?: (section: Section, unitId?: number, sectionId?: number) => Promise<void>
   className?: string,
 }
 
@@ -33,12 +33,12 @@ export default function NewSectionForm({ unitId, onSubmit, className }: NewSecti
 
   return (<>
     <Form {...form}>
-      <form className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}
+      <form className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}
         onSubmit={form.handleSubmit((values) => { onSubmit?.({
-            title: values.title,
-            description: values.description ?? '',
-            id: -1,
-            unitId } as Section) })}>
+          title: values.title,
+          description: values.description ?? '',
+          id: -1,
+          unitId } as Section) })}>
 
         {/* Section 'title' input */}
         <FormField

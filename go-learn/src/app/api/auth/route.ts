@@ -1,10 +1,10 @@
-import { TUser } from "@/lib/types"
-import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import sha1 from "js-sha1"
-import prisma from "@/lib/db"
-import { checkLoginCredentials } from "@/actions/userActions"
-import { User } from "@prisma/client"
+import { TUser } from '@/lib/types'
+import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import sha1 from 'js-sha1'
+import prisma from '@/lib/db'
+import { checkLoginCredentials } from '@/actions/userActions'
+import { User } from '@prisma/client'
 
 export type TLoginSuccessResponse = {
   success: true,
@@ -61,7 +61,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     }
     return NextResponse.json({
       success: false,
-      message: "Failed to create auth session. Please try again"
+      message: 'Failed to create auth session. Please try again'
     })
   }
 

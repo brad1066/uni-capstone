@@ -1,29 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from "@/actions/addressActions"
-import { createContactForUser, getContact, updateContact } from "@/actions/contactActions"
-import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from "@/actions/studentActions"
-import { getTeacher } from "@/actions/teacherActions"
-import { getUser, updateUser } from "@/actions/userActions"
-import NoAccessNotice from "@/components/NoAccessNotice"
-import ResourcesAuthoredCard from "@/components/ResourcesAuthoredCard"
-import AdminCourseItem from "@/components/admin/AdminCourseItem"
-import AdminModuleItem from "@/components/admin/AdminModuleItem"
-import { AssignStudentCourseForm } from "@/components/forms/AssignStudentCourseForm"
-import { AssignStudentModuleForm } from "@/components/forms/AssignStudentModuleForm"
-import EditAddressForm from "@/components/forms/EditAddressForm"
-import EditStudentAddressForm from "@/components/forms/EditStudentAddressForm"
-import EditUserForm from "@/components/forms/EditUserForm"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/hooks/useAuth"
-import { EMPTY_ADDRESS, EMPTY_CONTACT } from "@/lib/utils"
-import { Address, Contact, Course, Module, Student, Teacher, User } from "@prisma/client"
-import { ToastAction } from "@radix-ui/react-toast"
-import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from '@/actions/addressActions'
+import { createContactForUser, getContact, updateContact } from '@/actions/contactActions'
+import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from '@/actions/studentActions'
+import { getTeacher } from '@/actions/teacherActions'
+import { getUser, updateUser } from '@/actions/userActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
+import ResourcesAuthoredCard from '@/components/ResourcesAuthoredCard'
+import AdminCourseItem from '@/components/admin/AdminCourseItem'
+import AdminModuleItem from '@/components/admin/AdminModuleItem'
+import { AssignStudentCourseForm } from '@/components/forms/AssignStudentCourseForm'
+import { AssignStudentModuleForm } from '@/components/forms/AssignStudentModuleForm'
+import EditAddressForm from '@/components/forms/EditAddressForm'
+import EditStudentAddressForm from '@/components/forms/EditStudentAddressForm'
+import EditUserForm from '@/components/forms/EditUserForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/use-toast'
+import { useAuth } from '@/hooks/useAuth'
+import { EMPTY_ADDRESS, EMPTY_CONTACT } from '@/lib/utils'
+import { Address, Contact, Course, Module, Student, Teacher, User } from '@prisma/client'
+import { ToastAction } from '@radix-ui/react-toast'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type UserAdminPageProps = {
   params: { username: string }
@@ -56,17 +57,17 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
 
   const [contact, setContact] = useState<Contact>(EMPTY_CONTACT)
 
-  const userUpdateSuccess = () => toast({ title: "Updated", description: "Your details have been updated" })
+  const userUpdateSuccess = () => toast({ title: 'Updated', description: 'Your details have been updated' })
   const userUpdateFailed = () => toast({
-    title: "Not updated",
-    description: "There was an issue updating your account details",
-    variant: "destructive",
+    title: 'Not updated',
+    description: 'There was an issue updating your account details',
+    variant: 'destructive',
     action: <ToastAction altText="Try again" onClick={() => user && updateUser(user)}>Try again</ToastAction>
   })
 
   useEffect(() => {
     (async () => {
-      if (!loggedInUser) await validateLoggedIn?.().then(async ({ loggedIn, user }) => {
+      if (!loggedInUser) await validateLoggedIn?.().then(async ({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
 
@@ -101,7 +102,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
     </>}
     {!loading && loggedInUser?.role == 'admin' && <>
       {!user && <>
-        {username} could not be found in the database. <Button variant={"secondary"} onClick={router?.back}>Go Back</Button>
+        {username} could not be found in the database. <Button variant={'secondary'} onClick={router?.back}>Go Back</Button>
       </>}
       {user && <>
         <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>

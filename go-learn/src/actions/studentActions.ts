@@ -1,8 +1,8 @@
 'use server'
 
-import prisma from "@/lib/db"
-import { Address, Course, Module, Student, UserRole } from "@prisma/client"
-import { cookies } from "next/headers"
+import prisma from '@/lib/db'
+import { Address, Course, Module, Student, UserRole } from '@prisma/client'
+import { cookies } from 'next/headers'
 
 
 export async function getStudents(roles: UserRole[] = []): Promise<Student[]> {
@@ -51,8 +51,7 @@ export async function removeStudentModule(studentId: number, moduleId: number) {
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
     if (session?.user.role == UserRole.admin) {
-      const val = await prisma.student.update({ where: { id: studentId }, data: { modules: { disconnect: { id: moduleId } } }, include: { modules: true } })
-      const student = await prisma.student.findUnique({ where: { id: studentId }, include: { modules: true } })
+      const student = await prisma.student.update({ where: { id: studentId }, data: { modules: { disconnect: { id: moduleId } } }, include: { modules: true } })
       if (student) {
         return student
       }
@@ -65,8 +64,7 @@ export async function addStudentModule(studentId: number, moduleId: number) {
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
     if (session?.user.role == UserRole.admin) {
-      const val = await prisma.student.update({ where: { id: studentId }, data: { modules: { connect: { id: moduleId } } }, include: { modules: true } })
-      const student = await prisma.student.findUnique({ where: { id: studentId }, include: { modules: true } })
+      const student = await prisma.student.update({ where: { id: studentId }, data: { modules: { connect: { id: moduleId } } }, include: { modules: true } })
       if (student) {
         return student
       }

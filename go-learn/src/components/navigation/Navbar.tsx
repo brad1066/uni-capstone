@@ -1,15 +1,11 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import Link from "next/link";
+} from '@/components/ui/navigation-menu'
+import { cn } from '@/lib/utils'
 
 type NavbarProps = {
   className?: string
@@ -19,14 +15,14 @@ const navComponents: { title: string; href?: string; }[] = []
 
 const Navbar = ({ className }: NavbarProps) => {
   return <>
-    <NavigationMenu className="mx-auto">
+    <NavigationMenu className={cn('mx-auto', className)}>
       <NavigationMenuList>
         {
           navComponents.map(comp => (
-            <NavigationMenuItem>
-                <NavigationMenuLink href={comp?.href ?? ''} className={navigationMenuTriggerStyle()}>
-                  {comp.title}
-                </NavigationMenuLink>
+            <NavigationMenuItem key={comp.title}>
+              <NavigationMenuLink href={comp?.href ?? ''} className={navigationMenuTriggerStyle()}>
+                {comp.title}
+              </NavigationMenuLink>
             </NavigationMenuItem>
           ))
         }

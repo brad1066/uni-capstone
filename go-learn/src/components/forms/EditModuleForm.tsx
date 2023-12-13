@@ -1,12 +1,12 @@
-import { cn } from "@/lib/utils"
-import { Module } from "@prisma/client"
-import { Input } from "../ui/input"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import { Textarea } from "../ui/textarea"
-import { Button } from "../ui/button"
+import { cn } from '@/lib/utils'
+import { Module } from '@prisma/client'
+import { Input } from '../ui/input'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Textarea } from '../ui/textarea'
+import { Button } from '../ui/button'
 
 type EditModuleFormProps = {
   module: Module
@@ -33,7 +33,7 @@ export default function EditModuleForm({ module, onUpdateSave, className }: Edit
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { onUpdateSave?.(values as Omit<Module, 'id'>) })} className={cn(className, "max-w-[50rem] flex flex-col gap-[1rem]")}>
+        form.handleSubmit((values) => { onUpdateSave?.(values as Omit<Module, 'id'>) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Module 'title' input */}
         <FormField
           control={form.control}

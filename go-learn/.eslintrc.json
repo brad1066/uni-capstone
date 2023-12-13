@@ -9,7 +9,7 @@
   "parserOptions": { "project": ["./tsconfig.json"] },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "block-spacing": ["error", true],
+    "block-spacing": ["error", "always"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
     "indent": ["error", 2],

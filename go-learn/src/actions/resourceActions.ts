@@ -1,8 +1,8 @@
-"use server"
+'use server'
 
-import { Resource, UserRole } from "@prisma/client";
-import { getCurrentUserSession } from "./authActions";
-import prisma from "@/lib/db";
+import { Resource, UserRole } from '@prisma/client'
+import { getCurrentUserSession } from './authActions'
+import prisma from '@/lib/db'
 
 export async function getResources(username: string = '', roles: UserRole[] = []) {
   const session = await getCurrentUserSession()
@@ -17,7 +17,7 @@ export async function deleteResource(id: number) {
   return await prisma.resource.delete({ where: { id } }) ?? undefined
 }
 
-export async function createResource({ title, description = "" }: Resource, unitId?: number, sectionId?: number) {
+export async function createResource({ title, description = '' }: Resource, unitId?: number, sectionId?: number) {
   if (!unitId) return undefined
 
   const session = await getCurrentUserSession()
