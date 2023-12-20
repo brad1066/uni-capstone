@@ -4,6 +4,7 @@
 import { createResource, deleteResource } from '@/actions/resourceActions'
 import { createSection, deleteSection } from '@/actions/sectionActions'
 import { getUnit, updateUnit } from '@/actions/unitActions'
+import AdminModuleItem from '@/components/admin/AdminModuleItem'
 import AdminResourceItem from '@/components/admin/AdminResourceItem'
 import AdminSectionItem from '@/components/admin/AdminSectionItem'
 import EditUnitForm from '@/components/forms/EditUnitForm'
@@ -80,8 +81,20 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
               </DialogContent>
             </Dialog>
           </CardHeader>
-          <CardContent>
-            <pre className="inline-block font-[inherit] whitespace-pre-line">{unit.description || 'No Description'}</pre>
+          <CardContent className='flex flex-col gap-4'>
+            <div>
+              <h3 className="text-lg font-bold">Description</h3>
+              <pre className="inline-block font-[inherit] whitespace-pre-line">{unit.description || 'No Description'}</pre>
+            </div>
+
+            {
+              unit?.module && (
+                <div>
+                  <h3 className="text-lg font-bold">Module</h3>
+                  <AdminModuleItem module={unit.module as Module} />
+                </div>
+              )
+            }
           </CardContent>
         </Card>
 

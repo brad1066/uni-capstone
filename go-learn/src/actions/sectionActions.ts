@@ -39,7 +39,7 @@ export async function getSection(id: number, extraFields: string[] = []) {
 }
 
 export async function updateSection({ id, title, description }: Section) {
-  if (!title) return undefined
+  if (!title || !id) return undefined
 
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined

@@ -2,6 +2,7 @@
 'use client'
 
 import { getSection, updateSection } from '@/actions/sectionActions'
+import AdminResourceItem from '@/components/admin/AdminResourceItem'
 import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
 import EditSectionForm from '@/components/forms/EditSectionForm'
 import { Button } from '@/components/ui/button'
@@ -26,6 +27,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
     resources?: Resource[] | null
     author?: User | null
   }>()
+  const [editingSection, setEditingSection] = useState<boolean>(false)
 
   const refreshSectionData = async () => {
     if (user && section_id) {
@@ -55,21 +57,51 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
       <div className="flex gap-[2rem] w-full flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
 
         <Card>
-          <CardHeader>
+          <CardHeader className='flex flex-row items-center gap-2 space-y-0'>
             <CardTitle>Information</CardTitle>
-            <Dialog>
+            <Dialog open={editingSection} onOpenChange={setEditingSection}>
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Module</DialogTitle></DialogHeader>
                 <EditSectionForm section={section} onUpdateSave={updatedSection => {
-                  updateSection(updatedSection).then(async () => {
+                  updateSection({ id: section.id, ...updatedSection } as Section).then(async () => {
                     await refreshSectionData()
+
+                  }).finally(() => {
+                    setEditingSection(false)
                   })
                 }} />
               </DialogContent>
-            </Dialog></CardHeader>
-          <CardContent>
-            {section.unit && <AdminUnitListItem unit={section.unit} />}
+            </Dialog>
+          </CardHeader>
+          <CardContent className='flex flex-col gap-4'>
+            <div>
+              <h2 className="text-lg font-bold">Description</h2>
+              <pre className="inline-block font-[inherit] whitespace-pre">{section.description || 'No Description'}</pre>
+            </div>
+            {section?.unit && (
+              <div>
+                <h2 className="text-lg font-bold">Unit</h2>
+                <AdminUnitListItem unit={section.unit} />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card className='w-full xl:col-span-2'>
+          <CardHeader className='flex flex-row items-center gap-2 space-y-0'>
+            <CardTitle>Resources</CardTitle>
+            <Dialog>
+              <DialogTrigger asChild><Button className="ml-auto">Add</Button></DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Add Resources</DialogTitle></DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </CardHeader>
+          <CardContent className="flex flex-col xl:grid xl:grid-cols-2 gap-4">
+            {section.resources?.length === 0 && <p>No resources</p>}
+            {section.resources?.map(resource => (
+              <AdminResourceItem key={resource.id} resource={resource} />
+            ))}
           </CardContent>
         </Card>
       </div>
