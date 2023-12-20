@@ -39,7 +39,7 @@
     "lucide-react": "^0.292.0",
     "mongodb": "^6.2.0",
     "mongoose": "^7.6.3",
-    "next": "13.5.4",
+    "next": "^14.0.4",
     "next-themes": "^0.2.1",
     "prisma": "^5.5.0",
     "react": "^18",
@@ -49,6 +49,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3",
     "tailwindcss-animate": "^1.0.7",
+    "update": "^0.7.4",
     "utf-8-validate": "^6.0.3",
     "zod": "^3.22.4"
   },

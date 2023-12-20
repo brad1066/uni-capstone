@@ -9,9 +9,6 @@ const nextConfig = {
       aggregateTimeout: 300
     }
     return config
-  },
-  experimental: {
-    serverActions: true
   }
 }
 
