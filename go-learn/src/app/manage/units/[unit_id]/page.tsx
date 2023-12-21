@@ -141,7 +141,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
                 <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
                 <NewResourceForm unitId={unit.id} onSubmit={async (resource: Resource) => {
                   if (unit) {
-                    await createResource(resource, unit.id)
+                    await createResource(resource)
                     await refreshUnitData()
                   }
                   setCreatingUnit(false)

@@ -11,10 +11,11 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
 
 type NewResourceFormProps = {
-  unitId: number
-  onSubmit?: (resource: Resource, unitId?: number, sectionId?: number) => Promise<void>
+  onSubmit?: (resource: Resource, sectionId?: number) => Promise<void>
   className?: string,
+  unitId: number
 }
+
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'You need to provide a title for the unit' }),
@@ -34,10 +35,14 @@ export default function NewResourceForm({ unitId, onSubmit, className }: NewReso
   return (<>
     <Form {...form}>
       <form className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}
-        onSubmit={form.handleSubmit((values) => { onSubmit?.({
-          title: values.title,
-          description: values.description ?? '',
-          id: -1 } as Resource, unitId) })}>
+        onSubmit={form.handleSubmit((values) => {
+          onSubmit?.({
+            title: values.title,
+            description: values.description ?? '',
+            id: -1,
+            unitId: unitId ?? null,
+          } as Resource)
+        })}>
 
         {/* Resource 'title' input */}
         <FormField

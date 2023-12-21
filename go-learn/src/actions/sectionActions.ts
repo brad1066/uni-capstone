@@ -52,3 +52,9 @@ export async function updateSectionAddResource(sectionId: number, resourceId: nu
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
   return await prisma.section.update({ where: { id: sectionId }, data: { resources: { connect: { id: resourceId } } } }) ?? undefined
 }
+
+export async function updateSectionRemoveResource(sectionId: number, resourceId: number) {
+  const session = await getCurrentUserSession()
+  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
+  return await prisma.section.update({ where: { id: sectionId }, data: { resources: { disconnect: { id: resourceId } } } }) ?? undefined
+}
