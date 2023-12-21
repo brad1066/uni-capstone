@@ -1,9 +1,8 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { TUser } from '@/lib/types'
 import { genRandomPassword } from '@/lib/utils'
-import { User, UserRole } from '@prisma/client'
+import { Contact, User, UserRole } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
 import { env } from 'process'
@@ -15,7 +14,7 @@ import { createContactForUser } from './contactActions'
  * @param userInfo A TUser object to create a new user from
  * @returns Promise of a User object (as defined by Prisma)
  */
-export async function createUser(userInfo: TUser): Promise<User> {
+export async function createUser(userInfo: User & {contactDetails?: Contact}): Promise<User> {
   const rNum = Math.floor((Math.random()) * 100000)
   let user = await prisma.user.create({
     data: {

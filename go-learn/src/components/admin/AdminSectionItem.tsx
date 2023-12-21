@@ -30,13 +30,15 @@ const AdminSectionItem = ({ section, onDelete }: AdminSectionItemProps) => {
           </TooltipTrigger>
           <TooltipContent>Edit section</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove section</TooltipContent>
-        </Tooltip>
+        {onDelete && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Remove section</TooltipContent>
+          </Tooltip>
+        )}
       </div>
     </li>
   </>)

@@ -1,4 +1,3 @@
-import { TUser } from '@/lib/types'
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import sha1 from 'js-sha1'
@@ -31,14 +30,12 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
   const { username, password, rememberMe } = await req.json()
 
   // Check those login credentials against those stored
-  const user = await checkLoginCredentials(username, password) as TUser
+  const user = await checkLoginCredentials(username, password) as User
 
   // If there is a user returned...
   if (user) {
     const cookieValue = sha1(username + user.password + Date.now())
 
-    // Remove the password from the user and add it to a new response object
-    delete user.password
     const res = NextResponse.json({
       success: true,
       user

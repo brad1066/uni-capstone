@@ -1,7 +1,7 @@
 'use client'
 
 import { getResources, getUnitResources } from '@/actions/resourceActions'
-import { Resource, Student } from '@prisma/client'
+import { Resource } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
@@ -40,10 +40,10 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
 
   return (
     <Form {...form}>
-      <form target="" onSubmit={(e) => { e.preventDefault(); resource && onSave?.(resource) }}>
+      <form target='' onSubmit={(e) => { e.preventDefault(); resource && onSave?.(resource) }}>
         <FormField
           control={form.control}
-          name="resource"
+          name='resource'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Resource</FormLabel>
@@ -60,7 +60,7 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
               </FormControl>
             </FormItem>
           )} />
-        <Button type="submit" className="w-full" >Set Resource</Button>
+        <Button type='submit' className='w-full' >Set Resource</Button>
       </form>
     </Form>
 

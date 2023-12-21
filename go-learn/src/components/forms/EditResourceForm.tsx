@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Module } from '@prisma/client'
+import { Resource } from '@prisma/client'
 import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,39 +8,37 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from '../ui/textarea'
 import { Button } from '../ui/button'
 
-type EditModuleFormProps = {
-  module: Module
-  onUpdateSave?: (module: Omit<Module, 'id'>) => void
+type EditResourceFormProps = {
+  resource: Resource
+  onUpdateSave?: (resource: Omit<Resource, 'id'>) => void
   className?: string
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: 'You need to provide a title for the module' }),
+  title: z.string().min(1, { message: 'You need to provide a title for the resource' }),
   description: z.ostring(),
-  websiteURL: z.ostring(),
 })
 
-export default function EditModuleForm({ module, onUpdateSave, className }: EditModuleFormProps) {
+export default function EditResourceForm({ resource, onUpdateSave, className }: EditResourceFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: module.title,
-      description: module.description || '',
-      websiteURL: module.websiteURL || '',
+      title: resource.title,
+      description: resource.description || '',
     },
   })
 
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { onUpdateSave?.(values as Omit<Module, 'id'>) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
-        {/* Module 'title' input */}
+        form.handleSubmit((values) => { onUpdateSave?.(values as Omit<Resource, 'id'>) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
+        {/* Resource 'title' input */}
         <FormField
           control={form.control}
           name='title'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Module Title</FormLabel>
+              <FormLabel>Resource Title</FormLabel>
               <FormControl>
                 <Input placeholder='title' {...field}/>
               </FormControl>
@@ -62,20 +60,7 @@ export default function EditModuleForm({ module, onUpdateSave, className }: Edit
               <FormMessage />
             </FormItem>
           )} />
-        {/* Module 'websiteURL' input */}
-        <FormField
-          control={form.control}
-          name='websiteURL'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>External link</FormLabel>
-              <FormControl>
-                <Input placeholder='website url' {...field}/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
-        <Button type='submit' className='w-full'>Update module</Button>
+        <Button type='submit' className='w-full'>Update resource</Button>
       </form>
     </Form >
   </>)

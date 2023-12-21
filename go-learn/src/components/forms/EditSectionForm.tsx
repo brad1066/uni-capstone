@@ -35,12 +35,12 @@ export default function EditSectionForm({ section, onUpdateSave, className }: Ed
         {/* Section 'title' input */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Section Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field}/>
+                <Input placeholder='title' {...field}/>
               </FormControl>
             </FormItem>
           )}
@@ -48,19 +48,19 @@ export default function EditSectionForm({ section, onUpdateSave, className }: Ed
         {/* Section's 'description' input */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="description"
+                  placeholder='description'
                   {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full">Update section</Button>
+        <Button type='submit' className='w-full'>Update section</Button>
       </form>
     </Form >
   </>)

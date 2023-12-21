@@ -15,5 +15,5 @@
     "indent": ["error", 2],
     "no-multi-spaces": ["error"]
   },
-  "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*"]
+  "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*", "src/components/ui/*"]
 }

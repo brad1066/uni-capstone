@@ -39,12 +39,12 @@ export default function NewUnitForm({ moduleId, onSubmit, className }: NewUnitFo
         {/* Unit 'title' input */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Unit Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field} />
+                <Input placeholder='title' {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -53,19 +53,19 @@ export default function NewUnitForm({ moduleId, onSubmit, className }: NewUnitFo
         {/* Contact's 'description' input */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="description"
+                  placeholder='description'
                   {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full">Create Unit</Button>
+        <Button type='submit' className='w-full'>Create Unit</Button>
       </form>
     </Form>
   </>)

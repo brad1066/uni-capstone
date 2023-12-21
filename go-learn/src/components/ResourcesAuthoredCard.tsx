@@ -29,12 +29,12 @@ export default function ResourcesAuthoredCard({ author, className, noHeader }: R
     <Card className={cn(className)}>
       {!noHeader && <CardHeader>Resources</CardHeader>}
       <CardContent>
-        <ScrollArea className="height-[100%]">
+        <ScrollArea className='height-[100%]'>
           {resources?.map?.((resource, idx) => <>
             {idx < 5 && <>
               <ResourcesCardItem
                 key={resource.id}
-                className="cursor-pointer"
+                className='cursor-pointer'
                 resource={resource}
                 onClick={() => { router.push(`/resources/${resource.id}`) }} />
             </>}

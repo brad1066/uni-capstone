@@ -11,12 +11,12 @@ type AdminUserItemProps = {
 
 const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center">
+    <li className='w-full flex justify-between gap-[1rem] items-center'>
       {user.title} {user.forename} {user.surname}
-      <div className="actions flex gap-1">
+      <div className='actions flex gap-1'>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="outline">
+            <Button type='button' size='icon' variant='outline'>
               <Link href={`/profile/${user.username}`}><EyeOpenIcon /></Link>
             </Button>
           </TooltipTrigger>
@@ -24,19 +24,22 @@ const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="secondary">
+            <Button type='button' size='icon' variant='secondary'>
               <Link href={`/manage/users/${user.username}`}><Pencil2Icon /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Edit user</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove user</TooltipContent>
-        </Tooltip>
+        {onDelete && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type='button' size='icon' variant='destructive' onClick={() => { onDelete?.() }}><TrashIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Remove user</TooltipContent>
+          </Tooltip>
+        )}
+
       </div>
     </li>
   </>)

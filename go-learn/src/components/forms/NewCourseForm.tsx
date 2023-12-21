@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { TCourse } from '@/lib/types'
 import { Textarea } from '../ui/textarea'
 import { cn } from '@/lib/utils'
+import { Course } from '@prisma/client'
 
 type NewCourseFormProps = {
   className?: string
-  submitCourse?: (course: TCourse) => Promise<unknown>
+  submitCourse?: (course: Course) => Promise<unknown>
   disabled?: boolean
 }
 
@@ -36,16 +36,16 @@ const NewCourseForm = ({ className, submitCourse, disabled }: NewCourseFormProps
   return (<>
     <Form {...form}>
       <form onSubmit={
-        form.handleSubmit((values) => { submitCourse?.(values as TCourse) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
+        form.handleSubmit((values) => { submitCourse?.(values as Course) })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Course 'title' input */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field} disabled={disabled} />
+                <Input placeholder='title' {...field} disabled={disabled} />
               </FormControl>
             </FormItem>
           )}
@@ -53,13 +53,13 @@ const NewCourseForm = ({ className, submitCourse, disabled }: NewCourseFormProps
         {/* Contact's 'description' input */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="description"
+                  placeholder='description'
                   {...field} />
               </FormControl>
               <FormMessage />
@@ -68,17 +68,17 @@ const NewCourseForm = ({ className, submitCourse, disabled }: NewCourseFormProps
         {/* Course 'websiteURL' input */}
         <FormField
           control={form.control}
-          name="websiteURL"
+          name='websiteURL'
           render={({ field }) => (
             <FormItem>
               <FormLabel>External link</FormLabel>
               <FormControl>
-                <Input placeholder="website url" {...field} disabled={disabled} />
+                <Input placeholder='website url' {...field} disabled={disabled} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full" disabled={disabled}>Create course</Button>
+        <Button type='submit' className='w-full' disabled={disabled}>Create course</Button>
       </form>
     </Form >
   </>)

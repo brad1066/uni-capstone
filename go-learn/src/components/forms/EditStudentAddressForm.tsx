@@ -27,22 +27,22 @@ export default function EditStudentAddressForm({ homeAddress, termAddress, setHo
 
   return <div className={cn('flex flex-col gap-4', className)}>
     {/* Is home same as term */}
-    <Label className="flex justify-between items-center">Home and Term address are the same?
-      <Input className="w-[1.75rem]" type="checkbox" checked={studentTermSameAsHome} onChange={({ target }) => setStudentTermSameAsHome(target.checked)} />
+    <Label className='flex justify-between items-center'>Home and Term address are the same?
+      <Input className='w-[1.75rem]' type='checkbox' checked={studentTermSameAsHome} onChange={({ target }) => setStudentTermSameAsHome(target.checked)} />
     </Label>
 
-    <div className="flex flex-col md:flex-row gap-4">
+    <div className='flex flex-col md:flex-row gap-4'>
       {/* Home address & Both Address*/}
-      <div className="flex flex-col flex-1 gap-2">
-        {!studentTermSameAsHome && <h2 className="text-xl font-bold">Home Address</h2>}
+      <div className='flex flex-col flex-1 gap-2'>
+        {!studentTermSameAsHome && <h2 className='text-xl font-bold'>Home Address</h2>}
         <EditAddressForm address={homeAddress} setAddress={setHomeAddress} />
       </div>
 
       {/* Term address */}
       {!studentTermSameAsHome && <>
-        <div className="flex flex-col flex-1 gap-2">
-          <h2 className="text-xl font-bold">Term Address</h2>
-          {!studentTermSameAsHome && <EditAddressForm address={termAddress} setAddress={setTermAddress} className="flex-1" />}
+        <div className='flex flex-col flex-1 gap-2'>
+          <h2 className='text-xl font-bold'>Term Address</h2>
+          {!studentTermSameAsHome && <EditAddressForm address={termAddress} setAddress={setTermAddress} className='flex-1' />}
         </div>
       </>}
     </div>

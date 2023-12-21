@@ -9,12 +9,11 @@ import AdminUserItem from '@/components/admin/AdminUserItem'
 import NewUserForm from '@/components/forms/NewUserForm'
 import NoAccessNotice from '@/components/NoAccessNotice'
 import { useAuth } from '@/hooks/useAuth'
-import { TUser } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/userActions'
-import { User } from '@prisma/client'
+import { Contact, User } from '@prisma/client'
 import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
 
 export default function UsersAdminPage() {
@@ -60,7 +59,7 @@ export default function UsersAdminPage() {
             <DialogTrigger asChild><Button variant="outline" className="bg-accent">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
-              <NewUserForm disabled={loading || formDisabled} submitUser={async (user: TUser) => {
+              <NewUserForm disabled={loading || formDisabled} submitUser={async (user: User & {contactDetails: Contact}) => {
                 setFormDisabled(true)
                 const createdUser = await createUser(user)
                 setFormDisabled(false)

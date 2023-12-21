@@ -44,7 +44,7 @@ export function AssignStudentModuleForm({exclude: modExclusions, onSave }: Assig
       <form onSubmit={(e) => { e.preventDefault(); module && onSave?.(module) }}>
         <FormField
           control={form.control}
-          name="module"
+          name='module'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Module</FormLabel>
@@ -59,7 +59,7 @@ export function AssignStudentModuleForm({exclude: modExclusions, onSave }: Assig
               </FormControl>
             </FormItem>
           )} />
-        <Button type="submit" className="w-full" >Set Module</Button>
+        <Button type='submit' className='w-full' >Set Module</Button>
       </form>
     </Form>
 

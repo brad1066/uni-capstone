@@ -1,7 +1,6 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { TCourse } from '@/lib/types'
 import { Course, UserRole } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { getCurrentUserSession } from './authActions'
@@ -49,7 +48,7 @@ export async function getCourse(id: number, extraFields: string[] = [], roles: U
   return undefined
 }
 
-export async function createCourse({ title, description = '', websiteURL = '' }: TCourse, roles: UserRole[] = []) {
+export async function createCourse({ title, description = '', websiteURL = '' }: Course, roles: UserRole[] = []) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()

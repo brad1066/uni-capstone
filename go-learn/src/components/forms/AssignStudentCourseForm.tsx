@@ -38,10 +38,10 @@ export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps
 
   return (
     <Form {...form}>
-      <form target="" onSubmit={(e) => { e.preventDefault(); course && onSave?.(course) }}>
+      <form target='' onSubmit={(e) => { e.preventDefault(); course && onSave?.(course) }}>
         <FormField
           control={form.control}
-          name="course"
+          name='course'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course</FormLabel>
@@ -56,7 +56,7 @@ export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps
               </FormControl>
             </FormItem>
           )} />
-        <Button type="submit" className="w-full" >Set Course</Button>
+        <Button type='submit' className='w-full' >Set Course</Button>
       </form>
     </Form>
 

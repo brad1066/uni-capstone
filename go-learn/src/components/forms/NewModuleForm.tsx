@@ -46,12 +46,12 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
         {/* Module 'title' input */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Module Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field} disabled={disabled} />
+                <Input placeholder='title' {...field} disabled={disabled} />
               </FormControl>
             </FormItem>
           )}
@@ -59,13 +59,13 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
         {/* Modules's 'description' input */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="description"
+                  placeholder='description'
                   {...field} />
               </FormControl>
               <FormMessage />
@@ -74,19 +74,19 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
         {/* Module 'websiteURL' input */}
         <FormField
           control={form.control}
-          name="websiteURL"
+          name='websiteURL'
           render={({ field }) => (
             <FormItem>
               <FormLabel>External link</FormLabel>
               <FormControl>
-                <Input placeholder="website url" {...field} disabled={disabled} />
+                <Input placeholder='website url' {...field} disabled={disabled} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )} />
         {!courseId && <FormField
           control={form.control}
-          name="course"
+          name='course'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course</FormLabel>
@@ -98,7 +98,7 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
 
 
 
-        <Button type="submit" className="w-full" disabled={disabled}>Create module</Button>
+        <Button type='submit' className='w-full' disabled={disabled}>Create module</Button>
       </form>
     </Form>
   </>)

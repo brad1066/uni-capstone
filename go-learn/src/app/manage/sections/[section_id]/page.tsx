@@ -133,7 +133,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
             {section.resources?.length === 0 && <p>No resources</p>}
             {section.resources?.map(resource => (
               <AdminResourceItem key={resource.id} resource={resource} onDelete={async () => {
-                const result = await updateSectionRemoveResource(section.id, resource.id)
+                await updateSectionRemoveResource(section.id, resource.id)
                 await refreshSectionData()
               }} />
             ))}

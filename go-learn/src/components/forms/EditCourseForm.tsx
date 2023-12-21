@@ -37,12 +37,12 @@ export default function EditCourseForm({ course, onUpdateSave, className }: Edit
         {/* Course 'title' input */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course Title</FormLabel>
               <FormControl>
-                <Input placeholder="title" {...field}/>
+                <Input placeholder='title' {...field}/>
               </FormControl>
             </FormItem>
           )}
@@ -50,13 +50,13 @@ export default function EditCourseForm({ course, onUpdateSave, className }: Edit
         {/* Contact's 'description' input */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="description"
+                  placeholder='description'
                   {...field} />
               </FormControl>
               <FormMessage />
@@ -65,17 +65,17 @@ export default function EditCourseForm({ course, onUpdateSave, className }: Edit
         {/* Course 'websiteURL' input */}
         <FormField
           control={form.control}
-          name="websiteURL"
+          name='websiteURL'
           render={({ field }) => (
             <FormItem>
               <FormLabel>External link</FormLabel>
               <FormControl>
-                <Input placeholder="website url" {...field}/>
+                <Input placeholder='website url' {...field}/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )} />
-        <Button type="submit" className="w-full">Update course</Button>
+        <Button type='submit' className='w-full'>Update course</Button>
       </form>
     </Form >
   </>)

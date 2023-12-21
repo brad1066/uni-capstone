@@ -10,13 +10,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 import { Separator } from '../ui/separator'
-import { TUser } from '@/lib/types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { cn } from '@/lib/utils'
+import { Contact, User } from '@prisma/client'
 
 type NewUserFormProps = {
   className?: string
-  submitUser?: (user: TUser) => Promise<unknown>
+  submitUser?: (user: User & { contactDetails: Contact }) => Promise<unknown>
   disabled?: boolean
 }
 
@@ -50,34 +50,37 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
     <Form {...form}>
       <form onSubmit={
         form.handleSubmit((values) => {
-          const newUser: TUser = {
-            forename: values.forename,
-            surname: values.surname,
-            letters: values.letters,
-            middleNames: values.middleNames,
-            role: values.role as 'student' | 'teacher' | 'admin',
+          const newUser: User & { contactDetails: Contact } = {
+            username: '',
+            password: '',
             title: values.title,
-            contactDetails: {mobile: values.contactMobile, email: values.contactEmail},
+            forename: values.forename,
+            middleNames: values.middleNames ?? null,
+            surname: '',
+            letters: values.letters ?? null,
+            role: values.role as 'student' | 'teacher' | 'admin',
+            contactId: null,
+            contactDetails: { id: -1, label: '', mobile: values.contactMobile ?? null, email: values.contactEmail ?? null }
           }
-          
-          submitUser?.(newUser as TUser)
+
+          submitUser?.(newUser)
         })} className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}>
         {/* Name Entries */}
         <Collapsible
           open={nameEntryOpen}
           onOpenChange={setNameEntryOpen}
-          className="newUserNameEntries space-y-2"
+          className='newUserNameEntries space-y-2'
         >
-          <div className="alwaysShown">
+          <div className='alwaysShown'>
             {/* Name's 'title' input */}
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="title" {...field} disabled={disabled} />
+                    <Input placeholder='title' {...field} disabled={disabled} />
                   </FormControl>
                 </FormItem>
               )}
@@ -85,12 +88,12 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
             {/* Name's 'forename' input */}
             <FormField
               control={form.control}
-              name="forename"
+              name='forename'
               render={({ field }) => (
                 <FormItem>
                   <FormMessage />
                   <FormControl>
-                    <Input placeholder="forename" {...field} disabled={disabled} />
+                    <Input placeholder='forename' {...field} disabled={disabled} />
                   </FormControl>
                 </FormItem>
               )}
@@ -98,34 +101,34 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
             {/* Name's 'surname' input */}
             <FormField
               control={form.control}
-              name="surname"
+              name='surname'
               render={({ field }) => (
                 <FormItem>
                   <FormMessage />
                   <FormControl>
-                    <Input placeholder="surname" {...field} disabled={disabled} />
+                    <Input placeholder='surname' {...field} disabled={disabled} />
                   </FormControl>
                 </FormItem>
               )}
             />
             {/* The trigger to show/hide the extra fields */}
             <CollapsibleTrigger asChild>
-              <Button type="button" aria-label="edit toggle for middle names and end of name letters" size="icon" variant="ghost" >
+              <Button type='button' aria-label='edit toggle for middle names and end of name letters' size='icon' variant='ghost' >
                 {nameEntryOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
               </Button>
             </CollapsibleTrigger>
           </div>
           {/* Name's 'middleNames' and 'letters' inputs */}
-          <CollapsibleContent className="grid grid-cols-2 gap-x-4">
+          <CollapsibleContent className='grid grid-cols-2 gap-x-4'>
             {/* Name's 'middleNames' input */}
             <FormField
               control={form.control}
-              name="middleNames"
+              name='middleNames'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Middle Names</FormLabel>
                   <FormControl>
-                    <Input placeholder="middle names" {...field} disabled={disabled} />
+                    <Input placeholder='middle names' {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,12 +137,12 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
             {/* Name's 'letters' input */}
             <FormField
               control={form.control}
-              name="letters"
+              name='letters'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Letters</FormLabel>
                   <FormControl>
-                    <Input placeholder="letters" {...field} disabled={disabled} />
+                    <Input placeholder='letters' {...field} disabled={disabled} />
                   </FormControl>
                 </FormItem>
               )}
@@ -150,16 +153,16 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
 
         <Separator />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className='grid grid-cols-2 gap-4'>
           {/* Contact's 'email' input */}
           <FormField
             control={form.control}
-            name="contactEmail"
+            name='contactEmail'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="email" {...field} disabled={disabled} />
+                  <Input type='email' placeholder='email' {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -167,12 +170,12 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
           {/* Contact's 'mobile' input */}
           <FormField
             control={form.control}
-            name="contactMobile"
+            name='contactMobile'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mobile</FormLabel>
                 <FormControl>
-                  <Input placeholder="mobile" {...field} disabled={disabled} />
+                  <Input placeholder='mobile' {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -181,27 +184,27 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
         {/* 'role' input */}
         <FormField
           control={form.control}
-          name="role"
+          name='role'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Role</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a role for the user" />
+                    <SelectValue placeholder='Select a role for the user' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="teacher">Teacher</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value='student'>Student</SelectItem>
+                  <SelectItem value='teacher'>Teacher</SelectItem>
+                  <SelectItem value='admin'>Admin</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={disabled}>Create user</Button>
+        <Button type='submit' className='w-full' disabled={disabled}>Create user</Button>
       </form>
     </Form >
   </>)

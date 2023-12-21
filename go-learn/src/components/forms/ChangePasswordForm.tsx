@@ -36,18 +36,18 @@ const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewP
         {/* New 'password' input */}
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Class Title</FormLabel>
               <FormControl>
-                <Input placeholder="password" type="password" {...field} disabled={disabled} />
+                <Input placeholder='password' type='password' {...field} disabled={disabled} />
                 <FormMessage about='password'/>
               </FormControl>
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={disabled}>Update Password</Button>
+        <Button type='submit' className='w-full' disabled={disabled}>Update Password</Button>
       </form>
     </Form >
   </>)
