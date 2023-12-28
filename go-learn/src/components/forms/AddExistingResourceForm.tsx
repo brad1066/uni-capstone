@@ -36,7 +36,7 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
       if (!resources) return
       setResources(resources)
     })()
-  }, [])
+  }, [unitId])
 
   return (
     <Form {...form}>

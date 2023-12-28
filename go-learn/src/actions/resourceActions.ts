@@ -13,7 +13,8 @@ export async function getResource(id: number, extraFields: string[] = []) {
     where: { id }, include: {
       sections: extraFields.includes('sections') ?? false,
       unit: extraFields.includes('unit') ?? false,
-      author: extraFields.includes('author') ?? false
+      author: extraFields.includes('author') ?? false,
+      uploads: extraFields.includes('uploads') ?? false,
     }
   })
 }

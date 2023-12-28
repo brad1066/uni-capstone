@@ -6,14 +6,19 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DialogHeader } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Resource, Section, Unit, User } from '@prisma/client'
+import { Resource, Section, Unit, Upload, User } from '@prisma/client'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminSectionItem from '@/components/admin/AdminSectionItem'
 import EditResourceForm from '@/components/forms/EditResourceForm'
 import EditResourceContentForm from '@/components/forms/EditResourceContentForm'
 import AddUploadForm from '@/components/forms/AddUploadForm'
+import ReactMarkdown from 'react-markdown'
+import MarkdownLink from '@/components/markdownWrappers/MarkdownLink'
+import { useSupabase } from '@/hooks/useSupabase'
+import ResourceUploadItem from '@/components/ResourceUploadItem'
+import { createUpload, deleteUpload } from '@/actions/uploadActions'
 
 type SingleResourceAdminPageProps = {
   params: {
@@ -28,18 +33,22 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
   const [resource, setResource] = useState<Resource & {
     unit?: Unit | null
     sections?: Section[] | null,
-    author?: User | null
+    author?: User | null,
+    uploads?: Upload[] | null
   }>()
 
   const [editingResource, setEditingResource] = useState<boolean>(false)
   const [editingContent, setEditingContent] = useState<boolean>(false)
+  const [creatingUpload, setCreatingUpload] = useState<boolean>(false)
 
   const refreshResourceData = async () => {
     if (user && resource_id) {
-      const resource = await getResource(parseInt(resource_id), ['unit', 'sections'])
+      const resource = await getResource(parseInt(resource_id), ['unit', 'sections', 'uploads', 'author'])
       if (resource) setResource(resource)
     }
   }
+
+  const {supabase} = useSupabase()
 
   useEffect(() => {
     (async () => {
@@ -123,19 +132,41 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
             </Dialog>
           </CardHeader>
           <CardContent>
-            <pre className='inline-block font-[inherit] whitespace-pre'>{resource.content || 'No Content'}</pre>
+            <ReactMarkdown
+              components={{
+                a: MarkdownLink
+              }}>
+              {resource.content || '# No Content' }
+            </ReactMarkdown>
           </CardContent>
         </Card>
         <Card className='w-full xl:col-span-3'>
           <CardHeader className='flex flex-row items-center gap-2 space-y-0 justify-between'>
             <CardTitle>Uploads</CardTitle>
+            {/* Commented out until time to implement, but fully stocked to deal with the form being developed */}
             <div className='flex gap-2'>
-              <Dialog>
-                <DialogTrigger asChild><Button className='ml-auto'>Add Upload</Button></DialogTrigger>
+              <Dialog open={creatingUpload} onOpenChange={setCreatingUpload}> 
+                <DialogTrigger asChild>
+                  <Button className='ml-auto' >Add Upload</Button>
+                </DialogTrigger>
                 <DialogContent>
                   <DialogHeader><DialogTitle>Add Upload</DialogTitle></DialogHeader>
-                  <AddUploadForm onUploadSave={async () => {
-                    await refreshResourceData()
+                  <AddUploadForm onUploadSave={async (file: File) => {
+                    if (!file) return
+                    const upload = await supabase.storage
+                      .from('golearn-resources')
+                      .upload(`${resource.id}/${file.name}`, file)
+
+                    if (upload.error) {
+                      console.error(upload.error)
+                      return
+                    }
+                    const path = upload.data.path
+                    const publicURL = supabase.storage.from('golearn-resources').getPublicUrl(upload.data.path).data.publicUrl
+                    console.log(path, publicURL)
+                    if (await createUpload({title: file.name, publicURL, path, resourceId: resource.id} as Upload))
+                      await refreshResourceData()
+                    setCreatingUpload(false)
                   }} />
                 </DialogContent>
               </Dialog>
@@ -144,7 +175,13 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
           <CardContent className='flex flex-col xl:grid xl:grid-cols-2 gap-4'>
             {resource.uploads?.length === 0 && <p>No Uploads</p>}
             {resource.uploads?.map(upload => (
-              <>{upload}</>
+              <ResourceUploadItem upload={upload} key={upload.id} onDelete={async () => {
+                const {data} = await supabase.storage.from('golearn-resources').remove([upload.path])
+                // console.log(upload.path)
+                if (!data) return
+                if (!await deleteUpload(upload.id)) return
+                await refreshResourceData()
+              }}/>
             ))}
           </CardContent>
         </Card>

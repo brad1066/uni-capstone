@@ -124,13 +124,24 @@ model Resource {
   author         User?     @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   unit           Unit      @relation(fields: [unitId], references: [id])
   sections       Section[]
-  uploads        String[]
+  uploads        Upload[]
   // Auto Gen
   authorUsername String?
   unitId         Int
 
   @@index([authorUsername])
   @@index([unitId])
+}
+
+model Upload {
+  id         Int       @id @default(autoincrement()) @map("_id")
+  title      String
+  publicURL  String
+  path       String
+  Resource   Resource? @relation(fields: [resourceId], references: [id])
+  resourceId Int?
+
+  @@index([resourceId])
 }
 
 // Collections
