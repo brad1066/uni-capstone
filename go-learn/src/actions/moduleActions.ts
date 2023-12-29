@@ -36,7 +36,16 @@ export async function getModule(id: number, extraFields: string[] = [], roles: U
               } : false,
             }
           } : false,
-          units: extraFields.includes('units')
+          units: extraFields.includes('units'),
+          teachers: extraFields.includes('teachers') ? {
+            include: {
+              user: extraFields.includes('teachers.user') ? {
+                include: {
+                  contactDetails: extraFields.includes('teachers.user.contactDetails') ? true : false
+                }
+              } : false,
+            }
+          } : false
         }
       })
     ])

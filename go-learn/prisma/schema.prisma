@@ -64,6 +64,7 @@ model Teacher {
   id        Int      @id @default(autoincrement()) @map("_id")
   user      User     @relation(fields: [username], references: [username], onDelete: Cascade)
   address   Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  modules   Module[]
   // Auto Gen
   username  String   @unique
   addressId Int?     @unique
@@ -86,7 +87,10 @@ model Module {
   course      Course?   @relation(fields: [courseId], references: [id])
   units       Unit[]
   students    Student[]
-  courseId    Int?
+  teachers    Teacher[]
+
+  // Auto Gen
+  courseId Int?
 
   @@index([courseId])
 }
