@@ -52,10 +52,8 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
                   field.onChange(prevState)
                   if (prevState <= 0) return
                   const filteredResources = resources.filter(_resource => _resource.id == prevState)
-                  console.log(resource?.id, resources, filteredResources)
                   if (filteredResources.length == 0) return
                   setResource(filteredResources[0])
-                  console.log(filteredResources[0])
                 }} />
               </FormControl>
             </FormItem>

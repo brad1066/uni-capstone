@@ -2,7 +2,6 @@
 'use client'
 
 import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from '@/actions/addressActions'
-import { createContactForUser, getContact, updateContact } from '@/actions/contactActions'
 import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from '@/actions/studentActions'
 import { getTeacher } from '@/actions/teacherActions'
 import { getUser, updateUser } from '@/actions/userActions'
@@ -20,7 +19,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
-import { EMPTY_ADDRESS, EMPTY_CONTACT } from '@/lib/utils'
+import { EMPTY_ADDRESS } from '@/lib/utils'
 import { Address, Contact, Course, Module, Student, Teacher, User } from '@prisma/client'
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -38,7 +37,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
   const router = useRouter()
   const urlParams = useSearchParams()
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<User>()
+  const [user, setUser] = useState<User & {contactDetails?: Contact | null}>()
   const [homeAddress, setHomeAddress] = useState<Address>(EMPTY_ADDRESS)
   const [termAddress, setTermAddress] = useState<Address>(EMPTY_ADDRESS)
   const [teacher, setTeacher] = useState<Teacher & { address: Address | null } | undefined>()
@@ -48,14 +47,12 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
     homeAddress?: Address | null,
     termAddress?: Address | null
   }) | undefined>()
-  const [initialUser, setInitialUser] = useState<User | undefined>()
+  const [initialUser, setInitialUser] = useState<User & {contactDetails?: Contact | null}>()
 
   const [addressEntryOpen, setAddressEntryOpen] = useState<boolean>(false)
 
   const [addingCourse, setAddingCourse] = useState<boolean>(false)
   const [addingModule, setAddingModule] = useState<boolean>(false)
-
-  const [contact, setContact] = useState<Contact>(EMPTY_CONTACT)
 
   const userUpdateSuccess = () => toast({ title: 'Updated', description: 'Your details have been updated' })
   const userUpdateFailed = () => toast({
@@ -77,10 +74,10 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
 
   useEffect(() => {
     (async () => {
-      const user = await getUser(username)
+      const user = await getUser(username, ['contactDetails'])
+      setUser(user as User & {contactDetails?: Contact | null})
       // Use of initialUser state allows stops the initial definition of user at runtime on client
-      await setUser(() => { setInitialUser(user); return user })
-      if (user) setContact(await getContact(user.contactId ?? -1) ?? EMPTY_CONTACT)
+      await setUser(user => { setInitialUser(user); return user })
       if (user?.role == 'teacher') {
         const teacher = await getTeacher(username, ['address'])
         await setTeacher(teacher)
@@ -108,14 +105,10 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>
         <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
           {/* User Data Card */}
-          <EditUserForm user={user} setUser={setUser} contact={contact} setContact={setContact} onUpdateSave={async (user) => {
-            updateUser(user).then(async (user) => {
-              if (user?.contactId == null) {
-                const newContact = await createContactForUser(contact, user?.username)
-                if (newContact?.id && user) await setUser(user => ({ ...(user as User), contactId: newContact.id }))
-              }
-              else if (user?.contactId) await updateContact(contact)
-            })
+          <EditUserForm user={user} setUser={setUser} onUpdateSave={async (user) => {
+            if (!user) return
+            console.log(user)
+            updateUser(user as User)
               .then(validateLoggedIn)
               .then(userUpdateSuccess)
               .then(() => { setInitialUser(user) })

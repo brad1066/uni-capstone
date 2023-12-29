@@ -102,15 +102,17 @@ export async function getUsersByRole(roles: UserRole[] = []) {
   return roles
 }
 
-export async function getUser(username: string, roles: UserRole[] = []) {
+export async function getUser(username: string, extraFields: string[] = [], roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, user] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.user.findUnique({ where: { username } })
+      prisma.user.findUnique({ where: { username }, include: {
+        contactDetails: extraFields.includes('contactDetails'),
+      }})
     ])
     if (roles.length == 0 || roles.includes(session?.user.role as UserRole))
-      return user as User
+      return user
   }
   return undefined
 }
@@ -130,12 +132,11 @@ export async function checkLoginCredentials(username: string, password: string):
 
 }
 
-export async function updateUser(user: User) {
-  if (!user) return
+export async function updateUser({username, forename, middleNames, surname, title, letters}: User) {
+  if (!username) return
   const session = await getCurrentUserSession()
-  if (!(session?.user?.role == 'admin')) return null
-
-  return await prisma.user.update({ where: { username: user.username }, data: { ...user } })
+  if (!(session?.user?.role == 'admin' || session?.user?.username == username)) return null
+  return await prisma.user.update({ where: { username }, data: { forename, middleNames, surname, title, letters } })
 }
 
 export async function changePassword(username: string, password: string): Promise<User | undefined> {

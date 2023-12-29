@@ -10,19 +10,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Contact, User } from '@prisma/client'
 import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from '@radix-ui/react-icons'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 
 type EditUserFormProps = {
   loading?: boolean
-  user: User
-  setUser: Dispatch<SetStateAction<User | undefined>>
-  contact?: Contact,
-  setContact?: Dispatch<SetStateAction<Contact>>
+  user: User & {contactDetails?: Contact | null} | undefined
+  setUser: (user: User & {contactDetails?: Contact | null | undefined} | undefined) => void
   canEdit?: boolean
-  onUpdateSave?: (user: User) => void
+  onUpdateSave?: (user: User & {contactDetails?: Contact | null} | undefined) => void
 }
 
-const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSave, canEdit }: EditUserFormProps) => {
+const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUserFormProps) => {
   const [passwordDialogOpen, setPasswordDialogOpen] = useState<boolean>(false)
   const [passwordDialogDisabled, setPasswordDialogDisabled] = useState<boolean>(false)
 
@@ -64,14 +62,14 @@ const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
               >
                 <div className='alwaysShown'>
                   {/* Name's 'title' input */}
-                  <Input disabled={!canEdit} placeholder='title' value={user?.title} onChange={({ target: { value: title } }) => (setUser(user => user ? { ...user, title } : user
+                  <Input disabled={!canEdit} placeholder='title' value={user?.title} onChange={({ target: { value: title } }) => (setUser(user ? { ...user, title } : user
                   ))} />
 
                   {/* Name's 'forename' input */}
-                  <Input disabled={!canEdit} placeholder='forename' value={user?.forename} onChange={({ target: { value: forename } }) => (setUser(user => user ? { ...user, forename } : user))} />
+                  <Input disabled={!canEdit} placeholder='forename' value={user?.forename} onChange={({ target: { value: forename } }) => (setUser(user ? { ...user, forename } : user))} />
 
                   {/* Name's 'surname' input */}
-                  <Input disabled={!canEdit} placeholder='surname' value={user?.surname} onChange={({ target: { value: surname } }) => (setUser(user => user ? { ...user, surname } : user))} />
+                  <Input disabled={!canEdit} placeholder='surname' value={user?.surname} onChange={({ target: { value: surname } }) => (setUser(user ? { ...user, surname } : user))} />
 
                   {/* The trigger to show/hide the extra fields */}
                   <CollapsibleTrigger asChild>
@@ -84,12 +82,12 @@ const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
                 <CollapsibleContent className='grid grid-cols-2 gap-x-4'>
                   {/* Name's 'middleNames' input */}
                   <Label className='flex flex-col gap-4'>Middle names
-                    <Input disabled={!canEdit} placeholder='middle names' value={user?.middleNames || ''} onChange={({ target: { value: middleNames } }) => (setUser(user => user ? { ...user, middleNames } : user))} />
+                    <Input disabled={!canEdit} placeholder='middle names' value={user?.middleNames || ''} onChange={({ target: { value: middleNames } }) => (setUser(user ? { ...user, middleNames } : user))} />
                   </Label>
 
                   {/* Name's 'letters' input */}
                   <Label className='flex flex-col gap-4'>Letters
-                    <Input disabled={!canEdit} placeholder='letters' value={user?.letters || ''} onChange={({ target: { value: letters } }) => (setUser(user => user ? { ...user, letters } : user))} />
+                    <Input disabled={!canEdit} placeholder='letters' value={user?.letters || ''} onChange={({ target: { value: letters } }) => (setUser(user ? { ...user, letters } : user))} />
                   </Label>
                 </CollapsibleContent>
               </Collapsible>
@@ -98,12 +96,12 @@ const EditUserForm = ({ loading, user, setUser, contact, setContact, onUpdateSav
               <div className='flex flex-col sm:flex-row gap-4'>
                 {/* Contact's 'email' input */}
                 <Label className='flex-1 flex flex-col gap-4'>Email
-                  <Input disabled={!canEdit} type='email' placeholder='email' value={contact?.email ?? ''} onChange={(e) => { setContact?.(contact => ({ ...contact, email: e.target.value })) }} />
+                  <Input disabled={!canEdit} type='email' placeholder='email' value={user?.contactDetails?.email ?? ''} onChange={(e) => { setUser?.({...user, contactDetails: {...user?.contactDetails, email: e.target.value} as Contact}) }}/>
                 </Label>
 
                 {/* Contact's 'mobile' input */}
                 <Label className='flex-1 flex flex-col gap-4'>Mobile
-                  <Input disabled={!canEdit} placeholder='mobile' value={contact?.mobile ?? ''} onChange={e => { setContact?.(contact => ({ ...contact, mobile: e.target.value })) }} />
+                  <Input disabled={!canEdit} placeholder='mobile' value={user?.contactDetails?.mobile ?? ''} onChange={e => { setUser?.({...user, contactDetails: {...user?.contactDetails, mobile: e.target.value} as Contact}) }} />
                 </Label>
               </div>
             </li>
