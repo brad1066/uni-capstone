@@ -60,12 +60,9 @@ export function UserDropdown({ className }: UserDropdownProps) {
               </DropdownMenuPortal>
             </DropdownMenuSub>
             <DropdownMenuItem><Link href="/manage/courses" className="w-full">Courses</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link href="/manage/modules" className="w-full">Modules</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Teachers can do in this group */}
           {(user?.role == 'teacher') && (<>
-            <DropdownMenuItem><Link href="/teacher/courses" className="w-full">My courses</Link></DropdownMenuItem>
-            <DropdownMenuItem><Link href="/teacher/classes" className="w-full">My classes</Link></DropdownMenuItem>
             <DropdownMenuItem><Link href="/" className="w-full">Dashboard</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Students can do in this group */}

@@ -31,6 +31,9 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
     modules: Module[] | null
     students: Student[] | null
   }>()
+  const [editCourseDialogOpen, setEditCourseDialogOpen] = useState(false)
+  const [addingModuleDialogOpen, setAddingModuleDialogOpen] = useState(false)
+  const [newModuleDialogOpen, setNewModuleDialogOpen] = useState(false)
 
   const [newModuleId, setNewModuleId] = useState<number>(-1)
 
@@ -63,13 +66,14 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
         <Card className="w-full xl:w-1/2">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0">
             <CardTitle>Course Details</CardTitle>
-            <Dialog>
+            <Dialog open={editCourseDialogOpen} onOpenChange={setEditCourseDialogOpen}>
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Course</DialogTitle></DialogHeader>
                 <EditCourseForm course={course} onUpdateSave={updatedCourse => {
                   updateCourse({ id: course.id, ...updatedCourse }).then(async () => {
                     await refreshCourseData()
+                    setEditCourseDialogOpen(false)
                   })
                 }} />
               </DialogContent>
@@ -78,13 +82,17 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
               <DialogTrigger asChild><Button>Enrolled Students</Button></DialogTrigger>
               <DialogContent className="md:min-w-[50%]">
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
-                <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {
+                  course?.students?.length ? (
+                    <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                  {course.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
-                    await removeStudentCourse(student.id)
-                    await refreshCourseData()
-                  }} />)}
-                </ul>
+                      {course.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
+                        await removeStudentCourse(student.id)
+                        await refreshCourseData()
+                      }} />)}
+                    </ul>
+                  ) : <>No students enrolled</>
+                }
               </DialogContent>
             </Dialog>
           </CardHeader>
@@ -97,7 +105,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
             <CardTitle>Modules</CardTitle>
 
             {/* Add Existing Module */}
-            <Dialog>
+            <Dialog open={addingModuleDialogOpen} onOpenChange={setAddingModuleDialogOpen}>
               <DialogTrigger asChild><Button className="ml-auto">Add</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add existing Module</DialogTitle></DialogHeader>
@@ -109,6 +117,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
                       await addCourseModule(course.id, newModuleId)
                       await refreshCourseData()
                       setNewModuleId(-1)
+                      setAddingModuleDialogOpen(false)
                     }
                   }}>Add</Button>
                 </DialogFooter>
@@ -116,13 +125,14 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
             </Dialog>
 
             {/* Create new Module for course */}
-            <Dialog>
+            <Dialog open={newModuleDialogOpen} onOpenChange={setNewModuleDialogOpen}>
               <DialogTrigger asChild><Button>New</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
                 <NewModuleForm courseId={course.id} submitModule={async (module) => {
                   await createModule(module, course.id)
                   await refreshCourseData()
+                  setNewModuleDialogOpen(false)
                 }} />
               </DialogContent>
             </Dialog>

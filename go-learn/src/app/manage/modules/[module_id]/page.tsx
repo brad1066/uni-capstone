@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Course, Module, Student, Unit } from '@prisma/client'
+import { Course, Module, Student, Teacher, Unit } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -32,16 +32,18 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
     course: Course | null
     students: Student[] | null
     units: Unit[] | null
+    teachers: Teacher[] | null
   }>()
 
+  const [editModuleDetailsDialogOpen, setEditModuleDetailsDialogOpen] = useState(false)
   const [assigningCourse, setAssigningCourse] = useState<boolean>(false)
-  const [courseSelection, setCourseSelection] = useState<number>(-1)
-
   const [creatingUnit, setCreatingUnit] = useState<boolean>(false)
+  
+  const [courseSelection, setCourseSelection] = useState<number>(-1)
 
   const refreshModuleData = async () => {
     if (user && module_id) {
-      const _module = await getModule(parseInt(module_id), ['course', 'students', 'students.user', 'student.contactDetails', 'units'])
+      const _module = await getModule(parseInt(module_id), ['course', 'students', 'students.user', 'student.contactDetails', 'units', 'teachers', 'teachers.user'])
       if (_module) {
         setModule(_module)
       }
@@ -72,13 +74,14 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0">
             <CardTitle>Module Details</CardTitle>
-            <Dialog>
+            <Dialog open={editModuleDetailsDialogOpen} onOpenChange={setEditModuleDetailsDialogOpen}>
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Module</DialogTitle></DialogHeader>
                 <EditModuleForm module={module} onUpdateSave={updatedModule => {
                   updateModule({ id: module.id, ...updatedModule }).then(async () => {
                     await refreshModuleData()
+                    setEditModuleDetailsDialogOpen(false)
                   })
                 }} />
               </DialogContent>
@@ -87,18 +90,20 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
               <DialogTrigger asChild><Button>Enrolled Students</Button></DialogTrigger>
               <DialogContent className="md:min-w-[50%]">
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
-                <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {module?.students?.length ? <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
                   {module.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
                     await removeStudentModule(student.id, module.id)
                     await refreshModuleData()
                   }} />)}
                 </ul>
+                  : <>No students enrolled</>
+                }
               </DialogContent>
             </Dialog>
           </CardHeader>
           <CardContent>
-            <pre className="inline-block font-[inherit] whitespace-pre">{module.description || 'No Description'}</pre>
+            <pre className="inline-block font-[inherit] whitespace-pre-wrap">{module.description || 'No Description'}</pre>
           </CardContent>
         </Card>
 

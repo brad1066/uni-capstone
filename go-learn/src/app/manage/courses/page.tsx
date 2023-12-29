@@ -21,15 +21,20 @@ export default function CoursesAdminPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [courses, setCourses] = useState<Course[]>([])
 
+  const refreshCourses = async () => {
+    setLoading(true)
+    const courses = await getCourses()
+    if (courses) setCourses(courses)
+    setLoading(false)
+  }
+
   useEffect(() => {
     (async () => {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
 
-      const courses = await getCourses()
-      if (courses) setCourses(courses)
-      setLoading(false)
+      refreshCourses()
     })()
   }, [])
 
@@ -47,14 +52,14 @@ export default function CoursesAdminPage() {
               <NewCourseForm submitCourse={async course => {
                 await createCourse(course)
                 setDialogOpen(false)
-                router.refresh()
+                await refreshCourses()
               }} />
             </DialogContent>
           </Dialog>
         </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <AdminCourseItem course={course} key={course.id} onDelete={async () => { deleteCourse(course.id); router.refresh() }} />
+            <AdminCourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
           ))}
         </div>}
       </>}

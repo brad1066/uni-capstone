@@ -33,7 +33,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
     sections?: Section[] | null
   }>()
 
-  const [creatingUnit, setCreatingUnit] = useState<boolean>(false)
+  const [creatingResource, setCreatingResource] = useState<boolean>(false)
   const [creatingSection, setCreatingSection] = useState<boolean>(false)
 
   const refreshUnitData = async () => {
@@ -126,7 +126,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
                 }} />
               </>)}
             </ul>
-              : 'No Resources'}
+              : 'No Sections'}
           </CardContent>
         </Card>
 
@@ -135,7 +135,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
           <CardHeader className="flex flex-row items-center gap-2 space-y-0">
             <CardTitle>Resources</CardTitle>
             {/* Add Unit Dialog */}
-            <Dialog open={creatingUnit} onOpenChange={setCreatingUnit}>
+            <Dialog open={creatingResource} onOpenChange={setCreatingResource}>
               <DialogTrigger asChild><Button className="ml-auto">New Resource</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
@@ -144,7 +144,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
                     await createResource(resource)
                     await refreshUnitData()
                   }
-                  setCreatingUnit(false)
+                  setCreatingResource(false)
                 }} />
               </DialogContent>
             </Dialog>
