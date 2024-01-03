@@ -38,13 +38,15 @@ const AdminModuleItem = ({ module, onDelete }: AdminModuleItemProps) => {
           </TooltipTrigger>
           <TooltipContent>Edit module</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove module</TooltipContent>
-        </Tooltip>
+        {onDelete &&
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Remove module</TooltipContent>
+          </Tooltip>
+        }
       </div>
     </li>
   </>)

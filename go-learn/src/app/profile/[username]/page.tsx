@@ -3,6 +3,7 @@
 
 import { createContactForUser, updateContact } from '@/actions/contactActions'
 import { getUser, updateUser } from '@/actions/userActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import EditUserForm from '@/components/forms/EditUserForm'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
@@ -25,7 +26,7 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
 
-  const [user, setUser] = useState<User & {contactDetails: Contact | null} | null>()
+  const [user, setUser] = useState<User & { contactDetails: Contact | null } | null>()
   const [updated, setUpdated] = useState(false)
 
   const userUpdateSuccess = () => toast({ title: 'Updated', description: 'Your details have been updated' })
@@ -51,6 +52,7 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
   }, [user])
 
   return <>
+    {!loading && !(signedInUser?.role == 'admin' || signedInUser?.username == user?.username) && <NoAccessNotice />}
     <h1 className="mb-[2rem]">Hi {user?.forename} {user?.surname}</h1>
     <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
       <EditUserForm

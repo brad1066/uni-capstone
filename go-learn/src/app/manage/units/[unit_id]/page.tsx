@@ -4,6 +4,7 @@
 import { createResource, deleteResource } from '@/actions/resourceActions'
 import { createSection, deleteSection } from '@/actions/sectionActions'
 import { getUnit, updateUnit } from '@/actions/unitActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminModuleItem from '@/components/admin/AdminModuleItem'
 import AdminResourceItem from '@/components/admin/AdminResourceItem'
 import AdminSectionItem from '@/components/admin/AdminSectionItem'
@@ -61,6 +62,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
   }, [user, unit_id])
 
   return (<>
+    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <NoAccessNotice />}
     {!loading && unit && <>
       <h1 className="mb-[2rem]">{unit.title}</h1>
       <div className="grid gap-[2rem] w-full xl:grid-cols-2">

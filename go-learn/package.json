@@ -7,7 +7,6 @@
     "dev-https": "next dev -p 443 --experimental-https",
     "build": "next build",
     "start": "next start -p 80",
-    "start-https": "next start -p 443 --experimental-https",
     "lint": "next lint"
   },
   "dependencies": {
@@ -60,6 +59,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "autoprefixer": "^10",
     "eslint": "^8",

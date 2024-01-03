@@ -5,6 +5,7 @@ import { addCourseModule, getCourse, removeCourseModule, updateCourse } from '@/
 import { createModule } from '@/actions/moduleActions'
 import { removeStudentCourse } from '@/actions/studentActions'
 import { ModulesSelectCombobox } from '@/components/ModulesSelectCombobox'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminModuleItem from '@/components/admin/AdminModuleItem'
 import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
 import EditCourseForm from '@/components/forms/EditCourseForm'
@@ -54,13 +55,17 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
 
   useEffect(() => {
     (async () => {
+      if (user?.role != 'admin') router.replace(`/courses/${course_id}`)
       refreshCourseData()
       setLoading(false)
     })()
   }, [user, course_id])
 
   return (<>
-    {!loading && course && <>
+    {!loading && !(user?.role == 'admin') && <>
+      <NoAccessNotice />
+    </>}
+    {!loading && (user?.role == 'admin') && course && <>
       <h1 className="mb-[2rem]">{course.title}</h1>
       <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
         <Card className="w-full xl:w-1/2">

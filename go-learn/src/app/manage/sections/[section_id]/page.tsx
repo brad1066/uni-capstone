@@ -3,6 +3,7 @@
 
 import { createResource } from '@/actions/resourceActions'
 import { getSection, updateSection, updateSectionAddResource, updateSectionRemoveResource } from '@/actions/sectionActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminResourceItem from '@/components/admin/AdminResourceItem'
 import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
 import { AddExistingResourceForm } from '@/components/forms/AddExistingResourceForm'
@@ -58,6 +59,9 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
   }, [user, section_id])
 
   return (<>
+    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+      <NoAccessNotice />
+    </>}
     {!loading && section && <>
       <h1 className="mb-[2rem]">{section.title}</h1>
       <div className="flex gap-[2rem] w-full flex-col md:grid md:grid-cols-2 xl:grid-cols-3">

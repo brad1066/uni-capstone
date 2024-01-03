@@ -19,6 +19,7 @@ import MarkdownLink from '@/components/markdownWrappers/MarkdownLink'
 import { useSupabase } from '@/hooks/useSupabase'
 import ResourceUploadItem from '@/components/ResourceUploadItem'
 import { createUpload, deleteUpload } from '@/actions/uploadActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
 
 type SingleResourceAdminPageProps = {
   params: {
@@ -48,7 +49,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
     }
   }
 
-  const {supabase} = useSupabase()
+  const { supabase } = useSupabase()
 
   useEffect(() => {
     (async () => {
@@ -56,7 +57,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
         if (!loggedIn) router.replace('/login')
       })
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -64,10 +65,13 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
       refreshResourceData()
       setLoading(false)
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, resource_id])
 
   return (<>
+    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+      <NoAccessNotice />
+    </>}
     {!loading && resource && <>
       <h1 className='mb-[2rem]'>{resource.title}</h1>
       <div className='flex gap-[2rem] w-full flex-col md:grid md:grid-cols-2 xl:grid-cols-3'>
@@ -136,7 +140,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
               components={{
                 a: MarkdownLink
               }}>
-              {resource.content || '# No Content' }
+              {resource.content || '# No Content'}
             </ReactMarkdown>
           </CardContent>
         </Card>
@@ -145,7 +149,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
             <CardTitle>Uploads</CardTitle>
             {/* Commented out until time to implement, but fully stocked to deal with the form being developed */}
             <div className='flex gap-2'>
-              <Dialog open={creatingUpload} onOpenChange={setCreatingUpload}> 
+              <Dialog open={creatingUpload} onOpenChange={setCreatingUpload}>
                 <DialogTrigger asChild>
                   <Button className='ml-auto' >Add Upload</Button>
                 </DialogTrigger>
@@ -164,7 +168,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
                     const path = upload.data.path
                     const publicURL = supabase.storage.from('golearn-resources').getPublicUrl(upload.data.path).data.publicUrl
                     console.log(path, publicURL)
-                    if (await createUpload({title: file.name, publicURL, path, resourceId: resource.id} as Upload))
+                    if (await createUpload({ title: file.name, publicURL, path, resourceId: resource.id } as Upload))
                       await refreshResourceData()
                     setCreatingUpload(false)
                   }} />
@@ -176,12 +180,12 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
             {resource.uploads?.length === 0 && <p>No Uploads</p>}
             {resource.uploads?.map(upload => (
               <ResourceUploadItem upload={upload} key={upload.id} onDelete={async () => {
-                const {data} = await supabase.storage.from('golearn-resources').remove([upload.path])
+                const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
                 // console.log(upload.path)
                 if (!data) return
                 if (!await deleteUpload(upload.id)) return
                 await refreshResourceData()
-              }}/>
+              }} />
             ))}
           </CardContent>
         </Card>

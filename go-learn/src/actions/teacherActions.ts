@@ -26,7 +26,8 @@ export async function getTeacher(username: string, extraFields: string[] = [], r
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
       prisma.teacher.findUnique({ where: { username }, include: {
         address: extraFields.includes('address'),
-      } })
+        modules: extraFields.includes('modules'),
+      } }),
     ])
     if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && teacher) {
       return teacher

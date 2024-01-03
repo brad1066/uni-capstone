@@ -6,6 +6,7 @@ import { getModule, updateModule } from '@/actions/moduleActions'
 import { removeStudentModule } from '@/actions/studentActions'
 import { createUnit, deleteUnit } from '@/actions/unitActions'
 import { CoursesSelectCombobox } from '@/components/CoursesSelectCombobox'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminCourseItem from '@/components/admin/AdminCourseItem'
 import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
 import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
@@ -66,6 +67,9 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
   }, [user, module_id])
 
   return (<>
+    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+      <NoAccessNotice />
+    </>}
     {!loading && module && <>
       <h1 className="mb-[2rem]">{module.title}</h1>
       <div className="grid gap-[2rem] w-full xl:grid-cols-2">

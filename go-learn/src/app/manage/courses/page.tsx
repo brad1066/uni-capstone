@@ -3,6 +3,7 @@
 
 
 import { createCourse, deleteCourse, getCourses } from '@/actions/courseActions'
+import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminCourseItem from '@/components/admin/AdminCourseItem'
 import NewCourseForm from '@/components/forms/NewCourseForm'
 import { Button } from '@/components/ui/button'
@@ -10,7 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useAuth } from '@/hooks/useAuth'
 import { Course } from '@prisma/client'
 import { PlusIcon } from '@radix-ui/react-icons'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -40,9 +40,7 @@ export default function CoursesAdminPage() {
 
   return (
     <>
-      {(!loading && user?.role != 'admin') && <>
-        Sorry, but you cannot access this resource. <Link href='/'>Go Home</Link>
-      </>}
+      {(!loading && user?.role != 'admin') && <NoAccessNotice />}
       {!loading && user?.role == 'admin' && <>
         <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Courses
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

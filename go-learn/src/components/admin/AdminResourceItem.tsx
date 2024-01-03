@@ -30,13 +30,14 @@ const AdminResourceItem = ({ resource, onDelete }: AdminResourceItemProps) => {
           </TooltipTrigger>
           <TooltipContent>Edit resource</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        {onDelete && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove resource</TooltipContent>
         </Tooltip>
+        }
       </div>
     </li>
   </>)
