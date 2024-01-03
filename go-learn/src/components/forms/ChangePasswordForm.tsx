@@ -28,29 +28,28 @@ const NewPasswordForm = ({ className, username, submitPassword, disabled }: NewP
     },
   })
 
-  return (<>
-    <h3>Change of password for user: {username}</h3>
+  return (
     <Form {...form}>
-      <form onSubmit={
-        form.handleSubmit((values) => { submitPassword?.(values.password) })} className={cn(className, 'max-w-[50rem] flex gap-[1rem] flex-col')}>
+      <form className={cn(className, 'max-w-[50rem] flex gap-[1rem] flex-col')}
+        onSubmit={
+          form.handleSubmit((values) => { submitPassword?.(values.password) })} >
         {/* New 'password' input */}
         <FormField
           control={form.control}
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Class Title</FormLabel>
               <FormControl>
                 <Input placeholder='password' type='password' {...field} disabled={disabled} />
-                <FormMessage about='password'/>
               </FormControl>
+              <FormMessage about='password' />
             </FormItem>
           )}
         />
         <Button type='submit' className='w-full' disabled={disabled}>Update Password</Button>
       </form>
-    </Form >
-  </>)
+    </Form>
+  )
 }
 
 export default NewPasswordForm

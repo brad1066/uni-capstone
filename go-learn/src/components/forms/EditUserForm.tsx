@@ -14,10 +14,10 @@ import { useState } from 'react'
 
 type EditUserFormProps = {
   loading?: boolean
-  user: User & {contactDetails?: Contact | null} | undefined
-  setUser: (user: User & {contactDetails?: Contact | null | undefined} | undefined) => void
+  user: User & { contactDetails?: Contact | null } | undefined
+  setUser: (user: User & { contactDetails?: Contact | null | undefined } | undefined) => void
   canEdit?: boolean
-  onUpdateSave?: (user: User & {contactDetails?: Contact | null} | undefined) => void
+  onUpdateSave?: (user: User & { contactDetails?: Contact | null } | undefined) => void
 }
 
 const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUserFormProps) => {
@@ -52,7 +52,8 @@ const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUse
                     setPasswordDialogOpen(false)
                   }} />
                 </DialogContent>
-              </Dialog></li>}
+              </Dialog>
+            </li>}
             <li className='flex-col items-start hover:bg-accent'>
               Name
               <Collapsible
@@ -96,12 +97,12 @@ const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUse
               <div className='flex flex-col sm:flex-row gap-4'>
                 {/* Contact's 'email' input */}
                 <Label className='flex-1 flex flex-col gap-4'>Email
-                  <Input disabled={!canEdit} type='email' placeholder='email' value={user?.contactDetails?.email ?? ''} onChange={(e) => { setUser?.({...user, contactDetails: {...user?.contactDetails, email: e.target.value} as Contact}) }}/>
+                  <Input disabled={!canEdit} type='email' placeholder='email' value={user?.contactDetails?.email ?? ''} onChange={(e) => { setUser?.({ ...user, contactDetails: { ...user?.contactDetails, email: e.target.value } as Contact }) }} />
                 </Label>
 
                 {/* Contact's 'mobile' input */}
                 <Label className='flex-1 flex flex-col gap-4'>Mobile
-                  <Input disabled={!canEdit} placeholder='mobile' value={user?.contactDetails?.mobile ?? ''} onChange={e => { setUser?.({...user, contactDetails: {...user?.contactDetails, mobile: e.target.value} as Contact}) }} />
+                  <Input disabled={!canEdit} placeholder='mobile' value={user?.contactDetails?.mobile ?? ''} onChange={e => { setUser?.({ ...user, contactDetails: { ...user?.contactDetails, mobile: e.target.value } as Contact }) }} />
                 </Label>
               </div>
             </li>
