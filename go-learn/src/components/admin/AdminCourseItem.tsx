@@ -3,6 +3,7 @@ import { Button } from '../ui/button'
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Course } from '@prisma/client'
+import { useAuth } from '@/hooks/useAuth'
 
 type AdminCourseItemProps = {
   course: Course
@@ -10,6 +11,8 @@ type AdminCourseItemProps = {
 }
 
 const AdminCourseItem = ({ course, onDelete }: AdminCourseItemProps) => {
+
+  const { user } = useAuth()
   return (<>
     <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
       {course.title}
@@ -30,7 +33,7 @@ const AdminCourseItem = ({ course, onDelete }: AdminCourseItemProps) => {
           </TooltipTrigger>
           <TooltipContent>View course</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        {user?.role === 'admin' && <Tooltip>
           <TooltipTrigger asChild>
             <Link href={`/manage/courses/${course.id}`} className="">
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
@@ -38,13 +41,15 @@ const AdminCourseItem = ({ course, onDelete }: AdminCourseItemProps) => {
           </TooltipTrigger>
           <TooltipContent>Edit course</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        }
+        {onDelete && user?.role === 'admin' && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove course</TooltipContent>
         </Tooltip>
+        }
       </div>
     </li>
   </>)

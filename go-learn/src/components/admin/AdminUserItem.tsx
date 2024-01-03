@@ -11,7 +11,7 @@ type AdminUserItemProps = {
 
 const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
   return (<>
-    <li className='w-full flex justify-between gap-[1rem] items-center'>
+    <li className='w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'>
       {user.title} {user.forename} {user.surname}
       <div className='actions flex gap-1'>
         <Tooltip>

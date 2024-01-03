@@ -2,7 +2,7 @@
 'use client'
 
 import { removeCourseModule } from '@/actions/courseActions'
-import { getModule, updateModule } from '@/actions/moduleActions'
+import { getModule, removeModuleTeacher, addModuleTeacher, updateModule } from '@/actions/moduleActions'
 import { removeStudentModule } from '@/actions/studentActions'
 import { createUnit, deleteUnit } from '@/actions/unitActions'
 import { CoursesSelectCombobox } from '@/components/CoursesSelectCombobox'
@@ -10,13 +10,15 @@ import NoAccessNotice from '@/components/NoAccessNotice'
 import AdminCourseItem from '@/components/admin/AdminCourseItem'
 import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
 import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
+import AdminUserItem from '@/components/admin/AdminUserItem'
+import { AssignTeacherModuleForm } from '@/components/forms/AssignTeacherModuleForm'
 import EditModuleForm from '@/components/forms/EditModuleForm'
 import NewUnitForm from '@/components/forms/NewUnitForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Course, Module, Student, Teacher, Unit } from '@prisma/client'
+import { Course, Module, Student, Teacher, Unit, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -33,13 +35,14 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
     course: Course | null
     students: Student[] | null
     units: Unit[] | null
-    teachers: Teacher[] | null
+    teachers: (Teacher & { user?: User | null })[] | null
   }>()
 
   const [editModuleDetailsDialogOpen, setEditModuleDetailsDialogOpen] = useState(false)
   const [assigningCourse, setAssigningCourse] = useState<boolean>(false)
   const [creatingUnit, setCreatingUnit] = useState<boolean>(false)
-  
+  const [addingTeacher, setAddingTeacher] = useState<boolean>(false)
+
   const [courseSelection, setCourseSelection] = useState<number>(-1)
 
   const refreshModuleData = async () => {
@@ -107,7 +110,30 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
             </Dialog>
           </CardHeader>
           <CardContent>
-            <pre className="inline-block font-[inherit] whitespace-pre-wrap">{module.description || 'No Description'}</pre>
+            <pre className="inline-block font-[inherit] whitespace-pre-wrap mb-4">{module.description || 'No Description'}</pre>
+            <h2 className='flex flex-row justify-between mb-2'>Teachers
+              {user?.role == 'admin' && <Dialog open={addingTeacher} onOpenChange={setAddingTeacher}>
+                <DialogTrigger><Button>Add Teacher</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Add Teacher</DialogTitle></DialogHeader>
+                  <AssignTeacherModuleForm onSave={async ({ id: teacherId }) => {
+                    await addModuleTeacher(module.id, teacherId)
+                    await refreshModuleData()
+                    setAddingTeacher(false)
+                  }} exclude={module.teachers?.map(teacher => teacher.id)}/>
+                </DialogContent>
+              </Dialog>}
+            </h2>
+
+            {
+              module?.teachers?.length ? <ul>
+                {module.teachers?.map?.(teacher => <AdminUserItem user={teacher?.user as User} onDelete={async () => {
+                  await removeModuleTeacher(module.id, teacher.id);
+                  await refreshModuleData()
+                }} />)}
+              </ul>
+                : <>No teachers assigned</>
+            }
           </CardContent>
         </Card>
 

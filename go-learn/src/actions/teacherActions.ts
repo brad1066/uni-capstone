@@ -5,12 +5,18 @@ import { Address, Teacher, UserRole } from '@prisma/client'
 import { cookies } from 'next/headers'
 
 
-export async function getTeachers(roles: UserRole[] = []): Promise<Teacher[]> {
+export async function getTeachers(extraFields: string[] = [], roles: UserRole[] = []){
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, teachers] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.teacher.findMany()
+      prisma.teacher.findMany({
+        include: {
+          user: extraFields.includes('user'),
+          address: extraFields.includes('address'),
+          modules: extraFields.includes('modules'),
+        }
+      })
     ])
     if (roles.length == 0 || roles.includes(session?.user.role as UserRole)) {
       return teachers

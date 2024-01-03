@@ -86,3 +86,17 @@ export async function updateModule(module: Module, roles: UserRole[] = []) {
 
   return await prisma.module.update({ where: { id: module.id }, data: { ...module } })
 }
+
+export async function removeModuleTeacher(moduleId: number, teacherId: number) {
+  const session = await getCurrentUserSession()
+  if (!session || session.user.role != 'admin') return null
+
+  return await prisma.module.update({ where: { id: moduleId }, data: { teachers: { disconnect: { id: teacherId } } } })
+}
+
+export async function addModuleTeacher(moduleId: number, teacherId: number) {
+  const session = await getCurrentUserSession()
+  if (!session || session.user.role != 'admin') return null
+
+  return await prisma.module.update({ where: { id: moduleId }, data: { teachers: { connect: { id: teacherId } } } })
+}

@@ -5,8 +5,8 @@ import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 
 type AdminStudentListItemProps = {
-    student: Student & { user?: User & { contactDetails?: Contact | null } | null }
-    onDelete?: () => Promise<unknown>
+  student: Student & { user?: User & { contactDetails?: Contact | null } | null }
+  onDelete?: () => Promise<unknown>
 }
 
 export default function AdminStudentListItem({ student, onDelete }: AdminStudentListItemProps) {
@@ -30,13 +30,14 @@ export default function AdminStudentListItem({ student, onDelete }: AdminStudent
           </TooltipTrigger>
           <TooltipContent>View/Edit Student</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        {onDelete && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove Student</TooltipContent>
         </Tooltip>
+        }
       </div>
     </li>
   </>)
