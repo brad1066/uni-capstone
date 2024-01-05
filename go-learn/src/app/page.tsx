@@ -3,8 +3,10 @@
 
 import TeacherDashboard from '@/components/TeacherDashboard'
 import { useAuth } from '@/hooks/useAuth'
+import { Button } from '@react-email/components'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { sendWelcomeEmail } from '@/actions/emailActions'
 
 export default function Dashboard() {
   const { user, validateLoggedIn } = useAuth()
@@ -22,6 +24,9 @@ export default function Dashboard() {
   }, [])
 
   return <>
+    <Button onClick={() => {
+      sendWelcomeEmail({ to: user?.username || '' })
+    }}>Send Welcome Email</Button>
     {!loading && user?.role === 'admin' && <h1>Admin Dashboard</h1>}
     {!loading && user?.role === 'teacher' && <TeacherDashboard user={user} />}
     {!loading && user?.role === 'student' && <h1>Student Dashboard</h1>}

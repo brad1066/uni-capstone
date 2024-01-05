@@ -7,7 +7,8 @@
     "dev-https": "next dev -p 443 --experimental-https",
     "build": "next build",
     "start": "next start -p 80",
-    "lint": "next lint"
+    "lint": "next lint",
+    "preview-email": "email dev --dir ./src/emails"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -28,21 +29,29 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@react-email/button": "0.0.7",
+    "@react-email/components": "0.0.4",
+    "@react-email/container": "0.0.8",
+    "@react-email/html": "0.0.4",
+    "@react-email/tailwind": "0.0.7",
     "@supabase/supabase-js": "^2.39.0",
     "bcrypt": "^5.1.1",
     "bufferutil": "^4.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "fs": "^0.0.1-security",
     "js-sha1": "^0.6.0",
     "lucide-react": "^0.292.0",
     "mongodb": "^6.2.0",
     "mongoose": "^7.6.3",
     "next": "^14.0.4",
     "next-themes": "^0.2.1",
+    "nodemailer": "^6.9.8",
     "prisma": "^5.5.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-email": "1.9.0",
     "react-hook-form": "^7.47.0",
     "react-markdown": "^9.0.1",
     "sharp": "^0.33.0",
@@ -57,6 +66,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/js-sha1": "^0.6.1",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/ws": "^8.5.10",
@@ -67,5 +77,10 @@
     "postcss": "^8",
     "typescript": "^5",
     "typescript-eslint": "^0.0.1-alpha.0"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }
