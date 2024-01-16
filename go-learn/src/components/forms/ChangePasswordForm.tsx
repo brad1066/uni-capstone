@@ -11,12 +11,21 @@ import { cn } from '@/lib/utils'
 type NewPasswordFormProps = {
   className?: string
   submitPassword?: (password: string) => Promise<unknown>
-  username: string
+  username?: string
   disabled?: boolean
 }
 
 const formSchema = z.object({
-  password: z.string().min(8, { message: 'The password must have at least 8 characters' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+  confirmPassword: z.string(),
+}).superRefine(({ confirmPassword, password }, ctx) => {
+  console.log(confirmPassword, password)
+  if (confirmPassword !== password) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'The passwords did not match'
+    })
+  }
 })
 
 
@@ -24,7 +33,8 @@ const NewPasswordForm = ({ className, submitPassword, disabled }: NewPasswordFor
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: ''
+      password: '',
+      confirmPassword: ''
     },
   })
 
@@ -40,13 +50,26 @@ const NewPasswordForm = ({ className, submitPassword, disabled }: NewPasswordFor
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='password' type='password' {...field} disabled={disabled} />
+                <Input placeholder='Password' type='password' {...field} disabled={disabled} />
               </FormControl>
               <FormMessage about='password' />
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full' disabled={disabled}>Update Password</Button>
+        {/* New 'password' input */}
+        <FormField
+          control={form.control}
+          name='confirmPassword'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder='Confirm password' type='password' {...field} disabled={disabled} />
+              </FormControl>
+              <FormMessage about='confirmPassword' />
+            </FormItem>
+          )}
+        />
+        <Button type='submit' className='w-full' disabled={disabled}>Set Password</Button>
       </form>
     </Form>
   )

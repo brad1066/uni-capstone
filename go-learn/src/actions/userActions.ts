@@ -174,3 +174,28 @@ export async function deleteUser(user: User) {
     prisma.user.delete({ where: { username: user.username } })
   ])
 }
+
+export async function updatePasswordWithCode(authKey: string, authVal: string, password: string) {
+  console.log(authKey, authVal, password)
+  const resp = await prisma.userVerification.update({
+    where: { id: authKey, verificationCode: authVal, used: false },
+    data: { used: true }
+  }).catch(() => false)
+
+  console.log(resp)
+
+  if (typeof resp === 'boolean') return false
+
+  console.log('here')
+  const updatedUser = await prisma.user.update({
+    where: { username: resp.username },
+    data: {
+      password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
+    }
+  }).catch(() => false)
+
+  console.log(updatedUser)
+  if (!updatedUser) return false
+
+  return true
+}
