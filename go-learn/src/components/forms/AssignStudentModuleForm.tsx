@@ -13,12 +13,12 @@ import { ModulesSelectCombobox } from '../ModulesSelectCombobox'
 
 type AssignStudentModuleFormProps = {
   student: Student,
-  exclude?: number[],
+  exclude?: string[],
   onSave: (module: Module) => void
 }
 
 const formSchema = z.object({
-  module: z.coerce.number().min(0, 'You need to select a module')
+  module: z.coerce.string().min(0, 'You need to select a module')
 })
 
 export function AssignStudentModuleForm({exclude: modExclusions, onSave }: AssignStudentModuleFormProps) {
@@ -27,7 +27,7 @@ export function AssignStudentModuleForm({exclude: modExclusions, onSave }: Assig
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      module: -1
+      module: ''
     }
   })
 
@@ -51,7 +51,7 @@ export function AssignStudentModuleForm({exclude: modExclusions, onSave }: Assig
               <FormControl>
                 <ModulesSelectCombobox value={field.value} setValue={(prevState) => {
                   field.onChange(prevState)
-                  if (prevState <= 0) return
+                  if (prevState == '') return
                   const filteredModules = modules.filter(_module => _module.id == prevState)
                   if (filteredModules.length == 0) return
                   setModule(filteredModules[0])

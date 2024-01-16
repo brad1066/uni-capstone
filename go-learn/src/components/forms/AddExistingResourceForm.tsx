@@ -11,13 +11,13 @@ import { Button } from '../ui/button'
 import { ResourcesSelectCombobox } from '../ResourcesSelectCombobox'
 
 type AddExistingResourceFormProps = {
-  unitId: number,
-  ignoreList?: number[],
+  unitId: string,
+  ignoreList?: string[],
   onSave: (resource: Resource) => void
 }
 
 const formSchema = z.object({
-  resource: z.coerce.number().min(0, 'You need to select a resource')
+  resource: z.coerce.string().min(0, 'You need to select a resource')
 })
 
 export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExistingResourceFormProps) {
@@ -26,7 +26,7 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      resource: -1
+      resource: ''
     }
   })
 
@@ -50,7 +50,7 @@ export function AddExistingResourceForm({ onSave, unitId, ignoreList }: AddExist
               <FormControl>
                 <ResourcesSelectCombobox unitId={unitId} ignoreList={ignoreList} value={field.value} setValue={(prevState) => {
                   field.onChange(prevState)
-                  if (prevState <= 0) return
+                  if (prevState == '') return
                   const filteredResources = resources.filter(_resource => _resource.id == prevState)
                   if (filteredResources.length == 0) return
                   setResource(filteredResources[0])

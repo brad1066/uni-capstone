@@ -38,7 +38,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
 
   const refreshSectionData = async () => {
     if (user && section_id) {
-      const section = await getSection(parseInt(section_id), ['unit', 'resources'])
+      const section = await getSection(section_id, ['unit', 'resources'])
       if (section) setSection(section)
     }
   }

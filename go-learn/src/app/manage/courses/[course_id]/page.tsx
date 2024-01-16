@@ -36,11 +36,11 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
   const [addingModuleDialogOpen, setAddingModuleDialogOpen] = useState(false)
   const [newModuleDialogOpen, setNewModuleDialogOpen] = useState(false)
 
-  const [newModuleId, setNewModuleId] = useState<number>(-1)
+  const [newModuleId, setNewModuleId] = useState<string>('')
 
   const refreshCourseData = async () => {
     if (user && course_id) {
-      const course = await getCourse(parseInt(course_id), ['modules', 'students', 'students.user', 'student.contactDetails'])
+      const course = await getCourse(course_id, ['modules', 'students', 'students.user', 'student.contactDetails'])
       if (course) setCourse(course)
     }
   }
@@ -118,10 +118,10 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
                 <ModulesSelectCombobox unassignedOnly value={newModuleId} setValue={setNewModuleId} exclusions={course.modules?.map(mod => mod.id)} />
                 <DialogFooter>
                   <Button className="ml-auto" onClick={async () => {
-                    if (newModuleId !== -1) {
+                    if (newModuleId !== '') {
                       await addCourseModule(course.id, newModuleId)
                       await refreshCourseData()
-                      setNewModuleId(-1)
+                      setNewModuleId('')
                       setAddingModuleDialogOpen(false)
                     }
                   }}>Add</Button>

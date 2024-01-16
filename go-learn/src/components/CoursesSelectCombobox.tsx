@@ -19,14 +19,14 @@ import {
 import { useEffect, useState } from 'react'
 import { getCourses } from '@/actions/courseActions'
 
-export function CoursesSelectCombobox({value, setValue}: {value: number, setValue: (prevState: number) => void}) {
+export function CoursesSelectCombobox({value, setValue}: {value: string, setValue: (prevState: string) => void}) {
   const [open, setOpen] = useState(false)
-  const [courses, setCourses] = useState<{id: number, value: string, label:string}[]>()
+  const [courses, setCourses] = useState<{id: string, value: string, label:string}[]>()
 
   useEffect(() => {
     (async () => {
       setCourses(await getCourses().then(vals => vals.map(val => ({id: val.id, value: val.title.toLowerCase(), label: val.title}))))
-      setCourses(courses => ([{id: -1, label: 'Select a course', value:'-1'}, ...(courses ?? []), ]))
+      setCourses(courses => ([{id: '', label: 'Select a course', value:'-1'}, ...(courses ?? []), ]))
     })()
   })
 
@@ -56,7 +56,7 @@ export function CoursesSelectCombobox({value, setValue}: {value: number, setValu
                 value={course.value}
                 onSelect={(currentValue: string) => {
                   const currentId = courses.find(course => course.value == currentValue)?.id
-                  setValue(course.id === value ? -1 : currentId ?? -1)
+                  setValue(course.id === value ? '' : currentId ?? '')
                   setOpen(false)
                 }}
               >

@@ -21,20 +21,20 @@ import { useEffect, useState } from 'react'
 import { getUnitResources } from '@/actions/resourceActions'
 
 type ResourcesSelectComboboxProps = {
-  ignoreList?: number[]
-  unitId?: number
-  value: number
-  setValue: (prevState: number) => void
+  ignoreList?: string[]
+  unitId?: string
+  value: string
+  setValue: (prevState: string) => void
 }
 
 export function ResourcesSelectCombobox({ ignoreList, unitId, value, setValue }: ResourcesSelectComboboxProps) {
   const [open, setOpen] = useState(false)
-  const [resources, setResources] = useState<{ id: number, value: string, label: string }[]>()
+  const [resources, setResources] = useState<{ id: string, value: string, label: string }[]>()
 
   useEffect(() => {
     (async () => {
-      setResources(await getUnitResources(unitId ?? -1).then(vals => vals?.map(val => ({ id: val.id, value: val.title.toLowerCase(), label: val.title }))))
-      setResources(resources => ([{ id: -1, label: 'Select a resource', value: '-1' }, ...(resources ?? []),]))
+      setResources(await getUnitResources(unitId ?? '').then(vals => vals?.map(val => ({ id: val.id, value: val.title.toLowerCase(), label: val.title }))))
+      setResources(resources => ([{ id: '', label: 'Select a resource', value: '-1' }, ...(resources ?? []),]))
       setResources(resources => resources?.filter(resource => !ignoreList?.includes(resource.id)))
     })()
   }, [])
@@ -65,7 +65,7 @@ export function ResourcesSelectCombobox({ ignoreList, unitId, value, setValue }:
                 value={resource.value}
                 onSelect={(currentValue: string) => {
                   const currentId = resources.find(resource => resource.value == currentValue)?.id
-                  setValue(resource.id === value ? -1 : currentId ?? -1)
+                  setValue(resource.id === value ? '' : currentId ?? '')
                   setOpen(false)
                 }}
               >

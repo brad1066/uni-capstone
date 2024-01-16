@@ -1,20 +1,21 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { genRandomPassword } from '@/lib/utils'
+import { genRandomPassword, genVerificationCode } from '@/lib/utils'
 import { Contact, User, UserRole } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
 import { env } from 'process'
 import { getCurrentUserSession } from './authActions'
 import { createContactForUser } from './contactActions'
+import { sendWelcomeEmail } from './emailActions'
 
 /**
  * Creates a user with a default password
  * @param userInfo A TUser object to create a new user from
  * @returns Promise of a User object (as defined by Prisma)
  */
-export async function createUser(userInfo: User & {contactDetails?: Contact}): Promise<User> {
+export async function createUser(userInfo: User & { contactDetails?: Contact }): Promise<User> {
   const rNum = Math.floor((Math.random()) * 100000)
   let user = await prisma.user.create({
     data: {
@@ -56,6 +57,16 @@ export async function createUser(userInfo: User & {contactDetails?: Contact}): P
     }).then(student => { user = student.user })
   }
 
+  if (userInfo?.contactDetails) {
+    const verfication = await prisma.userVerification.create({
+      data: {
+        username: user.username,
+        verificationCode: genVerificationCode(),
+      }
+    })
+    console.log(verfication)
+    sendWelcomeEmail(user, userInfo.contactDetails, verfication)
+  }
   return user
 }
 
@@ -107,9 +118,11 @@ export async function getUser(username: string, extraFields: string[] = [], role
   if (authCookie) {
     const [session, user] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-      prisma.user.findUnique({ where: { username }, include: {
-        contactDetails: extraFields.includes('contactDetails'),
-      }})
+      prisma.user.findUnique({
+        where: { username }, include: {
+          contactDetails: extraFields.includes('contactDetails'),
+        }
+      })
     ])
     if (roles.length == 0 || roles.includes(session?.user.role as UserRole))
       return user
@@ -132,7 +145,7 @@ export async function checkLoginCredentials(username: string, password: string):
 
 }
 
-export async function updateUser({username, forename, middleNames, surname, title, letters}: User) {
+export async function updateUser({ username, forename, middleNames, surname, title, letters }: User) {
   if (!username) return
   const session = await getCurrentUserSession()
   if (!(session?.user?.role == 'admin' || session?.user?.username == username)) return null
@@ -157,7 +170,7 @@ export async function deleteUser(user: User) {
   if (!(session?.user?.role == 'admin')) return undefined
 
   return await prisma.$transaction([
-    prisma.userSession.deleteMany({ where: { userUsername: user.username } }),
+    prisma.userSession.deleteMany({ where: { username: user.username } }),
     prisma.user.delete({ where: { username: user.username } })
   ])
 }

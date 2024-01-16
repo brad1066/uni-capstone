@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { Teacher, Student, User } from '@prisma/client'
+import { Teacher, User } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
@@ -12,12 +12,12 @@ import { TeachersSelectCombobox } from '../TeachersSelectCombobox'
 import { getTeachers } from '@/actions/teacherActions'
 
 type AssignTeacherModuleFormProps = {
-  exclude?: number[],
+  exclude?: string[],
   onSave?: (teacher: Teacher) => void
 }
 
 const formSchema = z.object({
-  teacher: z.coerce.number().min(0, 'You need to select a teacher')
+  teacher: z.coerce.string().min(0, 'You need to select a teacher')
 })
 
 export function AssignTeacherModuleForm({ exclude: teacherExclusions, onSave }: AssignTeacherModuleFormProps) {
@@ -26,7 +26,7 @@ export function AssignTeacherModuleForm({ exclude: teacherExclusions, onSave }: 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      teacher: -1
+      teacher: ''
     }
   })
 
@@ -50,7 +50,7 @@ export function AssignTeacherModuleForm({ exclude: teacherExclusions, onSave }: 
               <FormControl>
                 <TeachersSelectCombobox value={field.value} setValue={(prevState) => {
                   field.onChange(prevState)
-                  if (prevState <= 0) return
+                  if (prevState == '') return
                   const filteredTeachers = teachers.filter(_teacher => _teacher.id == prevState)
                   if (filteredTeachers.length == 0) return
                   setTeacher(filteredTeachers[0])

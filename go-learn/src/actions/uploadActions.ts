@@ -4,7 +4,7 @@ import { Upload } from '@prisma/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 
-export async function getUpload(id: number) {
+export async function getUpload(id: string) {
   const session = await getCurrentUserSession()
   if (!session?.user) return undefined
 
@@ -18,7 +18,7 @@ export async function getUploads() {
   return await prisma.upload.findMany()
 }
 
-export async function deleteUpload(id: number) {
+export async function deleteUpload(id: string) {
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
   return await prisma.upload.delete({ where: { id } }) ?? undefined

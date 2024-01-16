@@ -39,7 +39,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
 
   const refreshUnitData = async () => {
     if (user && unit_id) {
-      const unit = await getUnit(parseInt(unit_id), ['module', 'resources', 'sections'])
+      const unit = await getUnit(unit_id, ['module', 'resources', 'sections'])
       if (unit) {
         setUnit(unit)
       }

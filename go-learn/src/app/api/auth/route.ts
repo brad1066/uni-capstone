@@ -43,7 +43,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
     // Create a new UserSession on the DB
     const userSession = await prisma.userSession
-      .create({ data: { cookieValue, userUsername: username } })
+      .create({ data: { cookieValue, username } })
 
     // If rememberMe is true, set a max-age to 48 hours (otherwise defaults to a session cookie)
     if (userSession) {

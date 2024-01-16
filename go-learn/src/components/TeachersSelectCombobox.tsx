@@ -10,14 +10,14 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { cn } from '@/lib/utils'
 
 type TeachersSelectComboboxProps = {
-  value: number
-  setValue: (prevState: number) => void
-  exclusions?: number[]
+  value: string
+  setValue: (prevState: string) => void
+  exclusions?: string[]
 }
 
 export function TeachersSelectCombobox({ value, setValue, exclusions }: TeachersSelectComboboxProps) {
   const [open, setOpen] = useState(false)
-  const [teachers, setTeachers] = useState<{ id: number, value: string, label: string }[]>()
+  const [teachers, setTeachers] = useState<{ id: string, value: string, label: string }[]>()
 
   useEffect(() => {
     (async () => {
@@ -26,8 +26,8 @@ export function TeachersSelectCombobox({ value, setValue, exclusions }: Teachers
         .then((teachers) => teachers.filter(teacher => !exclusions?.includes(teacher.id)))
         .then(teachers => teachers.map(teacher => ({ id: teacher.id, value: teacher.id.toString(), label: `${teacher?.user?.forename} ${teacher?.user?.surname}` })))
 
-      // Set teachers with a default value of -1
-      setTeachers([{ id: -1, label: 'Select a teacher', value: '-1' }, ...teachers])
+      // Set teachers with a default value of ''
+      setTeachers([{ id: '', label: 'Select a teacher', value: '-1' }, ...teachers])
     })()
   }, [])
 
@@ -57,7 +57,7 @@ export function TeachersSelectCombobox({ value, setValue, exclusions }: Teachers
                 value={teacher.value}
                 onSelect={(currentValue: string) => {
                   const currentId = teachers.find(teacher => teacher.value == currentValue)?.id
-                  setValue(teacher.id === value ? -1 : currentId ?? -1)
+                  setValue(teacher.id === value ? '' : currentId ?? '')
                   setOpen(false)
                 }}
               >

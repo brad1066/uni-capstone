@@ -44,7 +44,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
 
   const refreshResourceData = async () => {
     if (user && resource_id) {
-      const resource = await getResource(parseInt(resource_id), ['unit', 'sections', 'uploads', 'author'])
+      const resource = await getResource(resource_id, ['unit', 'sections', 'uploads', 'author'])
       if (resource) setResource(resource)
     }
   }

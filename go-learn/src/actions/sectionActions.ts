@@ -14,13 +14,13 @@ export async function createSection({ title, description = '', unitId }: Section
   return await prisma.section.create({ data: { title, description, unitId } }) ?? undefined
 }
 
-export async function deleteSection(id: number) {
+export async function deleteSection(id: string) {
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
   return await prisma.section.delete({ where: { id } }) ?? undefined
 }
 
-export async function getSection(id: number, extraFields: string[] = []) {
+export async function getSection(id: string, extraFields: string[] = []) {
   const authCookie = cookies().get('auth')
   if (!authCookie) return undefined
   const [session, section] = await prisma.$transaction([
@@ -47,13 +47,13 @@ export async function updateSection({ id, title, description }: Section) {
   return await prisma.section.update({ where: { id }, data: { title, description } }) ?? undefined
 }
 
-export async function updateSectionAddResource(sectionId: number, resourceId: number) {
+export async function updateSectionAddResource(sectionId: string, resourceId: string) {
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
   return await prisma.section.update({ where: { id: sectionId }, data: { resources: { connect: { id: resourceId } } } }) ?? undefined
 }
 
-export async function updateSectionRemoveResource(sectionId: number, resourceId: number) {
+export async function updateSectionRemoveResource(sectionId: string, resourceId: string) {
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
   return await prisma.section.update({ where: { id: sectionId }, data: { resources: { disconnect: { id: resourceId } } } }) ?? undefined

@@ -2,15 +2,33 @@
 
 import { render } from "@react-email/render";
 import { sendEmail } from "../lib/emails";
-import { NotionMagicLinkEmail } from "../emails/notion-magic-link";
+import { Contact, User, UserVerification } from "@prisma/client";
+import NewUserWelcomeEmail from "../emails/NewUserWelcome";
 
 export async function sendWelcomeEmail(
-    { to }: { to: string },
+    { username, forename, surname }: User,
+    { email }: Contact,
+    { id: authKey, verificationCode: authVal }: UserVerification
 ) {
     const resp = await sendEmail({
-        to: "bradleybeasley2000@gmail.com",
-        subject: "Welcome to NextAPI",
-        html: render(NotionMagicLinkEmail({ loginCode: '123456' })),
+        to: email ?? '',
+        subject: `Welcome to GoLearn, ${forename} ${surname}`,
+        html: render(NewUserWelcomeEmail({ username, authKey, authVal })),
+    });
+
+    if (resp.accepted)
+        return { message: "Email sent successfully" };
+}
+
+export async function sendPasswordResetEmail(
+    { username, forename, surname }: User,
+    { email }: Contact,
+    { id: authKey, verificationCode: authVal }: UserVerification
+) {
+    const resp = await sendEmail({
+        to: email ?? '',
+        subject: `Password reset for GoLearn, ${forename} ${surname}`,
+        html: render(NewUserWelcomeEmail({ username, authKey, authVal })),
     });
 
     if (resp.accepted)

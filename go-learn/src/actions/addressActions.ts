@@ -5,7 +5,7 @@ import { Address, UserRole } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { getCurrentUserSession } from './authActions'
 
-export async function getTeacherAddress(id: number, roles: UserRole[] = []): Promise<Address | undefined> {
+export async function getTeacherAddress(id: string, roles: UserRole[] = []): Promise<Address | undefined> {
   const authCookie = cookies().get('auth')
   if (!authCookie) return
   const [session, teacher] = await prisma.$transaction([
@@ -19,7 +19,7 @@ export async function getTeacherAddress(id: number, roles: UserRole[] = []): Pro
   return undefined
 }
 
-export async function createTeacherAddress(teacherId: number, address: Address, roles: UserRole[] = []) {
+export async function createTeacherAddress(teacherId: string, address: Address, roles: UserRole[] = []) {
   const session = await getCurrentUserSession()
   if (!session?.user || (roles.length > 0 && !roles.includes(session?.user.role as UserRole))) return
   const { id: addressId } = await prisma.address.create({
@@ -42,7 +42,7 @@ export async function updateAddress(address: Address, roles: UserRole[] = []) {
   return await prisma.address.update({ where: { id: address.id }, data: { ...address } })
 }
 
-export async function createStudentAddress(studentId: number, address: Address, isHomeAddress: boolean = true, roles: UserRole[] = []) {
+export async function createStudentAddress(studentId: string, address: Address, isHomeAddress: boolean = true, roles: UserRole[] = []) {
   const session = await getCurrentUserSession()
   if (!session?.user || (roles.length > 0 && !roles.includes(session?.user.role as UserRole))) return
   const { id: addressId } = await prisma.address.create({

@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
 
 type NewSectionFormProps = {
-  unitId: number
+  unitId: string
   onSubmit?: (section: Section, unitId?: number, sectionId?: number) => Promise<void>
   className?: string,
 }

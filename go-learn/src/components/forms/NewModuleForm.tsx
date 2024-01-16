@@ -13,16 +13,16 @@ import { Module } from '@prisma/client'
 
 type NewModuleFormProps = {
   className?: string
-  submitModule?: (module: Module, course: number) => Promise<unknown>
+  submitModule?: (module: Module, course: string) => Promise<unknown>
   disabled?: boolean,
-  courseId?: number
+  courseId?: string
 }
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'You need to provide a title for the module' }),
   description: z.ostring().optional(),
   websiteURL: z.ostring().optional(),
-  course: z.coerce.number().min(0, 'You need to select a course')
+  course: z.coerce.string().min(0, 'You need to select a course')
 })
 
 
@@ -33,7 +33,7 @@ const NewModuleForm = ({ className, submitModule, disabled, courseId }: NewModul
       title: '',
       description: '',
       websiteURL: '',
-      course: courseId ?? -1
+      course: courseId ?? ''
     },
   })
 

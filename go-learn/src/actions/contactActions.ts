@@ -4,7 +4,7 @@ import { Contact, UserRole } from '@prisma/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 
-export async function getContact(id: number, roles: UserRole[] = []) {
+export async function getContact(id: string, roles: UserRole[] = []) {
   const session = await getCurrentUserSession()
   if (!session?.user || (roles.length > 0 && !(session.user.role in roles))) return null
 

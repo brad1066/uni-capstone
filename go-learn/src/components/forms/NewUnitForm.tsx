@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
 
 type NewUnitFormProps = {
-  moduleId: number
+  moduleId: string
   onSubmit?: (unit: Unit) => Promise<void>
   className?: string,
 }

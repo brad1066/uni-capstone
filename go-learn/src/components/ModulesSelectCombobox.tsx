@@ -20,9 +20,9 @@ import {
 import { useEffect, useState } from 'react'
 import { getModules } from '@/actions/moduleActions'
 
-export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedOnly }: { value: number, setValue: (prevState: number) => void, exclusions?: number[], unassignedOnly?: boolean }) {
+export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedOnly }: { value: string, setValue: (prevState: string) => void, exclusions?: string[], unassignedOnly?: boolean }) {
   const [open, setOpen] = useState(false)
-  const [modules, setModules] = useState<{ id: number, value: string, label: string }[]>()
+  const [modules, setModules] = useState<{ id: string, value: string, label: string }[]>()
 
   useEffect(() => {
     (async () => {
@@ -32,7 +32,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
         .then(modules => modules.map(module => ({ id: module.id, value: module.id.toString(), label: module.title })))
 
       // Set modules with a default value of -1
-      setModules([{ id: -1, label: 'Select a module', value: '-1' }, ...modules])
+      setModules([{ id: '', label: 'Select a module', value: '-1' }, ...modules])
     })()
   }, [])
 
@@ -62,7 +62,7 @@ export function ModulesSelectCombobox({ value, setValue, exclusions, unassignedO
                 value={module.value}
                 onSelect={(currentValue: string) => {
                   const currentId = modules.find(module => module.value == currentValue)?.id
-                  setValue(module.id === value ? -1 : currentId ?? -1)
+                  setValue(module.id === value ? '' : currentId ?? '')
                   setOpen(false)
                 }}
               >

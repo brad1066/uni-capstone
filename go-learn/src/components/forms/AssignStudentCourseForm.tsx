@@ -16,7 +16,7 @@ type AssignStudentCourseFormProps = {
 }
 
 const formSchema = z.object({
-  course: z.coerce.number().min(0, 'You need to select a course')
+  course: z.coerce.string().min(0, 'You need to select a course')
 })
 
 export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps) {
@@ -25,7 +25,7 @@ export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      course: -1
+      course: ''
     }
   })
 
@@ -48,7 +48,7 @@ export function AssignStudentCourseForm({ onSave }: AssignStudentCourseFormProps
               <FormControl>
                 <CoursesSelectCombobox value={field.value} setValue={(prevState) => {
                   field.onChange(prevState)
-                  if (prevState <= 0) return
+                  if (prevState == '') return
                   const filteredCourses = courses.filter(_course => _course.id == prevState)
                   if (filteredCourses.length == 0) return
                   setCourse(filteredCourses[0])

@@ -19,7 +19,7 @@ export async function getModules(roles: UserRole[] = []): Promise<Module[]> {
   return []
 }
 
-export async function getModule(id: number, extraFields: string[] = [], roles: UserRole[] = []) {
+export async function getModule(id: string, extraFields: string[] = [], roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, module] = await prisma.$transaction([
@@ -56,7 +56,7 @@ export async function getModule(id: number, extraFields: string[] = [], roles: U
   return undefined
 }
 
-export async function createModule({ title, description = '', websiteURL = '' }: Module, courseId = -1, roles: UserRole[] = []) {
+export async function createModule({ title, description = '', websiteURL = '' }: Module, courseId = '', roles: UserRole[] = []) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()
@@ -71,7 +71,7 @@ export async function createModule({ title, description = '', websiteURL = '' }:
   return module as Module
 }
 
-export async function deleteModule(id: number) {
+export async function deleteModule(id: string) {
   const session = await getCurrentUserSession()
   if (!session || session.user.role != 'admin') return null
 
@@ -87,14 +87,14 @@ export async function updateModule(module: Module, roles: UserRole[] = []) {
   return await prisma.module.update({ where: { id: module.id }, data: { ...module } })
 }
 
-export async function removeModuleTeacher(moduleId: number, teacherId: number) {
+export async function removeModuleTeacher(moduleId: string, teacherId: string) {
   const session = await getCurrentUserSession()
   if (!session || session.user.role != 'admin') return null
 
   return await prisma.module.update({ where: { id: moduleId }, data: { teachers: { disconnect: { id: teacherId } } } })
 }
 
-export async function addModuleTeacher(moduleId: number, teacherId: number) {
+export async function addModuleTeacher(moduleId: string, teacherId: string) {
   const session = await getCurrentUserSession()
   if (!session || session.user.role != 'admin') return null
 

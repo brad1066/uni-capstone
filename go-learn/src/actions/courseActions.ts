@@ -19,7 +19,7 @@ export async function getCourses(roles: UserRole[] = []): Promise<Course[]> {
   return []
 }
 
-export async function getCourse(id: number, extraFields: string[] = [], roles: UserRole[] = []) {
+export async function getCourse(id: string, extraFields: string[] = [], roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, course] = await prisma.$transaction([
@@ -57,7 +57,7 @@ export async function createCourse({ title, description = '', websiteURL = '' }:
   return await prisma.course.create({ data: { title, description, websiteURL } })
 }
 
-export async function deleteCourse(id: number) {
+export async function deleteCourse(id: string) {
   const session = await getCurrentUserSession()
   if (!session || session.user?.role != 'admin') return null
 
@@ -66,7 +66,7 @@ export async function deleteCourse(id: number) {
   return deleted
 }
 
-export async function removeCourseModule(courseId: number, moduleId: number) {
+export async function removeCourseModule(courseId: string, moduleId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
@@ -86,7 +86,7 @@ export async function updateCourse(course: Course, roles: UserRole[] = []) {
   return await prisma.course.update({ where: { id: course.id }, data: { ...course } })
 }
 
-export async function addCourseModule(courseId: number, moduleId: number) {
+export async function addCourseModule(courseId: string, moduleId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })

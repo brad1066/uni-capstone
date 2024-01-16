@@ -10,8 +10,12 @@ export function genRandomPassword() {
   return Math.random().toString(36).slice(-8)
 }
 
+export function genVerificationCode() {
+  return Math.random().toString(36).slice(-16)
+}
+
 export const EMPTY_ADDRESS: Address = {
-  id: -1,
+  id: '',
   addressLine1: '',
   addressLine2: '',
   town: '',
@@ -20,7 +24,7 @@ export const EMPTY_ADDRESS: Address = {
 }
 
 export const EMPTY_CONTACT: Contact = {
-  id: -1,
+  id: '',
   label: 'primary',
   email: '',
   mobile: ''

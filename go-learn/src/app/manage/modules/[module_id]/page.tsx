@@ -43,11 +43,11 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
   const [creatingUnit, setCreatingUnit] = useState<boolean>(false)
   const [addingTeacher, setAddingTeacher] = useState<boolean>(false)
 
-  const [courseSelection, setCourseSelection] = useState<number>(-1)
+  const [courseSelection, setCourseSelection] = useState<string>('')
 
   const refreshModuleData = async () => {
     if (user && module_id) {
-      const _module = await getModule(parseInt(module_id), ['course', 'students', 'students.user', 'student.contactDetails', 'units', 'teachers', 'teachers.user'])
+      const _module = await getModule(module_id, ['course', 'students', 'students.user', 'student.contactDetails', 'units', 'teachers', 'teachers.user'])
       if (_module) {
         setModule(_module)
       }
@@ -120,7 +120,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
                     await addModuleTeacher(module.id, teacherId)
                     await refreshModuleData()
                     setAddingTeacher(false)
-                  }} exclude={module.teachers?.map(teacher => teacher.id)}/>
+                  }} exclude={module.teachers?.map(teacher => teacher.id)} />
                 </DialogContent>
               </Dialog>}
             </h2>

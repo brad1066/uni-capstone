@@ -46,7 +46,7 @@ export async function getStudent(username: string, extraFields: string[] = [], r
   return undefined
 }
 
-export async function removeStudentModule(studentId: number, moduleId: number) {
+export async function removeStudentModule(studentId: string, moduleId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
@@ -59,7 +59,7 @@ export async function removeStudentModule(studentId: number, moduleId: number) {
   }
 }
 
-export async function addStudentModule(studentId: number, moduleId: number) {
+export async function addStudentModule(studentId: string, moduleId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
@@ -72,7 +72,7 @@ export async function addStudentModule(studentId: number, moduleId: number) {
   }
 }
 
-export async function removeStudentCourse(studentId: number) {
+export async function removeStudentCourse(studentId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })
@@ -85,7 +85,7 @@ export async function removeStudentCourse(studentId: number) {
   }
 }
 
-export async function addStudentCourse(studentId: number, courseId: number) {
+export async function addStudentCourse(studentId: string, courseId: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } })

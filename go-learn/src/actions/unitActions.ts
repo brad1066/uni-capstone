@@ -5,17 +5,17 @@ import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 import { Unit } from '@prisma/client'
 
-export async function getUnits(moduleId: number = -1) {
+export async function getUnits(moduleId: string = '') {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await getCurrentUserSession()
     if (!session) return []
   }
-  if (moduleId != -1) return prisma.unit.findMany({ where: { moduleId } })
+  if (moduleId != '') return prisma.unit.findMany({ where: { moduleId } })
   return prisma.unit.findMany() ?? []
 }
 
-export async function getUnit(unitId: number, extraFields: string[] = []) {
+export async function getUnit(unitId: string, extraFields: string[] = []) {
   const authCookie = cookies().get('auth')
   if (!authCookie) return undefined
   const [session, unit] = await prisma.$transaction([
@@ -42,7 +42,7 @@ export async function updateUnit({ id, title, description }: Unit) {
 
 }
 
-export async function deleteUnit(id: number) {
+export async function deleteUnit(id: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await getCurrentUserSession()

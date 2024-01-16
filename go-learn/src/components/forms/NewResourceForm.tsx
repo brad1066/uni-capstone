@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
 
 type NewResourceFormProps = {
-  onSubmit?: (resource: Resource, sectionId?: number) => Promise<void>
+  onSubmit?: (resource: Resource, sectionId?: string) => Promise<void>
   className?: string,
-  unitId: number
+  unitId: string
 }
 
 
@@ -39,7 +39,7 @@ export default function NewResourceForm({ unitId, onSubmit, className }: NewReso
           onSubmit?.({
             title: values.title,
             description: values.description ?? '',
-            id: -1,
+            id: '',
             unitId: unitId ?? null,
           } as Resource)
         })}>

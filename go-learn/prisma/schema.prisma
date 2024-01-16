@@ -12,38 +12,29 @@ datasource db {
   relationMode = "prisma"
 }
 
-model UserSession {
-  id           Int      @id @unique @default(autoincrement())
-  user         User     @relation(fields: [userUsername], references: [username], onDelete: Cascade)
-  cookieValue  String
-  created      DateTime @default(now())
-  userUsername String
-
-  @@index([userUsername], name: "userUsername")
-}
-
 model User {
-  username       String        @id @unique
-  password       String
-  title          String
-  forename       String
-  middleNames    String?
-  surname        String
-  letters        String?
-  contactDetails Contact?      @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  role           UserRole
+  username         String             @id @unique
+  password         String
+  title            String
+  forename         String
+  middleNames      String?
+  surname          String
+  letters          String?
+  contactDetails   Contact?           @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  role             UserRole
   // Auto Gen - leave untouched
-  contactId      Int?
-  student        Student?
-  teacher        Teacher?
-  userSessions   UserSession[]
-  resources      Resource[]
+  contactId        String?
+  student          Student?
+  teacher          Teacher?
+  userSessions     UserSession[]
+  resources        Resource[]
+  UserVerification UserVerification[]
 
   @@index([contactId], name: "contactId")
 }
 
 model Student {
-  id                 Int      @id @default(autoincrement()) @map("_id")
+  id                 String   @id @default(uuid())
   user               User     @relation(fields: [username], references: [username], onDelete: Cascade)
   emergencyContact   Contact? @relation(fields: [emergencyContactId], references: [id], onDelete: Cascade)
   termAddress        Address? @relation("termAddress", fields: [termAddressId], references: [id], onDelete: Cascade)
@@ -52,26 +43,26 @@ model Student {
   modules            Module[]
   // Auto Gen
   username           String   @unique
-  emergencyContactId Int?     @unique
-  termAddressId      Int?     @unique
-  homeAddressId      Int?     @unique
-  courseId           Int?
+  emergencyContactId String?  @unique
+  termAddressId      String?  @unique
+  homeAddressId      String?  @unique
+  courseId           String?
 
   @@index([courseId])
 }
 
 model Teacher {
-  id        Int      @id @default(autoincrement()) @map("_id")
+  id        String   @id @default(uuid())
   user      User     @relation(fields: [username], references: [username], onDelete: Cascade)
   address   Address? @relation(fields: [addressId], references: [id], onDelete: Cascade)
   modules   Module[]
   // Auto Gen
   username  String   @unique
-  addressId Int?     @unique
+  addressId String?  @unique
 }
 
 model Course {
-  id          Int       @id @default(autoincrement()) @map("_id")
+  id          String    @id @default(uuid())
   title       String
   description String?
   websiteURL  String?
@@ -80,7 +71,7 @@ model Course {
 }
 
 model Module {
-  id          Int       @id @default(autoincrement()) @map("_id")
+  id          String    @id @default(uuid())
   title       String
   description String?
   websiteURL  String?
@@ -90,38 +81,38 @@ model Module {
   teachers    Teacher[]
 
   // Auto Gen
-  courseId Int?
+  courseId String?
 
   @@index([courseId])
 }
 
 model Unit {
-  id          Int        @id @default(autoincrement()) @map("_id")
+  id          String     @id @default(uuid())
   title       String
   description String?
   module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   sections    Section[]
   resources   Resource[]
   // Auto Gen
-  moduleId    Int
+  moduleId    String
 
   @@index([moduleId])
 }
 
 model Section {
-  id          Int        @id @default(autoincrement()) @map("_id")
+  id          String     @id @default(uuid())
   title       String
   description String?
   unit        Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
   resources   Resource[]
   // Auto Gen
-  unitId      Int
+  unitId      String
 
   @@index([unitId])
 }
 
 model Resource {
-  id             Int       @id @default(autoincrement()) @map("_id")
+  id             String    @id @default(uuid())
   title          String
   description    String
   content        String
@@ -131,26 +122,26 @@ model Resource {
   uploads        Upload[]
   // Auto Gen
   authorUsername String?
-  unitId         Int
+  unitId         String
 
   @@index([authorUsername])
   @@index([unitId])
 }
 
 model Upload {
-  id         Int       @id @default(autoincrement()) @map("_id")
+  id         String    @id @default(uuid())
   title      String
   publicURL  String
   path       String
   Resource   Resource? @relation(fields: [resourceId], references: [id])
-  resourceId Int?
+  resourceId String?
 
   @@index([resourceId])
 }
 
 // Collections
 model Address {
-  id           Int       @id @default(autoincrement()) @map("_id")
+  id           String    @id @default(uuid())
   addressLine1 String?
   addressLine2 String?
   town         String?
@@ -162,12 +153,34 @@ model Address {
 }
 
 model Contact {
-  id               Int       @id @default(autoincrement()) @map("_id")
+  id               String    @id @default(uuid())
   label            String?
   email            String?
   mobile           String?
   user             User[]
   studentEmergency Student[]
+}
+
+// Utiltiy
+model UserSession {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [username], references: [username], onDelete: Cascade)
+  cookieValue String
+  created     DateTime @default(now())
+  username    String
+
+  @@index([username])
+}
+
+model UserVerification {
+  id               String   @id @default(uuid())
+  verificationCode String
+  user             User     @relation(fields: [username], references: [username], onDelete: Cascade)
+  created          DateTime @default(now())
+  used             Boolean  @default(false)
+  username         String
+
+  @@index([username])
 }
 
 // Enum for User->role
