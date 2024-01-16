@@ -38,8 +38,6 @@ export async function createResource({ title, description = '', unitId }: Resour
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
 
-  console.log('createResource', { title, description, unitId, sectionId })
-
   return await prisma.resource.create({
     data: {
       title,
@@ -78,7 +76,7 @@ export async function updateResourceRemoveSection(id: string, sectionId: string)
 // Here to remove all resources if anything goes wrong while developing. Do not include in production
 // export async function removeAllResources() {
 //   const session = await getCurrentUserSession()
-//   console.log(await prisma.resource.deleteMany())
+//   await prisma.resource.deleteMany()
 //   if (!session || session.user.role != 'admin') return undefined
 //   return 
 // }

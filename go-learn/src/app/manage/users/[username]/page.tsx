@@ -104,7 +104,6 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         {/* User Data Card */}
         <EditUserForm user={user} setUser={setUser} onUpdateSave={async (user) => {
           if (!user) return
-          console.log(user)
           updateUser(user as User)
             .then(validateLoggedIn)
             .then(userUpdateSuccess)

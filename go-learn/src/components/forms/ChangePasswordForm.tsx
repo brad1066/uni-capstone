@@ -19,7 +19,6 @@ const formSchema = z.object({
   password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
   confirmPassword: z.string(),
 }).superRefine(({ confirmPassword, password }, ctx) => {
-  console.log(confirmPassword, password)
   if (confirmPassword !== password) {
     ctx.addIssue({
       code: 'custom',

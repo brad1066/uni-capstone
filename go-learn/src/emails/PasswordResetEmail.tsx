@@ -32,7 +32,7 @@ export const PasswordResetEmail = ({
         <Text style={{ ...text, marginBottom: '14px' }}>
           Please use the verification below to reset your password.
         </Text>
-        <code style={code}>{authVal}</code>
+        <code style={{...code, marginBottom: '14px'} }>{authVal}</code>
         <Button
           href={`${baseUrl}/validate/${authKey}`}
           target='_blank'
@@ -44,7 +44,7 @@ export const PasswordResetEmail = ({
           pX={24}
           pY={16}
         >
-          Click here to reset your password
+          Reset your password
         </Button>
       </Container>
     </Body>

@@ -64,7 +64,6 @@ export async function createUser(userInfo: User & { contactDetails?: Contact }):
         verificationCode: genVerificationCode(),
       }
     })
-    console.log(verfication)
     sendWelcomeEmail(user, userInfo.contactDetails, verfication)
   }
   return user
@@ -176,17 +175,12 @@ export async function deleteUser(user: User) {
 }
 
 export async function updatePasswordWithCode(authKey: string, authVal: string, password: string) {
-  console.log(authKey, authVal, password)
   const resp = await prisma.userVerification.update({
     where: { id: authKey, verificationCode: authVal, used: false },
     data: { used: true }
   }).catch(() => false)
 
-  console.log(resp)
-
-  if (typeof resp === 'boolean') return false
-
-  console.log('here')
+  if (typeof resp === 'boolean') return { success: false, message: 'Invalid verification code'}
   const updatedUser = await prisma.user.update({
     where: { username: resp.username },
     data: {
@@ -194,8 +188,7 @@ export async function updatePasswordWithCode(authKey: string, authVal: string, p
     }
   }).catch(() => false)
 
-  console.log(updatedUser)
-  if (!updatedUser) return false
+  if (!updatedUser) return { success: false, message: 'Failed to update password'}
 
-  return true
+  return { success: true, message: 'Password updated successfully' }
 }

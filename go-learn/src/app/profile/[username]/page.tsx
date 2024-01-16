@@ -58,7 +58,6 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
       <EditUserForm
         user={user as User} setUser={setUser as Dispatch<SetStateAction<User | undefined>>}
         canEdit={user?.username == signedInUser?.username || signedInUser?.role == 'admin'} onUpdateSave={(updatedUser) => {
-          console.log(updatedUser)
           // if (!updated) return
           updateUser(updatedUser as User)
             .then(validateLoggedIn)

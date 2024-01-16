@@ -105,6 +105,9 @@ const LoginPage = () => {
           </CardContent>
           <CardFooter>
             <Button type="submit">Submit</Button>
+            <Button type="button" onClick={() => {
+              router.push('/login/forgot-password')
+            }}>Forgot my password</Button>
           </CardFooter>
         </Card>
       </form>

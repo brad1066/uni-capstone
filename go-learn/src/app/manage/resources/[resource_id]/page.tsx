@@ -128,8 +128,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit content</DialogTitle></DialogHeader>
                 <EditResourceContentForm resource={resource} onUpdateSave={async (content) => {
-                  const newResource = await updateResource(resource.id, { ...resource, content } as Resource)
-                  console.log(newResource)
+                  await updateResource(resource.id, { ...resource, content } as Resource)
                   await refreshResourceData()
                 }} />
               </DialogContent>
@@ -167,7 +166,6 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
                     }
                     const path = upload.data.path
                     const publicURL = supabase.storage.from('golearn-resources').getPublicUrl(upload.data.path).data.publicUrl
-                    console.log(path, publicURL)
                     if (await createUpload({ title: file.name, publicURL, path, resourceId: resource.id } as Upload))
                       await refreshResourceData()
                     setCreatingUpload(false)
@@ -181,7 +179,6 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
             {resource.uploads?.map(upload => (
               <ResourceUploadItem upload={upload} key={upload.id} onDelete={async () => {
                 const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
-                // console.log(upload.path)
                 if (!data) return
                 if (!await deleteUpload(upload.id)) return
                 await refreshResourceData()
