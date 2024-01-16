@@ -127,8 +127,8 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
 
             {
               module?.teachers?.length ? <ul>
-                {module.teachers?.map?.(teacher => <AdminUserItem user={teacher?.user as User} onDelete={async () => {
-                  await removeModuleTeacher(module.id, teacher.id);
+                {module.teachers?.map?.(teacher => <AdminUserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
+                  await removeModuleTeacher(module.id, teacher.id)
                   await refreshModuleData()
                 }} />)}
               </ul>

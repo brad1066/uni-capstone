@@ -7,8 +7,8 @@ import {
   Html,
   Preview,
   Text,
-} from '@react-email/components';
-import * as React from 'react';
+} from '@react-email/components'
+import * as React from 'react'
 
 interface PasswordResetEmailProps {
   username: string
@@ -18,7 +18,7 @@ interface PasswordResetEmailProps {
 
 const baseUrl = process.env.HOST_URL
   ? `https://${process.env.HOST_URL}`
-  : '';
+  : ''
 
 export const PasswordResetEmail = ({
   authKey, authVal
@@ -28,7 +28,7 @@ export const PasswordResetEmail = ({
     <Preview>Welcome to GoLearn</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>You've requested a password change. If this was not you, please ignore or speak to an administrator</Heading>
+        <Heading style={h1}>You&apos;ve requested a password change. If this was not you, please ignore or speak to an administrator</Heading>
         <Text style={{ ...text, marginBottom: '14px' }}>
           Please use the verification below to reset your password.
         </Text>
@@ -49,19 +49,19 @@ export const PasswordResetEmail = ({
       </Container>
     </Body>
   </Html>
-);
+)
 
-export default PasswordResetEmail;
+export default PasswordResetEmail
 
 const main = {
   backgroundColor: '#ffffff',
-};
+}
 
 const container = {
   paddingLeft: '12px',
   paddingRight: '12px',
   margin: '0 auto',
-};
+}
 
 const h1 = {
   color: '#333',
@@ -71,15 +71,15 @@ const h1 = {
   fontWeight: 'bold',
   margin: '40px 0',
   padding: '0',
-};
+}
 
-const link = {
-  color: '#2754C5',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-  fontSize: '14px',
-  textDecoration: 'underline',
-};
+// const link = {
+//   color: '#2754C5',
+//   fontFamily:
+//     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+//   fontSize: '14px',
+//   textDecoration: 'underline',
+// }
 
 const button = {
   color: '#fff',
@@ -95,17 +95,17 @@ const text = {
     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   fontSize: '14px',
   margin: '24px 0',
-};
+}
 
-const footer = {
-  color: '#898989',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
-};
+// const footer = {
+//   color: '#898989',
+//   fontFamily:
+//     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+//   fontSize: '12px',
+//   lineHeight: '22px',
+//   marginTop: '12px',
+//   marginBottom: '24px',
+// }
 
 const code = {
   display: 'block',
@@ -115,4 +115,4 @@ const code = {
   borderRadius: '5px',
   border: '1px solid #eee',
   color: '#333',
-};
+}

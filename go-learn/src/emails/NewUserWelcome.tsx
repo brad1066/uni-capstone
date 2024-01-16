@@ -7,8 +7,8 @@ import {
   Html,
   Preview,
   Text,
-} from '@react-email/components';
-import * as React from 'react';
+} from '@react-email/components'
+import * as React from 'react'
 
 interface NewUserWelcomeEmailProps {
   username: string
@@ -18,7 +18,7 @@ interface NewUserWelcomeEmailProps {
 
 const baseUrl = process.env.HOST_URL
   ? `https://${process.env.HOST_URL}`
-  : '';
+  : ''
 
 export const NewUserWelcomeEmail = ({
   username, authKey, authVal
@@ -28,7 +28,7 @@ export const NewUserWelcomeEmail = ({
     <Preview>Welcome to GoLearn</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>You"ve been added to GoLearn</Heading>
+        <Heading style={h1}>You&apos;ve been added to GoLearn</Heading>
         <Text style={{ ...text, marginBottom: '14px' }}>
           Your account has been created and you can now log in to GoLearn.
         </Text>
@@ -59,19 +59,19 @@ export const NewUserWelcomeEmail = ({
       </Container>
     </Body>
   </Html>
-);
+)
 
-export default NewUserWelcomeEmail;
+export default NewUserWelcomeEmail
 
 const main = {
   backgroundColor: '#ffffff',
-};
+}
 
 const container = {
   paddingLeft: '12px',
   paddingRight: '12px',
   margin: '0 auto',
-};
+}
 
 const h1 = {
   color: '#333',
@@ -81,15 +81,15 @@ const h1 = {
   fontWeight: 'bold',
   margin: '40px 0',
   padding: '0',
-};
+}
 
-const link = {
-  color: '#2754C5',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-  fontSize: '14px',
-  textDecoration: 'underline',
-};
+// const link = {
+//   color: '#2754C5',
+//   fontFamily:
+//     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+//   fontSize: '14px',
+//   textDecoration: 'underline',
+// }
 
 const button = {
   color: '#fff',
@@ -105,17 +105,17 @@ const text = {
     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   fontSize: '14px',
   margin: '24px 0',
-};
+}
 
-const footer = {
-  color: '#898989',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
-};
+// const footer = {
+//   color: '#898989',
+//   fontFamily:
+//     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+//   fontSize: '12px',
+//   lineHeight: '22px',
+//   marginTop: '12px',
+//   marginBottom: '24px',
+// }
 
 const code = {
   display: 'block',
@@ -125,4 +125,4 @@ const code = {
   borderRadius: '5px',
   border: '1px solid #eee',
   color: '#333',
-};
+}
