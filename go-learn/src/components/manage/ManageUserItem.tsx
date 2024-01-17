@@ -4,12 +4,12 @@ import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { User } from '@prisma/client'
 
-type AdminUserItemProps = {
+type ManageUserItemProps = {
   user: User
   onDelete?: () => Promise<unknown>
 }
 
-const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
+const ManageUserItem = ({ user, onDelete }: ManageUserItemProps) => {
   return (<>
     <li className='w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'>
       {user.title} {user.forename} {user.surname}
@@ -45,4 +45,4 @@ const AdminUserItem = ({ user, onDelete }: AdminUserItemProps) => {
   </>)
 }
 
-export default AdminUserItem
+export default ManageUserItem

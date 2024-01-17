@@ -1,46 +1,50 @@
+import { Unit } from '@prisma/client'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import { Resource } from '@prisma/client'
 
-type AdminResourceItemProps = {
-  resource: Resource
+type ManageUnitListItemProps = {
+  unit: Unit,
   onDelete?: () => Promise<unknown>
 }
 
-const AdminResourceItem = ({ resource, onDelete }: AdminResourceItemProps) => {
-  return (<>
+export default function ManageUnitListItem({ unit, onDelete }: ManageUnitListItemProps) {
+  return (
     <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
-      {resource.title}
+      {unit.title}
       <div className="actions flex gap-1">
+
+        {/* View Action */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/resources/${resource.id}`}>
+            <Link href={`/view/units/${unit.id}`}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
-          <TooltipContent>View resource</TooltipContent>
+          <TooltipContent>View</TooltipContent>
         </Tooltip>
+
+        {/* Edit Action */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/manage/resources/${resource.id}`} className="">
+            <Link href={`/manage/units/${unit.id}`}>
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
             </Link>
           </TooltipTrigger>
-          <TooltipContent>Edit resource</TooltipContent>
+          <TooltipContent>Edit</TooltipContent>
         </Tooltip>
+
+        {/* Remove Action */}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Remove resource</TooltipContent>
+          <TooltipContent>Remove Unit</TooltipContent>
         </Tooltip>
         }
       </div>
     </li>
-  </>)
+  )
 }
-
-export default AdminResourceItem

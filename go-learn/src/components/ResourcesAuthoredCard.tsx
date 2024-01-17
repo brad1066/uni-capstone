@@ -36,7 +36,7 @@ export default function ResourcesAuthoredCard({ author, className, noHeader }: R
                 key={resource.id}
                 className='cursor-pointer'
                 resource={resource}
-                onClick={() => { router.push(`/resources/${resource.id}`) }} />
+                onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
             </>}
           </>)}
           {resources.length == 0 && 'No resources found'}

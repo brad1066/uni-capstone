@@ -2,21 +2,24 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import { Module } from '@prisma/client'
+import { Course } from '@prisma/client'
+import { useAuth } from '@/hooks/useAuth'
 
-type AdminModuleItemProps = {
-  module: Module
+type ManageCourseItemProps = {
+  course: Course
   onDelete?: () => Promise<unknown>
 }
 
-const AdminModuleItem = ({ module, onDelete }: AdminModuleItemProps) => {
+const ManageCourseItem = ({ course, onDelete }: ManageCourseItemProps) => {
+
+  const { user } = useAuth()
   return (<>
     <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
-      {module.title}
+      {course.title}
       <div className="actions flex gap-1">
-        {module?.websiteURL && <Tooltip>
+        {course?.websiteURL && <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={module.websiteURL ?? ''}>
+            <Link href={course.websiteURL ?? ''}>
               <Button type="button" size="icon" variant="ghost"><GlobeIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -24,32 +27,32 @@ const AdminModuleItem = ({ module, onDelete }: AdminModuleItemProps) => {
         </Tooltip>}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/modules/${module.id}`}>
+            <Link href={`/view/courses/${course.id}`}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
-          <TooltipContent>View module</TooltipContent>
+          <TooltipContent>View course</TooltipContent>
         </Tooltip>
-        <Tooltip>
+        {user?.role === 'admin' && <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/manage/modules/${module.id}`} className="">
+            <Link href={`/manage/courses/${course.id}`} className="">
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
             </Link>
           </TooltipTrigger>
-          <TooltipContent>Edit module</TooltipContent>
+          <TooltipContent>Edit course</TooltipContent>
         </Tooltip>
-        {onDelete &&
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Remove module</TooltipContent>
-          </Tooltip>
+        }
+        {onDelete && user?.role === 'admin' && <Tooltip>
+          <TooltipTrigger asChild>
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Remove course</TooltipContent>
+        </Tooltip>
         }
       </div>
     </li>
   </>)
 }
 
-export default AdminModuleItem
+export default ManageCourseItem

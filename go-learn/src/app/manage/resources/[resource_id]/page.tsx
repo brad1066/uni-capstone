@@ -1,7 +1,7 @@
 'use client'
 
 import { getResource, updateResource, updateResourceRemoveSection } from '@/actions/resourceActions'
-import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
+import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DialogHeader } from '@/components/ui/dialog'
@@ -10,7 +10,7 @@ import { Resource, Section, Unit, Upload, User } from '@prisma/client'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import AdminSectionItem from '@/components/admin/AdminSectionItem'
+import ManageSectionItem from '@/components/manage/ManageSectionItem'
 import EditResourceForm from '@/components/forms/EditResourceForm'
 import EditResourceContentForm from '@/components/forms/EditResourceContentForm'
 import AddUploadForm from '@/components/forms/AddUploadForm'
@@ -21,13 +21,13 @@ import ResourceUploadItem from '@/components/ResourceUploadItem'
 import { createUpload, deleteUpload } from '@/actions/uploadActions'
 import NoAccessNotice from '@/components/NoAccessNotice'
 
-type SingleResourceAdminPageProps = {
+type SingleResourceManagePageProps = {
   params: {
     resource_id: string
   }
 }
 
-export default function SingleResourceAdminPage({ params: { resource_id } }: SingleResourceAdminPageProps) {
+export default function SingleResourceManagePage({ params: { resource_id } }: SingleResourceManagePageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -102,7 +102,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
             {resource?.unit && (
               <div>
                 <h2 className='text-lg font-bold'>Unit</h2>
-                <AdminUnitListItem unit={resource.unit} />
+                <ManageUnitListItem unit={resource.unit} />
               </div>
             )}
             {resource?.sections?.length && resource?.sections?.length > 0 && (
@@ -110,7 +110,7 @@ export default function SingleResourceAdminPage({ params: { resource_id } }: Sin
                 <h2 className='text-lg font-bold flex'>Sections</h2>
                 <div className='flex flex-col gap-2'>
                   {resource.sections.map(section => (
-                    <AdminSectionItem key={section.id} section={section} onDelete={async () => {
+                    <ManageSectionItem key={section.id} section={section} onDelete={async () => {
                       await updateResourceRemoveSection(resource.id, section.id)
                       await refreshResourceData()
                     }} />

@@ -6,8 +6,8 @@ import { createModule } from '@/actions/moduleActions'
 import { removeStudentCourse } from '@/actions/studentActions'
 import { ModulesSelectCombobox } from '@/components/ModulesSelectCombobox'
 import NoAccessNotice from '@/components/NoAccessNotice'
-import AdminModuleItem from '@/components/admin/AdminModuleItem'
-import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
+import ManageModuleItem from '@/components/manage/ManageModuleItem'
+import ManageStudentListItem from '@/components/manage/ManageStudentListItem'
 import EditCourseForm from '@/components/forms/EditCourseForm'
 import NewModuleForm from '@/components/forms/NewModuleForm'
 import { Button } from '@/components/ui/button'
@@ -20,11 +20,11 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 
-type SingleCourseAdminPageProps = {
+type SingleCourseManagePageProps = {
   params: { course_id: string }
 }
 
-export default function SingleCourseAdminPage({ params: { course_id } }: SingleCourseAdminPageProps) {
+export default function SingleCourseManagePage({ params: { course_id } }: SingleCourseManagePageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -55,7 +55,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
 
   useEffect(() => {
     (async () => {
-      if (user?.role != 'admin') router.replace(`/courses/${course_id}`)
+      if (user?.role != 'admin') router.replace(`/view/courses/${course_id}`)
       refreshCourseData()
       setLoading(false)
     })()
@@ -91,7 +91,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
                   course?.students?.length ? (
                     <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                      {course.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
+                      {course.students?.map(student => <ManageStudentListItem key={student.id} student={student} onDelete={async () => {
                         await removeStudentCourse(student.id)
                         await refreshCourseData()
                       }} />)}
@@ -144,7 +144,7 @@ export default function SingleCourseAdminPage({ params: { course_id } }: SingleC
           </CardHeader>
           <CardContent>
             <ul>
-              {course?.modules?.map(module => <AdminModuleItem key={module.id} module={module} onDelete={async () => {
+              {course?.modules?.map(module => <ManageModuleItem key={module.id} module={module} onDelete={async () => {
                 const resp = await removeCourseModule(course.id, module.id)
                 if (resp) {
                   setCourse(await getCourse(course.id, ['modules']))

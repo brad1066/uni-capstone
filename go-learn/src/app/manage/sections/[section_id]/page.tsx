@@ -4,8 +4,8 @@
 import { createResource } from '@/actions/resourceActions'
 import { getSection, updateSection, updateSectionAddResource, updateSectionRemoveResource } from '@/actions/sectionActions'
 import NoAccessNotice from '@/components/NoAccessNotice'
-import AdminResourceItem from '@/components/admin/AdminResourceItem'
-import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
+import ManageResourceItem from '@/components/manage/ManageResourceItem'
+import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
 import { AddExistingResourceForm } from '@/components/forms/AddExistingResourceForm'
 import EditSectionForm from '@/components/forms/EditSectionForm'
 import NewResourceForm from '@/components/forms/NewResourceForm'
@@ -17,11 +17,11 @@ import { Resource, Section, Unit, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-type SingleSectionAdminPageProps = {
+type SingleSectionManagePageProps = {
   params: { section_id: string }
 }
 
-export default function SingleSectionAdminPage({ params: { section_id } }: SingleSectionAdminPageProps) {
+export default function SingleSectionManagePage({ params: { section_id } }: SingleSectionManagePageProps) {
 
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
@@ -92,7 +92,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
             {section?.unit && (
               <div>
                 <h2 className="text-lg font-bold">Unit</h2>
-                <AdminUnitListItem unit={section.unit} />
+                <ManageUnitListItem unit={section.unit} />
               </div>
             )}
           </CardContent>
@@ -136,7 +136,7 @@ export default function SingleSectionAdminPage({ params: { section_id } }: Singl
           <CardContent className="flex flex-col xl:grid xl:grid-cols-2 gap-4">
             {section.resources?.length === 0 && <p>No resources</p>}
             {section.resources?.map(resource => (
-              <AdminResourceItem key={resource.id} resource={resource} onDelete={async () => {
+              <ManageResourceItem key={resource.id} resource={resource} onDelete={async () => {
                 await updateSectionRemoveResource(section.id, resource.id)
                 await refreshSectionData()
               }} />

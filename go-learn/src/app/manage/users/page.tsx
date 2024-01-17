@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { PlusIcon } from '@radix-ui/react-icons'
-import AdminUserItem from '@/components/admin/AdminUserItem'
+import ManageUserItem from '@/components/manage/ManageUserItem'
 import NewUserForm from '@/components/forms/NewUserForm'
 import NoAccessNotice from '@/components/NoAccessNotice'
 import { useAuth } from '@/hooks/useAuth'
@@ -16,7 +16,7 @@ import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/
 import { Contact, User } from '@prisma/client'
 import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
 
-export default function UsersAdminPage() {
+export default function UsersManagePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, validateLoggedIn } = useAuth()
@@ -38,7 +38,7 @@ export default function UsersAdminPage() {
       if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
         if (!loggedIn) router.replace('/login')
       })
-      const allUsers = await getUsersByRole() as User[]
+      const allUsers = await getUsersByRole() as User[] ?? []
       await setUsers([...allUsers])
       setLoading(false)
     })()
@@ -76,7 +76,7 @@ export default function UsersAdminPage() {
               <ul className="flex flex-col gap-[1rem]">
                 {
                   users.filter(user => user.role == 'teacher').map((user: User) => (
-                    <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                    <ManageUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                   ))
                 }
                 {
@@ -93,7 +93,7 @@ export default function UsersAdminPage() {
                 <ul className="flex flex-col gap-[1rem]">
                   {
                     users && users.filter(user => user.role == 'student').map(user => (
-                      <AdminUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                      <ManageUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
                   {

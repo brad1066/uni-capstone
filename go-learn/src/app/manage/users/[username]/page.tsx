@@ -7,8 +7,8 @@ import { getTeacher } from '@/actions/teacherActions'
 import { getUser, updateUser } from '@/actions/userActions'
 import NoAccessNotice from '@/components/NoAccessNotice'
 import ResourcesAuthoredCard from '@/components/ResourcesAuthoredCard'
-import AdminCourseItem from '@/components/admin/AdminCourseItem'
-import AdminModuleItem from '@/components/admin/AdminModuleItem'
+import ManageCourseItem from '@/components/manage/ManageCourseItem'
+import ManageModuleItem from '@/components/manage/ManageModuleItem'
 import { AssignStudentCourseForm } from '@/components/forms/AssignStudentCourseForm'
 import { AssignStudentModuleForm } from '@/components/forms/AssignStudentModuleForm'
 import EditAddressForm from '@/components/forms/EditAddressForm'
@@ -25,11 +25,11 @@ import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-type UserAdminPageProps = {
+type UserManagePageProps = {
   params: { username: string }
 }
 
-export default function UserAdminPage({ params: { username } }: UserAdminPageProps) {
+export default function UserManagePage({ params: { username } }: UserManagePageProps) {
 
   const { toast } = useToast()
 
@@ -113,7 +113,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
         }} canEdit />
 
         {user.role == 'admin' && <Card className="flex-1">
-          <CardHeader><CardTitle>Admin actions</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Manage actions</CardTitle></CardHeader>
           <CardContent className="flex flex-col gap-[1rem]">
 
           </CardContent>
@@ -172,7 +172,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
           <CardContent className="flex flex-col gap-[1rem]">
             {
               student?.enrolledCourse
-                ? <AdminCourseItem course={student.enrolledCourse} onDelete={async () => {
+                ? <ManageCourseItem course={student.enrolledCourse} onDelete={async () => {
                   const updatedStudent = await removeStudentCourse(student.id)
                   if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                 }} />
@@ -198,7 +198,7 @@ export default function UserAdminPage({ params: { username } }: UserAdminPagePro
               <div className="flex flex-col gap-2">
                 {student.modules.map((module) => {
                   return <>
-                    <AdminModuleItem module={module} onDelete={async () => {
+                    <ManageModuleItem module={module} onDelete={async () => {
                       const updatedStudent = await removeStudentModule(student.id, module.id)
                       if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                     }} />

@@ -4,7 +4,7 @@
 
 import { createCourse, deleteCourse, getCourses } from '@/actions/courseActions'
 import NoAccessNotice from '@/components/NoAccessNotice'
-import AdminCourseItem from '@/components/admin/AdminCourseItem'
+import ManageCourseItem from '@/components/manage/ManageCourseItem'
 import NewCourseForm from '@/components/forms/NewCourseForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -14,7 +14,7 @@ import { PlusIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-export default function CoursesAdminPage() {
+export default function CoursesManagePage() {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -57,7 +57,7 @@ export default function CoursesAdminPage() {
         </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <AdminCourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
+            <ManageCourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
           ))}
         </div>}
       </>}

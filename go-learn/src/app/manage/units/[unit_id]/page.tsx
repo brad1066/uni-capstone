@@ -5,9 +5,9 @@ import { createResource, deleteResource } from '@/actions/resourceActions'
 import { createSection, deleteSection } from '@/actions/sectionActions'
 import { getUnit, updateUnit } from '@/actions/unitActions'
 import NoAccessNotice from '@/components/NoAccessNotice'
-import AdminModuleItem from '@/components/admin/AdminModuleItem'
-import AdminResourceItem from '@/components/admin/AdminResourceItem'
-import AdminSectionItem from '@/components/admin/AdminSectionItem'
+import ManageModuleItem from '@/components/manage/ManageModuleItem'
+import ManageResourceItem from '@/components/manage/ManageResourceItem'
+import ManageSectionItem from '@/components/manage/ManageSectionItem'
 import EditUnitForm from '@/components/forms/EditUnitForm'
 import NewResourceForm from '@/components/forms/NewResourceForm'
 import NewSectionForm from '@/components/forms/NewSectionForm'
@@ -19,11 +19,11 @@ import { Unit, Module, Resource, Section } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-type SingleUnitAdminPageProps = {
+type SingleUnitManagePageProps = {
   params: { unit_id: string }
 }
 
-export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitAdminPageProps) {
+export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnitManagePageProps) {
 
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
@@ -93,7 +93,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
               unit?.module && (
                 <div>
                   <h3 className="text-lg font-bold">Module</h3>
-                  <AdminModuleItem module={unit.module as Module} />
+                  <ManageModuleItem module={unit.module as Module} />
                 </div>
               )
             }
@@ -122,7 +122,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
           <CardContent>
             {unit.sections?.length ? <ul className="flex flex-col gap-2">
               {unit.sections.map(section => <>
-                <AdminSectionItem key={section.id} section={section} onDelete={async () => {
+                <ManageSectionItem key={section.id} section={section} onDelete={async () => {
                   const result = await deleteSection(section.id)
                   if (result) await refreshUnitData()
                 }} />
@@ -154,7 +154,7 @@ export default function SingleUnitAdminPage({ params: { unit_id } }: SingleUnitA
           <CardContent>
             {unit.resources?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {unit.resources.map(resource => <>
-                <AdminResourceItem key={resource.id} resource={resource} onDelete={async () => {
+                <ManageResourceItem key={resource.id} resource={resource} onDelete={async () => {
                   const result = await deleteResource(resource.id)
                   if (result) await refreshUnitData()
                 }} />

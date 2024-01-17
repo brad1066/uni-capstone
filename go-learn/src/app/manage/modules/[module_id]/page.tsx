@@ -7,10 +7,10 @@ import { removeStudentModule } from '@/actions/studentActions'
 import { createUnit, deleteUnit } from '@/actions/unitActions'
 import { CoursesSelectCombobox } from '@/components/CoursesSelectCombobox'
 import NoAccessNotice from '@/components/NoAccessNotice'
-import AdminCourseItem from '@/components/admin/AdminCourseItem'
-import AdminStudentListItem from '@/components/admin/AdminStudentListItem'
-import AdminUnitListItem from '@/components/admin/AdminUnitListItem'
-import AdminUserItem from '@/components/admin/AdminUserItem'
+import ManageCourseItem from '@/components/manage/ManageCourseItem'
+import ManageStudentListItem from '@/components/manage/ManageStudentListItem'
+import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
+import ManageUserItem from '@/components/manage/ManageUserItem'
 import { AssignTeacherModuleForm } from '@/components/forms/AssignTeacherModuleForm'
 import EditModuleForm from '@/components/forms/EditModuleForm'
 import NewUnitForm from '@/components/forms/NewUnitForm'
@@ -22,11 +22,11 @@ import { Course, Module, Student, Teacher, Unit, User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-type SingleModuleAdminPageProps = {
+type SingleModuleManagePageProps = {
   params: { module_id: string }
 }
 
-export default function SingleModuleAdminPage({ params: { module_id } }: SingleModuleAdminPageProps) {
+export default function SingleModuleManagePage({ params: { module_id } }: SingleModuleManagePageProps) {
 
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
@@ -99,7 +99,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
                 {module?.students?.length ? <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                  {module.students?.map(student => <AdminStudentListItem key={student.id} student={student} onDelete={async () => {
+                  {module.students?.map(student => <ManageStudentListItem key={student.id} student={student} onDelete={async () => {
                     await removeStudentModule(student.id, module.id)
                     await refreshModuleData()
                   }} />)}
@@ -127,7 +127,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
 
             {
               module?.teachers?.length ? <ul>
-                {module.teachers?.map?.(teacher => <AdminUserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
+                {module.teachers?.map?.(teacher => <ManageUserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
                   await removeModuleTeacher(module.id, teacher.id)
                   await refreshModuleData()
                 }} />)}
@@ -167,7 +167,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
             </Dialog>
           </CardHeader>
           <CardContent>
-            {module.course?.id ? <AdminCourseItem course={module.course} onDelete={async () => {
+            {module.course?.id ? <ManageCourseItem course={module.course} onDelete={async () => {
               module.course && await removeCourseModule(module.course.id, module.id)
               await refreshModuleData()
             }} /> : <p>No Course</p>
@@ -197,7 +197,7 @@ export default function SingleModuleAdminPage({ params: { module_id } }: SingleM
           <CardContent>
             {module.units?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {module.units.map(unit => <>
-                <AdminUnitListItem key={unit.id} unit={unit} onDelete={async () => {
+                <ManageUnitListItem key={unit.id} unit={unit} onDelete={async () => {
                   const result = await deleteUnit(unit.id)
                   if (result) await refreshModuleData()
                 }} />
