@@ -4,10 +4,10 @@
 import { addCourseModule, getCourse, removeCourseModule, updateCourse } from '@/actions/courseActions'
 import { createModule } from '@/actions/moduleActions'
 import { removeStudentCourse } from '@/actions/studentActions'
-import { ModulesSelectCombobox } from '@/components/ModulesSelectCombobox'
-import NoAccessNotice from '@/components/NoAccessNotice'
-import ManageModuleItem from '@/components/manage/ManageModuleItem'
-import ManageStudentListItem from '@/components/manage/ManageStudentListItem'
+import { ModulesSelectCombobox } from '@/components/forms/ModulesSelectCombobox'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import ModuleItem from '@/components/item-cards/ModuleItem'
+import StudentItem from '@/components/item-cards/StudentItem'
 import EditCourseForm from '@/components/forms/EditCourseForm'
 import NewModuleForm from '@/components/forms/NewModuleForm'
 import { Button } from '@/components/ui/button'
@@ -91,7 +91,7 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
                   course?.students?.length ? (
                     <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                      {course.students?.map(student => <ManageStudentListItem key={student.id} student={student} onDelete={async () => {
+                      {course.students?.map(student => <StudentItem key={student.id} student={student} onDelete={async () => {
                         await removeStudentCourse(student.id)
                         await refreshCourseData()
                       }} />)}
@@ -144,7 +144,7 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
           </CardHeader>
           <CardContent>
             <ul>
-              {course?.modules?.map(module => <ManageModuleItem key={module.id} module={module} onDelete={async () => {
+              {course?.modules?.map(module => <ModuleItem key={module.id} module={module} onDelete={async () => {
                 const resp = await removeCourseModule(course.id, module.id)
                 if (resp) {
                   setCourse(await getCourse(course.id, ['modules']))

@@ -4,14 +4,16 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 
-type ManageUnitListItemProps = {
-  unit: Unit,
+type UnitItemProps = {
+  unit: Unit
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-export default function ManageUnitListItem({ unit, onDelete }: ManageUnitListItemProps) {
+export default function UnitItem({ unit, editable, onClick, onDelete }: UnitItemProps) {
   return (
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+(onClick ? 'cursor-pointer' : '')}>
       {unit.title}
       <div className="actions flex gap-1">
 
@@ -26,14 +28,16 @@ export default function ManageUnitListItem({ unit, onDelete }: ManageUnitListIte
         </Tooltip>
 
         {/* Edit Action */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/manage/units/${unit.id}`}>
-              <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>Edit</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/manage/units/${unit.id}`}>
+                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>Edit</TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Remove Action */}
         {onDelete && <Tooltip>

@@ -4,14 +4,17 @@ import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { User } from '@prisma/client'
 
-type ManageUserItemProps = {
+type UserItemProps = {
   user: User
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ManageUserItem = ({ user, onDelete }: ManageUserItemProps) => {
+const UserItem = ({ user, editable, onClick, onDelete }: UserItemProps) => {
   return (<>
-    <li className='w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'>
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+(onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}>
       {user.title} {user.forename} {user.surname}
       <div className='actions flex gap-1'>
         <Tooltip>
@@ -22,14 +25,16 @@ const ManageUserItem = ({ user, onDelete }: ManageUserItemProps) => {
           </TooltipTrigger>
           <TooltipContent>View Profile</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type='button' size='icon' variant='secondary'>
-              <Link href={`/manage/users/${user.username}`}><Pencil2Icon /></Link>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Edit user</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type='button' size='icon' variant='secondary'>
+                <Link href={`/manage/users/${user.username}`}><Pencil2Icon /></Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Edit user</TooltipContent>
+          </Tooltip>
+        )}
         {onDelete && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -45,4 +50,4 @@ const ManageUserItem = ({ user, onDelete }: ManageUserItemProps) => {
   </>)
 }
 
-export default ManageUserItem
+export default UserItem

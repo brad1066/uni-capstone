@@ -1,7 +1,7 @@
 'use client'
 
 import { getResource, updateResource, updateResourceRemoveSection } from '@/actions/resourceActions'
-import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
+import UnitItem from '@/components/item-cards/UnitItem'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DialogHeader } from '@/components/ui/dialog'
@@ -10,16 +10,16 @@ import { Resource, Section, Unit, Upload, User } from '@prisma/client'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ManageSectionItem from '@/components/manage/ManageSectionItem'
+import SectionItem from '@/components/item-cards/SectionItem'
 import EditResourceForm from '@/components/forms/EditResourceForm'
 import EditResourceContentForm from '@/components/forms/EditResourceContentForm'
 import AddUploadForm from '@/components/forms/AddUploadForm'
 import ReactMarkdown from 'react-markdown'
 import MarkdownLink from '@/components/markdownWrappers/MarkdownLink'
 import { useSupabase } from '@/hooks/useSupabase'
-import ResourceUploadItem from '@/components/ResourceUploadItem'
+import ResourceUploadItem from '@/components/forms/ResourceUploadItem'
 import { createUpload, deleteUpload } from '@/actions/uploadActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
 
 type SingleResourceManagePageProps = {
   params: {
@@ -102,7 +102,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
             {resource?.unit && (
               <div>
                 <h2 className='text-lg font-bold'>Unit</h2>
-                <ManageUnitListItem unit={resource.unit} />
+                <UnitItem unit={resource.unit} />
               </div>
             )}
             {resource?.sections?.length && resource?.sections?.length > 0 && (
@@ -110,7 +110,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 <h2 className='text-lg font-bold flex'>Sections</h2>
                 <div className='flex flex-col gap-2'>
                   {resource.sections.map(section => (
-                    <ManageSectionItem key={section.id} section={section} onDelete={async () => {
+                    <SectionItem key={section.id} section={section} onDelete={async () => {
                       await updateResourceRemoveSection(resource.id, section.id)
                       await refreshResourceData()
                     }} />

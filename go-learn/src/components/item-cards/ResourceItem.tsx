@@ -4,14 +4,18 @@ import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Resource } from '@prisma/client'
 
-type ManageResourceItemProps = {
+type ResourceItemProps = {
   resource: Resource
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ManageResourceItem = ({ resource, onDelete }: ManageResourceItemProps) => {
+const ResourceItem = ({ resource, editable, onClick, onDelete }: ResourceItemProps) => {
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}
+    >
       {resource.title}
       <div className="actions flex gap-1">
         <Tooltip>
@@ -22,14 +26,16 @@ const ManageResourceItem = ({ resource, onDelete }: ManageResourceItemProps) => 
           </TooltipTrigger>
           <TooltipContent>View resource</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/manage/resources/${resource.id}`} className="">
-              <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>Edit resource</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/manage/resources/${resource.id}`} className="">
+                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>Edit resource</TooltipContent>
+          </Tooltip>
+        )}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
@@ -43,4 +49,4 @@ const ManageResourceItem = ({ resource, onDelete }: ManageResourceItemProps) => 
   </>)
 }
 
-export default ManageResourceItem
+export default ResourceItem

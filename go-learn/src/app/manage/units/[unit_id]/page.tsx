@@ -4,10 +4,10 @@
 import { createResource, deleteResource } from '@/actions/resourceActions'
 import { createSection, deleteSection } from '@/actions/sectionActions'
 import { getUnit, updateUnit } from '@/actions/unitActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
-import ManageModuleItem from '@/components/manage/ManageModuleItem'
-import ManageResourceItem from '@/components/manage/ManageResourceItem'
-import ManageSectionItem from '@/components/manage/ManageSectionItem'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import ModuleItem from '@/components/item-cards/ModuleItem'
+import ResourceItem from '@/components/item-cards/ResourceItem'
+import SectionItem from '@/components/item-cards/SectionItem'
 import EditUnitForm from '@/components/forms/EditUnitForm'
 import NewResourceForm from '@/components/forms/NewResourceForm'
 import NewSectionForm from '@/components/forms/NewSectionForm'
@@ -93,7 +93,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
               unit?.module && (
                 <div>
                   <h3 className="text-lg font-bold">Module</h3>
-                  <ManageModuleItem module={unit.module as Module} />
+                  <ModuleItem module={unit.module as Module} />
                 </div>
               )
             }
@@ -122,7 +122,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
           <CardContent>
             {unit.sections?.length ? <ul className="flex flex-col gap-2">
               {unit.sections.map(section => <>
-                <ManageSectionItem key={section.id} section={section} onDelete={async () => {
+                <SectionItem key={section.id} section={section} onDelete={async () => {
                   const result = await deleteSection(section.id)
                   if (result) await refreshUnitData()
                 }} />
@@ -154,7 +154,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
           <CardContent>
             {unit.resources?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {unit.resources.map(resource => <>
-                <ManageResourceItem key={resource.id} resource={resource} onDelete={async () => {
+                <ResourceItem key={resource.id} resource={resource} onDelete={async () => {
                   const result = await deleteResource(resource.id)
                   if (result) await refreshUnitData()
                 }} />

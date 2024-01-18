@@ -1,10 +1,10 @@
 import { getTeacher } from '@/actions/teacherActions'
 import { Module, Resource, Teacher, User } from '@prisma/client'
 import { useEffect, useState } from 'react'
-import ManageModuleItem from './manage/ManageModuleItem'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import ModuleItem from '../item-cards/ModuleItem'
+import { Card, CardContent, CardHeader, CardTitle } from './card'
 import { deleteResource, getResources } from '@/actions/resourceActions'
-import ManageResourceItem from './manage/ManageResourceItem'
+import ResourceItem from '../item-cards/ResourceItem'
 
 type TeacherDashboardProps = {
   user: User;
@@ -34,7 +34,7 @@ export default function TeacherDashboard({ user }: TeacherDashboardProps) {
         <Card>
           <CardHeader><CardTitle>Modules</CardTitle></CardHeader>
           <CardContent>
-            {teacher.modules?.map(module => <ManageModuleItem key={module.id} module={module} />)}
+            {teacher.modules?.map(module => <ModuleItem key={module.id} module={module} />)}
           </CardContent>
         </Card>
       )}
@@ -42,7 +42,7 @@ export default function TeacherDashboard({ user }: TeacherDashboardProps) {
         <Card className='col-span-2'>
           <CardHeader><CardTitle>Resources</CardTitle></CardHeader>
           <CardContent className='grid grid-cols-1 xl:grid-cols-2 gap-4'>
-            {resources?.map(resource => <ManageResourceItem key={module.id} resource={resource} onDelete={async () => {
+            {resources?.map(resource => <ResourceItem key={module.id} resource={resource} onDelete={async () => {
               await deleteResource(resource.id)
             }} />)}
           </CardContent>

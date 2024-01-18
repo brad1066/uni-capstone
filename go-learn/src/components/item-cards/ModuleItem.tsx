@@ -4,14 +4,18 @@ import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Module } from '@prisma/client'
 
-type ManageModuleItemProps = {
+type ModuleItemProps = {
   module: Module
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ManageModuleItem = ({ module, onDelete }: ManageModuleItemProps) => {
+const ModuleItem = ({ module, editable, onClick, onDelete }: ModuleItemProps) => {
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}
+    >
       {module.title}
       <div className="actions flex gap-1">
         {module?.websiteURL && <Tooltip>
@@ -30,14 +34,17 @@ const ManageModuleItem = ({ module, onDelete }: ManageModuleItemProps) => {
           </TooltipTrigger>
           <TooltipContent>View module</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/manage/modules/${module.id}`} className="">
-              <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>Edit module</TooltipContent>
-        </Tooltip>
+        {
+          editable && <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/manage/modules/${module.id}`} className="">
+                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>Edit module</TooltipContent>
+          </Tooltip>
+        }
+        
         {onDelete &&
           <Tooltip>
             <TooltipTrigger asChild>
@@ -52,4 +59,4 @@ const ManageModuleItem = ({ module, onDelete }: ManageModuleItemProps) => {
   </>)
 }
 
-export default ManageModuleItem
+export default ModuleItem

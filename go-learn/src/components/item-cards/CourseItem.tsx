@@ -5,16 +5,20 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Course } from '@prisma/client'
 import { useAuth } from '@/hooks/useAuth'
 
-type ManageCourseItemProps = {
+type CourseItemProps = {
   course: Course
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ManageCourseItem = ({ course, onDelete }: ManageCourseItemProps) => {
+const CourseItem = ({ course, editable, onClick, onDelete }: CourseItemProps) => {
 
   const { user } = useAuth()
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}
+    >
       {course.title}
       <div className="actions flex gap-1">
         {course?.websiteURL && <Tooltip>
@@ -25,14 +29,16 @@ const ManageCourseItem = ({ course, onDelete }: ManageCourseItemProps) => {
           </TooltipTrigger>
           <TooltipContent>External Link</TooltipContent>
         </Tooltip>}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/view/courses/${course.id}`}>
-              <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>View course</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/view/courses/${course.id}`}>
+                <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>View course</TooltipContent>
+          </Tooltip>
+        )}
         {user?.role === 'admin' && <Tooltip>
           <TooltipTrigger asChild>
             <Link href={`/manage/courses/${course.id}`} className="">
@@ -55,4 +61,4 @@ const ManageCourseItem = ({ course, onDelete }: ManageCourseItemProps) => {
   </>)
 }
 
-export default ManageCourseItem
+export default CourseItem

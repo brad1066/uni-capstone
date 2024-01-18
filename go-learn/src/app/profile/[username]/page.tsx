@@ -3,7 +3,7 @@
 
 import { createContactForUser, updateContact } from '@/actions/contactActions'
 import { getUser, updateUser } from '@/actions/userActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
 import EditUserForm from '@/components/forms/EditUserForm'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'

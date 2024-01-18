@@ -5,10 +5,10 @@ import { createStudentAddress, createTeacherAddress, updateAddress, updateAddres
 import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, removeStudentModule } from '@/actions/studentActions'
 import { getTeacher } from '@/actions/teacherActions'
 import { getUser, updateUser } from '@/actions/userActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
 import ResourcesAuthoredCard from '@/components/ResourcesAuthoredCard'
-import ManageCourseItem from '@/components/manage/ManageCourseItem'
-import ManageModuleItem from '@/components/manage/ManageModuleItem'
+import CourseItem from '@/components/item-cards/CourseItem'
+import ModuleItem from '@/components/item-cards/ModuleItem'
 import { AssignStudentCourseForm } from '@/components/forms/AssignStudentCourseForm'
 import { AssignStudentModuleForm } from '@/components/forms/AssignStudentModuleForm'
 import EditAddressForm from '@/components/forms/EditAddressForm'
@@ -172,7 +172,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
           <CardContent className="flex flex-col gap-[1rem]">
             {
               student?.enrolledCourse
-                ? <ManageCourseItem course={student.enrolledCourse} onDelete={async () => {
+                ? <CourseItem course={student.enrolledCourse} onDelete={async () => {
                   const updatedStudent = await removeStudentCourse(student.id)
                   if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                 }} />
@@ -198,7 +198,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
               <div className="flex flex-col gap-2">
                 {student.modules.map((module) => {
                   return <>
-                    <ManageModuleItem module={module} onDelete={async () => {
+                    <ModuleItem module={module} onDelete={async () => {
                       const updatedStudent = await removeStudentModule(student.id, module.id)
                       if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                     }} />

@@ -3,8 +3,8 @@
 
 
 import { createCourse, deleteCourse, getCourses } from '@/actions/courseActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
-import ManageCourseItem from '@/components/manage/ManageCourseItem'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import CourseItem from '@/components/item-cards/CourseItem'
 import NewCourseForm from '@/components/forms/NewCourseForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -57,7 +57,7 @@ export default function CoursesManagePage() {
         </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <ManageCourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
+            <CourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
           ))}
         </div>}
       </>}

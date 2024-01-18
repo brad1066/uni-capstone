@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader } from './ui/card'
 import { useEffect, useState } from 'react'
 import { getResources } from '@/actions/resourceActions'
 import { cn } from '@/lib/utils'
-import ResourcesCardItem from './ResourcesCardItem'
 import { useRouter } from 'next/navigation'
 import { ScrollArea } from './ui/scroll-area'
+import ResourceItem from './item-cards/ResourceItem'
 
 type ResourcesAuthoredCardProps = {
   author: User
@@ -32,9 +32,8 @@ export default function ResourcesAuthoredCard({ author, className, noHeader }: R
         <ScrollArea className='height-[100%]'>
           {resources?.map?.((resource, idx) => <>
             {idx < 5 && <>
-              <ResourcesCardItem
+              <ResourceItem
                 key={resource.id}
-                className='cursor-pointer'
                 resource={resource}
                 onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
             </>}

@@ -4,14 +4,18 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 
-type ManageStudentListItemProps = {
+type StudentItemProps = {
   student: Student & { user?: User & { contactDetails?: Contact | null } | null }
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-export default function ManageStudentListItem({ student, onDelete }: ManageStudentListItemProps) {
+export default function StudentItem({ student, editable, onClick, onDelete }: StudentItemProps) {
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}
+    >
       {student.user?.forename} {student.user?.surname}
       <div className="actions flex gap-1">
         <Tooltip>
@@ -22,14 +26,15 @@ export default function ManageStudentListItem({ student, onDelete }: ManageStude
           </TooltipTrigger>
           <TooltipContent>View Profile</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/manage/users/${student.username}`} className="">
-              <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>View/Edit Student</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/manage/users/${student.username}`} className="">
+                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>View/Edit Student</TooltipContent></Tooltip>
+        )}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />

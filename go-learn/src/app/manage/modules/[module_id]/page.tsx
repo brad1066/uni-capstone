@@ -5,12 +5,12 @@ import { removeCourseModule } from '@/actions/courseActions'
 import { getModule, removeModuleTeacher, addModuleTeacher, updateModule } from '@/actions/moduleActions'
 import { removeStudentModule } from '@/actions/studentActions'
 import { createUnit, deleteUnit } from '@/actions/unitActions'
-import { CoursesSelectCombobox } from '@/components/CoursesSelectCombobox'
-import NoAccessNotice from '@/components/NoAccessNotice'
-import ManageCourseItem from '@/components/manage/ManageCourseItem'
-import ManageStudentListItem from '@/components/manage/ManageStudentListItem'
-import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
-import ManageUserItem from '@/components/manage/ManageUserItem'
+import { CoursesSelectCombobox } from '@/components/forms/CoursesSelectCombobox'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import CourseItem from '@/components/item-cards/CourseItem'
+import StudentItem from '@/components/item-cards/StudentItem'
+import UnitListItem from '@/components/item-cards/UnitItem'
+import UserItem from '@/components/item-cards/UserItem'
 import { AssignTeacherModuleForm } from '@/components/forms/AssignTeacherModuleForm'
 import EditModuleForm from '@/components/forms/EditModuleForm'
 import NewUnitForm from '@/components/forms/NewUnitForm'
@@ -99,7 +99,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
                 {module?.students?.length ? <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                  {module.students?.map(student => <ManageStudentListItem key={student.id} student={student} onDelete={async () => {
+                  {module.students?.map(student => <StudentItem key={student.id} student={student} onDelete={async () => {
                     await removeStudentModule(student.id, module.id)
                     await refreshModuleData()
                   }} />)}
@@ -127,7 +127,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
 
             {
               module?.teachers?.length ? <ul>
-                {module.teachers?.map?.(teacher => <ManageUserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
+                {module.teachers?.map?.(teacher => <UserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
                   await removeModuleTeacher(module.id, teacher.id)
                   await refreshModuleData()
                 }} />)}
@@ -167,7 +167,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
             </Dialog>
           </CardHeader>
           <CardContent>
-            {module.course?.id ? <ManageCourseItem course={module.course} onDelete={async () => {
+            {module.course?.id ? <CourseItem course={module.course} onDelete={async () => {
               module.course && await removeCourseModule(module.course.id, module.id)
               await refreshModuleData()
             }} /> : <p>No Course</p>
@@ -197,7 +197,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
           <CardContent>
             {module.units?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {module.units.map(unit => <>
-                <ManageUnitListItem key={unit.id} unit={unit} onDelete={async () => {
+                <UnitListItem key={unit.id} unit={unit} onDelete={async () => {
                   const result = await deleteUnit(unit.id)
                   if (result) await refreshModuleData()
                 }} />

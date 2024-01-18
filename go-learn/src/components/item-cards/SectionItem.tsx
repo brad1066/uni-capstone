@@ -4,14 +4,18 @@ import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Section } from '@prisma/client'
 
-type ManageSectionItemProps = {
+type SectionItemProps = {
   section: Section
+  editable?: boolean
+  onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ManageSectionItem = ({ section, onDelete }: ManageSectionItemProps) => {
+const SectionItem = ({ section, editable, onClick, onDelete }: SectionItemProps) => {
   return (<>
-    <li className="w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]">
+    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+      onClick={onClick}
+    >
       {section.title}
       <div className="actions flex gap-1">
         <Tooltip>
@@ -22,14 +26,16 @@ const ManageSectionItem = ({ section, onDelete }: ManageSectionItemProps) => {
           </TooltipTrigger>
           <TooltipContent>View section</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/manage/sections/${section.id}`} className="">
-              <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>Edit section</TooltipContent>
-        </Tooltip>
+        {editable && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={`/manage/sections/${section.id}`} className="">
+                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>Edit section</TooltipContent>
+          </Tooltip>
+        )}
         {onDelete && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -44,4 +50,4 @@ const ManageSectionItem = ({ section, onDelete }: ManageSectionItemProps) => {
   </>)
 }
 
-export default ManageSectionItem
+export default SectionItem

@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Dialog, DialogHeader, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { PlusIcon } from '@radix-ui/react-icons'
-import ManageUserItem from '@/components/manage/ManageUserItem'
+import UserItem from '@/components/item-cards/UserItem'
 import NewUserForm from '@/components/forms/NewUserForm'
-import NoAccessNotice from '@/components/NoAccessNotice'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -76,7 +76,7 @@ export default function UsersManagePage() {
               <ul className="flex flex-col gap-[1rem]">
                 {
                   users.filter(user => user.role == 'teacher').map((user: User) => (
-                    <ManageUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                    <UserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                   ))
                 }
                 {
@@ -93,7 +93,7 @@ export default function UsersManagePage() {
                 <ul className="flex flex-col gap-[1rem]">
                   {
                     users && users.filter(user => user.role == 'student').map(user => (
-                      <ManageUserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                      <UserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
                   {

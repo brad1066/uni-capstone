@@ -3,9 +3,9 @@
 
 import { createResource } from '@/actions/resourceActions'
 import { getSection, updateSection, updateSectionAddResource, updateSectionRemoveResource } from '@/actions/sectionActions'
-import NoAccessNotice from '@/components/NoAccessNotice'
-import ManageResourceItem from '@/components/manage/ManageResourceItem'
-import ManageUnitListItem from '@/components/manage/ManageUnitListItem'
+import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import ResourceItem from '@/components/item-cards/ResourceItem'
+import UnitItem from '@/components/item-cards/UnitItem'
 import { AddExistingResourceForm } from '@/components/forms/AddExistingResourceForm'
 import EditSectionForm from '@/components/forms/EditSectionForm'
 import NewResourceForm from '@/components/forms/NewResourceForm'
@@ -92,7 +92,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
             {section?.unit && (
               <div>
                 <h2 className="text-lg font-bold">Unit</h2>
-                <ManageUnitListItem unit={section.unit} />
+                <UnitItem unit={section.unit} />
               </div>
             )}
           </CardContent>
@@ -136,7 +136,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
           <CardContent className="flex flex-col xl:grid xl:grid-cols-2 gap-4">
             {section.resources?.length === 0 && <p>No resources</p>}
             {section.resources?.map(resource => (
-              <ManageResourceItem key={resource.id} resource={resource} onDelete={async () => {
+              <ResourceItem key={resource.id} resource={resource} onDelete={async () => {
                 await updateSectionRemoveResource(section.id, resource.id)
                 await refreshSectionData()
               }} />
