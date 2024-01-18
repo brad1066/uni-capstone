@@ -2,12 +2,10 @@
 
 import { getCourse } from '@/actions/courseActions'
 import NotFoundPage from '@/app/not-found'
+import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tooltip } from '@/components/ui/tooltip'
 import { useAuth } from '@/hooks/useAuth'
 import { Course, Module } from '@prisma/client'
-import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -20,7 +18,7 @@ type ViewCoursePageProps = {
 export default function ViewCoursePage({ params: { course_id } }: ViewCoursePageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
-  const [course, setCourse] = useState<Course & {modules: Module[] | null}>()
+  const [course, setCourse] = useState<Course & { modules: Module[] | null }>()
   const [loading, setLoading] = useState(true)
 
 
@@ -40,7 +38,7 @@ export default function ViewCoursePage({ params: { course_id } }: ViewCoursePage
       </>}
       {!loading && course && <>
         <h1 className="mb-4">{course?.title}</h1>
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-col gap-4">
           {/* Description Card */}
           <Card className="">
             <CardHeader><CardTitle>Description</CardTitle></CardHeader>
@@ -51,21 +49,12 @@ export default function ViewCoursePage({ params: { course_id } }: ViewCoursePage
           </Card>
 
           {/* Course Modules Card */}
-          <Card>
+          <Card className='col-span-2'>
             <CardHeader><CardTitle>Course Modules</CardTitle></CardHeader>
             <CardContent>
-              <ul className="md:grid md:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2">
                 {course?.modules?.map(module => (
-                  <Tooltip key={module.id} >
-                    <TooltipTrigger asChild>
-                      <Link
-                        className="border-solid border-primary border-2 rounded-md p-4"
-                        href={`/view/modules/${module.id}`}>{module.title}</Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" align="center" className="bg-primary text-white p-2 rounded-md">
-                      Go to {module.title}
-                    </TooltipContent>
-                  </Tooltip>
+                  <ModuleItem key={module.id} module={module} onClick={() => { router.push(`/view/modules/${module.id}`) }} />
                 ))}
               </ul>
             </CardContent>

@@ -27,6 +27,7 @@ export async function getModule(id: string, extraFields: string[] = [], roles: U
       prisma.module.findUnique({
         where: { id }, include: {
           course: extraFields.includes('course'),
+          units: extraFields.includes('units'),
           students: extraFields.includes('students') ? {
             include: {
               user: extraFields.includes('students.user') ? {
@@ -36,7 +37,6 @@ export async function getModule(id: string, extraFields: string[] = [], roles: U
               } : false,
             }
           } : false,
-          units: extraFields.includes('units'),
           teachers: extraFields.includes('teachers') ? {
             include: {
               user: extraFields.includes('teachers.user') ? {
@@ -49,9 +49,8 @@ export async function getModule(id: string, extraFields: string[] = [], roles: U
         }
       })
     ])
-    if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && module) {
+    if ((roles.length == 0 || roles.includes(session?.user.role as UserRole)) && module)
       return module
-    }
   }
   return undefined
 }
