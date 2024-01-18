@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client'
 
 import TeacherDashboard from '@/components/TeacherDashboard'

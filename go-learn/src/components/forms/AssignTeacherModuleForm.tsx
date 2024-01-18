@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client'
 
 import { Teacher, User } from '@prisma/client'
