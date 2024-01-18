@@ -1,7 +1,7 @@
 import { Upload } from '@prisma/client'
 import Link from 'next/link'
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
-import { Button } from './ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import { Button } from '../ui/button'
 import { DownloadIcon, TrashIcon } from '@radix-ui/react-icons'
 
 type ResourceUploadItemProps = {

@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
-import { ResourcesSelectCombobox } from '../ResourcesSelectCombobox'
+import { ResourcesSelectCombobox } from './ResourcesSelectCombobox'
 
 type AddExistingResourceFormProps = {
   unitId: string,

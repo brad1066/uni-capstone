@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
-import { ModulesSelectCombobox } from '../ModulesSelectCombobox'
+import { ModulesSelectCombobox } from './ModulesSelectCombobox'
 
 type AssignStudentModuleFormProps = {
   student: Student,

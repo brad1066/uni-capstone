@@ -3,7 +3,7 @@
 import { getCourses } from '@/actions/courseActions'
 import { Course, Student } from '@prisma/client'
 import { useEffect, useState } from 'react'
-import { CoursesSelectCombobox } from '../CoursesSelectCombobox'
+import { CoursesSelectCombobox } from './CoursesSelectCombobox'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'

@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '../ui/button'
-import { TeachersSelectCombobox } from '../TeachersSelectCombobox'
+import { TeachersSelectCombobox } from './TeachersSelectCombobox'
 import { getTeachers } from '@/actions/teacherActions'
 
 type AssignTeacherModuleFormProps = {

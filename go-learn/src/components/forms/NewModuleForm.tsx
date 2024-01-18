@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '../ui/textarea'
-import { CoursesSelectCombobox } from '../CoursesSelectCombobox'
+import { CoursesSelectCombobox } from './CoursesSelectCombobox'
 import { cn } from '@/lib/utils'
 import { Module } from '@prisma/client'
 

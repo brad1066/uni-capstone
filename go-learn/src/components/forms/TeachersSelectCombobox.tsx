@@ -4,9 +4,9 @@
 import { getTeachers } from '@/actions/teacherActions'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { Button } from './ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from './ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Button } from '../ui/button'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
 import { cn } from '@/lib/utils'
 
 type TeachersSelectComboboxProps = {
