@@ -76,7 +76,7 @@ export default function UsersManagePage() {
               <ul className="flex flex-col gap-[1rem]">
                 {
                   users.filter(user => user.role == 'teacher').map((user: User) => (
-                    <UserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                    <UserItem editable user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                   ))
                 }
                 {
@@ -93,7 +93,7 @@ export default function UsersManagePage() {
                 <ul className="flex flex-col gap-[1rem]">
                   {
                     users && users.filter(user => user.role == 'student').map(user => (
-                      <UserItem user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                      <UserItem editable user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
                   {

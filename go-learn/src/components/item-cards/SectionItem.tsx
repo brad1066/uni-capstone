@@ -3,17 +3,19 @@ import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Section } from '@prisma/client'
+import { cn } from '@/lib/utils'
 
 type SectionItemProps = {
+  className?: string
   section: Section
   editable?: boolean
   onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const SectionItem = ({ section, editable, onClick, onDelete }: SectionItemProps) => {
+const SectionItem = ({ className, section, editable, onClick, onDelete }: SectionItemProps) => {
   return (<>
-    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+    <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+ (onClick ? ' cursor-pointer' : ''), className)}
       onClick={onClick}
     >
       {section.title}

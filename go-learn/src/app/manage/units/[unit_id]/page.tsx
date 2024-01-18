@@ -93,7 +93,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
               unit?.module && (
                 <div>
                   <h3 className="text-lg font-bold">Module</h3>
-                  <ModuleItem module={unit.module as Module} />
+                  <ModuleItem editable module={unit.module as Module} />
                 </div>
               )
             }
@@ -122,7 +122,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
           <CardContent>
             {unit.sections?.length ? <ul className="flex flex-col gap-2">
               {unit.sections.map(section => <>
-                <SectionItem key={section.id} section={section} onDelete={async () => {
+                <SectionItem editable key={section.id} section={section} onDelete={async () => {
                   const result = await deleteSection(section.id)
                   if (result) await refreshUnitData()
                 }} />
@@ -154,7 +154,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
           <CardContent>
             {unit.resources?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {unit.resources.map(resource => <>
-                <ResourceItem key={resource.id} resource={resource} onDelete={async () => {
+                <ResourceItem editable key={resource.id} resource={resource} onDelete={async () => {
                   const result = await deleteResource(resource.id)
                   if (result) await refreshUnitData()
                 }} />

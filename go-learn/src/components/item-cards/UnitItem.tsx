@@ -3,17 +3,21 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
+import { cn } from '@/lib/utils'
 
 type UnitItemProps = {
+  className?: string
   unit: Unit
   editable?: boolean
   onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-export default function UnitItem({ unit, editable, onClick, onDelete }: UnitItemProps) {
+export default function UnitItem({ className, unit, editable, onClick, onDelete }: UnitItemProps) {
   return (
-    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+(onClick ? 'cursor-pointer' : '')}>
+    <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+ (onClick ? ' cursor-pointer' : ''), className)}
+      onClick={onClick}
+    >
       {unit.title}
       <div className="actions flex gap-1">
 

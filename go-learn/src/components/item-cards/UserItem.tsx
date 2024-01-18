@@ -3,18 +3,21 @@ import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { User } from '@prisma/client'
+import { cn } from '@/lib/utils'
 
 type UserItemProps = {
+  className?: string
   user: User
   editable?: boolean
   onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const UserItem = ({ user, editable, onClick, onDelete }: UserItemProps) => {
+const UserItem = ({ className, user, editable, onClick, onDelete }: UserItemProps) => {
   return (<>
-    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+(onClick ? ' cursor-pointer' : '')}
-      onClick={onClick}>
+    <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+ (onClick ? ' cursor-pointer' : ''), className)}
+      onClick={onClick}
+    >
       {user.title} {user.forename} {user.surname}
       <div className='actions flex gap-1'>
         <Tooltip>

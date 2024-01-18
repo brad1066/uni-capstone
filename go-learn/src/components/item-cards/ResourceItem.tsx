@@ -3,17 +3,19 @@ import { Button } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Resource } from '@prisma/client'
+import { cn } from '@/lib/utils'
 
 type ResourceItemProps = {
+  className?: string
   resource: Resource
   editable?: boolean
   onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const ResourceItem = ({ resource, editable, onClick, onDelete }: ResourceItemProps) => {
+const ResourceItem = ({ className, resource, editable, onClick, onDelete }: ResourceItemProps) => {
   return (<>
-    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+    <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]'+ (onClick ? ' cursor-pointer' : ''), className)}
       onClick={onClick}
     >
       {resource.title}

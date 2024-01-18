@@ -99,7 +99,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                 <DialogHeader><DialogTitle>Enrolled Students</DialogTitle></DialogHeader>
                 {module?.students?.length ? <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                  {module.students?.map(student => <StudentItem key={student.id} student={student} onDelete={async () => {
+                  {module.students?.map(student => <StudentItem editable key={student.id} student={student} onDelete={async () => {
                     await removeStudentModule(student.id, module.id)
                     await refreshModuleData()
                   }} />)}
@@ -127,7 +127,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
 
             {
               module?.teachers?.length ? <ul>
-                {module.teachers?.map?.(teacher => <UserItem key={teacher.id} user={teacher?.user as User} onDelete={async () => {
+                {module.teachers?.map?.(teacher => <UserItem editable key={teacher.id} user={teacher?.user as User} onDelete={async () => {
                   await removeModuleTeacher(module.id, teacher.id)
                   await refreshModuleData()
                 }} />)}
@@ -167,7 +167,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
             </Dialog>
           </CardHeader>
           <CardContent>
-            {module.course?.id ? <CourseItem course={module.course} onDelete={async () => {
+            {module.course?.id ? <CourseItem editable course={module.course} onDelete={async () => {
               module.course && await removeCourseModule(module.course.id, module.id)
               await refreshModuleData()
             }} /> : <p>No Course</p>
@@ -197,7 +197,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
           <CardContent>
             {module.units?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {module.units.map(unit => <>
-                <UnitListItem key={unit.id} unit={unit} onDelete={async () => {
+                <UnitListItem editable key={unit.id} unit={unit} onDelete={async () => {
                   const result = await deleteUnit(unit.id)
                   if (result) await refreshModuleData()
                 }} />

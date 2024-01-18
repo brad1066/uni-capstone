@@ -102,7 +102,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
             {resource?.unit && (
               <div>
                 <h2 className='text-lg font-bold'>Unit</h2>
-                <UnitItem unit={resource.unit} />
+                <UnitItem editable unit={resource.unit} />
               </div>
             )}
             {resource?.sections?.length && resource?.sections?.length > 0 && (
@@ -110,7 +110,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 <h2 className='text-lg font-bold flex'>Sections</h2>
                 <div className='flex flex-col gap-2'>
                   {resource.sections.map(section => (
-                    <SectionItem key={section.id} section={section} onDelete={async () => {
+                    <SectionItem editable key={section.id} section={section} onDelete={async () => {
                       await updateResourceRemoveSection(resource.id, section.id)
                       await refreshResourceData()
                     }} />
@@ -177,7 +177,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
           <CardContent className='flex flex-col xl:grid xl:grid-cols-2 gap-4'>
             {resource.uploads?.length === 0 && <p>No Uploads</p>}
             {resource.uploads?.map(upload => (
-              <ResourceUploadItem upload={upload} key={upload.id} onDelete={async () => {
+              <ResourceUploadItem editable upload={upload} key={upload.id} onDelete={async () => {
                 const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
                 if (!data) return
                 if (!await deleteUpload(upload.id)) return

@@ -172,7 +172,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
           <CardContent className="flex flex-col gap-[1rem]">
             {
               student?.enrolledCourse
-                ? <CourseItem course={student.enrolledCourse} onDelete={async () => {
+                ? <CourseItem editable course={student.enrolledCourse} onDelete={async () => {
                   const updatedStudent = await removeStudentCourse(student.id)
                   if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                 }} />
@@ -198,7 +198,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
               <div className="flex flex-col gap-2">
                 {student.modules.map((module) => {
                   return <>
-                    <ModuleItem module={module} onDelete={async () => {
+                    <ModuleItem editable module={module} onDelete={async () => {
                       const updatedStudent = await removeStudentModule(student.id, module.id)
                       if (updatedStudent) setStudent({ ...student, ...updatedStudent })
                     }} />

@@ -4,19 +4,21 @@ import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Course } from '@prisma/client'
 import { useAuth } from '@/hooks/useAuth'
+import { cn } from '@/lib/utils'
 
 type CourseItemProps = {
+  className?: string
   course: Course
   editable?: boolean
   onClick?: () => void
   onDelete?: () => Promise<unknown>
 }
 
-const CourseItem = ({ course, editable, onClick, onDelete }: CourseItemProps) => {
+const CourseItem = ({ className, course, editable, onClick, onDelete }: CourseItemProps) => {
 
   const { user } = useAuth()
   return (<>
-    <li className={'w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : '')}
+    <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : ''), className)}
       onClick={onClick}
     >
       {course.title}
@@ -29,17 +31,15 @@ const CourseItem = ({ course, editable, onClick, onDelete }: CourseItemProps) =>
           </TooltipTrigger>
           <TooltipContent>External Link</TooltipContent>
         </Tooltip>}
-        {editable && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={`/view/courses/${course.id}`}>
-                <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>View course</TooltipContent>
-          </Tooltip>
-        )}
-        {user?.role === 'admin' && <Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href={`/view/courses/${course.id}`}>
+              <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>View course</TooltipContent>
+        </Tooltip>
+        {user?.role === 'admin' && editable && <Tooltip>
           <TooltipTrigger asChild>
             <Link href={`/manage/courses/${course.id}`} className="">
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>

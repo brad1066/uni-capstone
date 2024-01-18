@@ -57,7 +57,7 @@ export default function CoursesManagePage() {
         </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <CourseItem course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
+            <CourseItem editable course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
           ))}
         </div>}
       </>}

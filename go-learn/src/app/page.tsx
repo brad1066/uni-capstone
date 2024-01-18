@@ -1,8 +1,8 @@
 
 'use client'
 
-import StudentDashboard from '@/components/StudentDashboard'
-import TeacherDashboard from '@/components/TeacherDashboard'
+import StudentDashboard from '@/components/ui/StudentDashboard'
+import TeacherDashboard from '@/components/ui/TeacherDashboard'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'

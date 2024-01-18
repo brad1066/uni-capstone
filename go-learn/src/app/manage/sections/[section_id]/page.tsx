@@ -92,7 +92,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
             {section?.unit && (
               <div>
                 <h2 className="text-lg font-bold">Unit</h2>
-                <UnitItem unit={section.unit} />
+                <UnitItem editable unit={section.unit} />
               </div>
             )}
           </CardContent>
@@ -136,7 +136,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
           <CardContent className="flex flex-col xl:grid xl:grid-cols-2 gap-4">
             {section.resources?.length === 0 && <p>No resources</p>}
             {section.resources?.map(resource => (
-              <ResourceItem key={resource.id} resource={resource} onDelete={async () => {
+              <ResourceItem editable key={resource.id} resource={resource} onDelete={async () => {
                 await updateSectionRemoveResource(section.id, resource.id)
                 await refreshSectionData()
               }} />

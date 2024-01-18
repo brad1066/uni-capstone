@@ -91,7 +91,7 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
                   course?.students?.length ? (
                     <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                      {course.students?.map(student => <StudentItem key={student.id} student={student} onDelete={async () => {
+                      {course.students?.map(student => <StudentItem editable key={student.id} student={student} onDelete={async () => {
                         await removeStudentCourse(student.id)
                         await refreshCourseData()
                       }} />)}
@@ -144,7 +144,7 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
           </CardHeader>
           <CardContent>
             <ul>
-              {course?.modules?.map(module => <ModuleItem key={module.id} module={module} onDelete={async () => {
+              {course?.modules?.map(module => <ModuleItem editable key={module.id} module={module} onDelete={async () => {
                 const resp = await removeCourseModule(course.id, module.id)
                 if (resp) {
                   setCourse(await getCourse(course.id, ['modules']))

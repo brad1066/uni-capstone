@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import ModuleItem from '../item-cards/ModuleItem'
 import { Card, CardContent, CardHeader, CardTitle } from './card'
 import { useRouter } from 'next/navigation'
+import CourseItem from '../item-cards/CourseItem'
 
 type StudentDashboardProps = {
   user: User;
@@ -16,7 +17,7 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
   const [student, setStudent] = useState<Student & {
     enrolledCourse?: Course | null
     modules?: Module[] | null
-   }>()
+  }>()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -34,6 +35,11 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
       {student?.enrolledCourse ? (
         <Card>
           <CardHeader><CardTitle>Enrolled Course</CardTitle></CardHeader>
+          <CardContent>
+            <CourseItem course={student.enrolledCourse} onClick={() => {
+              router.push(`/view/courses/${student.enrolledCourse?.id}`)
+            }} />
+          </CardContent>
         </Card>
       )
         : (
@@ -43,10 +49,15 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
       {!!student?.modules?.length && (
         <Card className='md:col-span-2'>
           <CardHeader><CardTitle>Modules</CardTitle></CardHeader>
-          <CardContent>
-            {student.modules?.map(module => <ModuleItem key={module.id} module={module} onClick={() => {
-              router.push(`/view/modules/${module.id}`)
-            }}/>)}
+          <CardContent className='grid grid-cols-1 md:grid-cols-2'>
+            {student.modules?.map(module => (
+              <ModuleItem
+              key={module.id}
+              module={module}
+              onClick={() => {
+                router.push(`/view/modules/${module.id}`)
+              }} />
+            ))}
           </CardContent>
         </Card>
       )}
