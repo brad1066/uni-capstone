@@ -79,25 +79,12 @@ model Module {
   units       Unit[]
   students    Student[]
   teachers    Teacher[]
+  assignments Assignment[]
 
   // Auto Gen
-  courseId String?
+  courseId    String?
 
   @@index([courseId])
-}
-
-model Unit {
-  id          String       @id @default(uuid())
-  title       String
-  description String?
-  module      Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  sections    Section[]
-  resources   Resource[]
-  assignments Assignment[]
-  // Auto Gen
-  moduleId    String
-
-  @@index([moduleId])
 }
 
 model Assignment {
@@ -105,12 +92,25 @@ model Assignment {
   title       String
   description String?
   dueDate     DateTime?
-  unit        Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
   resources   Resource[]
   // Auto Gen
-  unitId      String
+  Module      Module?    @relation(fields: [moduleId], references: [id])
+  moduleId    String?
 
-  @@index([unitId])
+  @@index([moduleId])
+}
+
+model Unit {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  sections    Section[]
+  resources   Resource[]
+  // Auto Gen
+  moduleId    String
+
+  @@index([moduleId])
 }
 
 model Section {
