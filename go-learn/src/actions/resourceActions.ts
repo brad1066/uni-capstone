@@ -9,7 +9,7 @@ export async function getResource(id: string, extraFields: string[] = []) {
   const session = await getCurrentUserSession()
   if (!session?.user) return undefined
 
-  return await prisma.resource.findUnique({
+  const resource = await prisma.resource.findUnique({
     where: { id }, include: {
       sections: extraFields.includes('sections') ?? false,
       unit: extraFields.includes('unit') ?? false,
@@ -17,9 +17,12 @@ export async function getResource(id: string, extraFields: string[] = []) {
       uploads: extraFields.includes('uploads') ?? false,
     }
   })
+
+  if (!resource) return undefined
+  return resource
 }
 
-export async function getResources(username: string = '', roles: UserRole[] = []) {
+export async function getResources(username: string = '',roles: UserRole[] = []) {
   const session = await getCurrentUserSession()
   if (!session?.user || (roles.length > 0 && (session.user.role in roles))) return undefined
 

@@ -56,11 +56,11 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
             title: values.title,
             forename: values.forename,
             middleNames: values.middleNames ?? null,
-            surname: '',
+            surname: values.surname,
             letters: values.letters ?? null,
             role: values.role as 'student' | 'teacher' | 'admin',
             contactId: null,
-            contactDetails: { id: -1, label: '', mobile: values.contactMobile ?? null, email: values.contactEmail ?? null }
+            contactDetails: { id: '', label: '', mobile: values.contactMobile ?? null, email: values.contactEmail ?? null }
           }
 
           submitUser?.(newUser)

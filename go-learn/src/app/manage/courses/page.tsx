@@ -42,9 +42,9 @@ export default function CoursesManagePage() {
     <>
       {(!loading && user?.role != 'admin') && <NoAccessNotice />}
       {!loading && user?.role == 'admin' && <>
-        <h1 className="mb-[1rem] flex gap-[1rem] items-center">All Courses
+        <h1 className="mb-[1rem] flex gap-4 items-center">All Courses
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="secondary" className='bg-card border shadow'>New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {
@@ -57,7 +57,12 @@ export default function CoursesManagePage() {
         </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
-            <CourseItem editable course={course} key={course.id} onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
+            <CourseItem
+              key={course.id}
+              course={course}
+              className='bg-card'
+              editable
+              onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
           ))}
         </div>}
       </>}

@@ -46,7 +46,8 @@ export default function UsersManagePage() {
 
   useEffect(() => {
     setLoading(true)
-    setFilter(searchParams?.get('filter') as string)
+    const filter = searchParams?.get('filter') as string | null
+    if (filter && filter in ['students', 'teachers']) setFilter(filter)
     setLoading(false)
   }, [searchParams])
 
@@ -54,12 +55,12 @@ export default function UsersManagePage() {
     <>
       {(!loading && user?.role != 'admin') && <NoAccessNotice />}
       {!loading && user?.role == 'admin' && <>
-        <h1 className="mb-[1rem] flex gap-[1rem] items-center">Users
+        <h1 className="mb-[1rem] flex gap-4 items-center">Users
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="outline" className="bg-accent">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
+            <DialogTrigger asChild><Button variant="outline" className="bg-card border shadow">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
-              <NewUserForm disabled={loading || formDisabled} submitUser={async (user: User & {contactDetails: Contact}) => {
+              <NewUserForm disabled={loading || formDisabled} submitUser={async (user: User & { contactDetails: Contact }) => {
                 setFormDisabled(true)
                 const createdUser = await createUser(user)
                 setFormDisabled(false)
@@ -69,11 +70,11 @@ export default function UsersManagePage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {users ? <div className={cn('w-full', !filter ? 'grid md:grid-cols-2 gap-[1rem]' : '')}>
+        {users ? <div className={cn('w-full', !filter ? 'grid md:grid-cols-2 gap-4' : '')}>
           {(!filter || filter == 'teachers') && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>
-              <ul className="flex flex-col gap-[1rem]">
+              <ul className={cn('grid grid-cols-1 gap-4', filter == 'students' ? 'flex flex-wrap flex-row' : '')}>
                 {
                   users.filter(user => user.role == 'teacher').map((user: User) => (
                     <UserItem editable user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
@@ -90,10 +91,15 @@ export default function UsersManagePage() {
             <Card>
               <CardHeader>Students</CardHeader>
               <CardContent>
-                <ul className="flex flex-col gap-[1rem]">
+                <ul className={cn('grid grid-cols-1 gap-4', filter == 'students' ? 'flex flex-wrap flex-row' : '')}>
                   {
                     users && users.filter(user => user.role == 'student').map(user => (
-                      <UserItem editable user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                      <UserItem
+                        key={user.username}
+                        user={user}
+                        className='w-fit'
+                        editable
+                        onDelete={async () => { confirmUserDelete(user) }} />
                     ))
                   }
                   {

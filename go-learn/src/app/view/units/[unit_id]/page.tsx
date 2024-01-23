@@ -52,7 +52,7 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
               <h4 className="mb-2">Description</h4>
               {unit.description ? unit.description : 'No description'}
               <h4 className="mt-4 mb-2">Module</h4>
-              {unit?.module ? <ModuleItem module={unit.module} /> : 'Not assigned to a module'}
+              {unit?.module ? <ModuleItem module={unit.module} onClick={() => { router.push(`/view/modules/${module.id}`) }} /> : 'Not assigned to a module'}
             </CardContent>
           </Card>
 
@@ -77,8 +77,6 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
                   <ResourceItem
                     key={resource.id}
                     resource={resource}
-                    download={async () => {
-                    }}
                     onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
                 ))}
               </ul>

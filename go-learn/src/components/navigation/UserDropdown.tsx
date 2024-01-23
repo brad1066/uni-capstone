@@ -31,7 +31,7 @@ export function UserDropdown({ className }: UserDropdownProps) {
   return (
     <DropdownMenu>
       {user && <DropdownMenuTrigger asChild>
-        <Button variant="outline" className={cn(className, 'bg-card')}>Hi {user?.forename}</Button>
+        <Button variant="outline" className={cn(className, 'bg-card border shadow')}>Hi {user?.forename}</Button>
       </DropdownMenuTrigger>
       }
       <DropdownMenuContent className="w-56">

@@ -47,7 +47,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
               <h4 className="mb-2">Description</h4>
               {module.description ? module.description : 'No description'}
               <h4 className="mt-4 mb-2">Course</h4>
-              {module?.course ? <CourseItem course={module.course} /> : 'Not assigned to a course'}
+              {module?.course ? <CourseItem course={module.course} onClick={() => { module?.course && router.push(`/view/courses/${module.course.id}`) }} /> : 'Not assigned to a course'}
             </CardContent>
           </Card>
 
@@ -57,7 +57,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
             <CardContent>
               {module.units?.length ? (
                 <ul className="grid grid-cols-1 md:grid-cols-2">
-                  {module.units.map(unit => <UnitItem key={unit.id} unit={unit} />)}
+                  {module.units.map(unit => <UnitItem key={unit.id} unit={unit} onClick={() => { router.push(`/view/units/${unit.id}`) }} />)}
                 </ul>
               ) : 'No units'}
             </CardContent>

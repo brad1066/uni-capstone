@@ -17,7 +17,7 @@ import AddUploadForm from '@/components/forms/AddUploadForm'
 import ReactMarkdown from 'react-markdown'
 import MarkdownLink from '@/components/markdownWrappers/MarkdownLink'
 import { useSupabase } from '@/hooks/useSupabase'
-import ResourceUploadItem from '@/components/forms/ResourceUploadItem'
+import UploadItem from '@/components/item-cards/UploadItem'
 import { createUpload, deleteUpload } from '@/actions/uploadActions'
 import NoAccessNotice from '@/components/ui/NoAccessNotice'
 
@@ -97,7 +97,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
           <CardContent className='flex flex-col gap-4'>
             <div>
               <h2 className='text-lg font-bold'>Description</h2>
-              <pre className='inline-block font-[inherit] whitespace-pre'>{resource.description || 'No Description'}</pre>
+              <pre className='inline-block font-[inherit] whitespace-normal'>{resource.description || 'No Description'}</pre>
             </div>
             {resource?.unit && (
               <div>
@@ -174,15 +174,19 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
               </Dialog>
             </div>
           </CardHeader>
-          <CardContent className='flex flex-col xl:grid xl:grid-cols-2 gap-4'>
+          <CardContent className='flex flex-row gap-4'>
             {resource.uploads?.length === 0 && <p>No Uploads</p>}
             {resource.uploads?.map(upload => (
-              <ResourceUploadItem editable upload={upload} key={upload.id} onDelete={async () => {
-                const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
-                if (!data) return
-                if (!await deleteUpload(upload.id)) return
-                await refreshResourceData()
-              }} />
+              <UploadItem
+                key={upload.id}
+                className='w-fit'
+                upload={upload}
+                onDelete={async () => {
+                  const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
+                  if (!data) return
+                  if (!await deleteUpload(upload.id)) return
+                  await refreshResourceData()
+                }} />
             ))}
           </CardContent>
         </Card>

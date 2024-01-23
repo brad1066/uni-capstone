@@ -28,7 +28,7 @@ export async function getSection(id: string, extraFields: string[] = []) {
     prisma.section.findUnique({
       where: { id }, include: {
         unit: extraFields.includes('unit') ?? false,
-        resources: extraFields.includes('resources') ?? false
+        resources: extraFields.includes('resources') ?? false,
       }
     })
   ])

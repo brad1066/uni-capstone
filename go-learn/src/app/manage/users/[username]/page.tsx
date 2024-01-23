@@ -114,7 +114,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
 
         {user.role == 'admin' && <Card className="flex-1">
           <CardHeader><CardTitle>Manage actions</CardTitle></CardHeader>
-          <CardContent className="flex flex-col gap-[1rem]">
+          <CardContent className="flex flex-col gap-4">
 
           </CardContent>
         </Card>}
@@ -139,7 +139,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
                 </DialogFooter>
               </DialogContent>
             </Dialog></CardTitle></CardHeader>
-          <CardContent className="flex flex-col gap-[1rem]">
+          <CardContent className="flex flex-col gap-4">
             <ResourcesAuthoredCard author={user} className="border-none shadow-none" />
           </CardContent>
         </Card>}
@@ -169,7 +169,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
                 </DialogFooter>
               </DialogContent>
             </Dialog></CardTitle></CardHeader>
-          <CardContent className="flex flex-col gap-[1rem]">
+          <CardContent className="flex flex-col gap-4">
             {
               student?.enrolledCourse
                 ? <CourseItem editable course={student.enrolledCourse} onDelete={async () => {
