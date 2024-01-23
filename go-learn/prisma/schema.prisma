@@ -87,16 +87,30 @@ model Module {
 }
 
 model Unit {
-  id          String     @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
   description String?
-  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  module      Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   sections    Section[]
   resources   Resource[]
+  assignments Assignment[]
   // Auto Gen
   moduleId    String
 
   @@index([moduleId])
+}
+
+model Assignment {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  unit        Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  resources   Resource[]
+  // Auto Gen
+  unitId      String
+
+  @@index([unitId])
 }
 
 model Section {
@@ -112,14 +126,15 @@ model Section {
 }
 
 model Resource {
-  id             String    @id @default(uuid())
+  id             String       @id @default(uuid())
   title          String
   description    String
   content        String
-  author         User?     @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
-  unit           Unit      @relation(fields: [unitId], references: [id])
+  author         User?        @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
+  unit           Unit         @relation(fields: [unitId], references: [id])
   sections       Section[]
   uploads        Upload[]
+  assignments    Assignment[]
   // Auto Gen
   authorUsername String?
   unitId         String
