@@ -71,18 +71,18 @@ model Course {
 }
 
 model Module {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
   description String?
   websiteURL  String?
-  course      Course?   @relation(fields: [courseId], references: [id])
+  course      Course?      @relation(fields: [courseId], references: [id])
   units       Unit[]
   students    Student[]
   teachers    Teacher[]
   assignments Assignment[]
 
   // Auto Gen
-  courseId    String?
+  courseId String?
 
   @@index([courseId])
 }
@@ -131,7 +131,7 @@ model Resource {
   description    String
   content        String
   author         User?        @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
-  unit           Unit         @relation(fields: [unitId], references: [id])
+  unit           Unit?        @relation(fields: [unitId], references: [id])
   sections       Section[]
   uploads        Upload[]
   assignments    Assignment[]
