@@ -22,7 +22,8 @@ import { Assignment, Course, Module, Student, Teacher, Unit, User } from '@prism
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AssignmentItem from '@/components/item-cards/AssignmentItem'
-import { deleteAssignment } from '@/actions/assignmentActions'
+import { createAssignment, deleteAssignment } from '@/actions/assignmentActions'
+import NewAssignmentForm from '@/components/forms/NewAssignmentForm'
 
 type SingleModuleManagePageProps = {
   params: { module_id: string }
@@ -44,6 +45,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
   const [editModuleDetailsDialogOpen, setEditModuleDetailsDialogOpen] = useState(false)
   const [assigningCourse, setAssigningCourse] = useState<boolean>(false)
   const [creatingUnit, setCreatingUnit] = useState<boolean>(false)
+  const [creatingAssignmentOpen, setCreatingAssignmentOpen] = useState<boolean>(false)
   const [addingTeacher, setAddingTeacher] = useState<boolean>(false)
 
   const [courseSelection, setCourseSelection] = useState<string>('')
@@ -226,11 +228,16 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
           <CardHeader className="flex flex-row items-center gap-2 space-y-0 justify-between">
             <CardTitle>Assignments</CardTitle>
             {/* Add Assignment Dialog */}
-            <Dialog>
+            <Dialog open={creatingAssignmentOpen} onOpenChange={setCreatingAssignmentOpen}>
               <DialogTrigger asChild><Button>Add Assignment</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add Assignment</DialogTitle></DialogHeader>
-                <p>Not implemented yet</p>
+                <NewAssignmentForm submitAssignment={async ({ title, description }) => {
+                  createAssignment({ title, description, moduleId: module.id } as Assignment)
+                    .then(async () => {
+                      await refreshModuleData()
+                    })
+                }} />
               </DialogContent>
             </Dialog>
           </CardHeader>

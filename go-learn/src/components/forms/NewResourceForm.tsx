@@ -13,7 +13,7 @@ import { Button } from '../ui/button'
 type NewResourceFormProps = {
   onSubmit?: (resource: Resource, sectionId?: string) => Promise<void>
   className?: string,
-  unitId: string
+  unitId?: string
 }
 
 
@@ -40,7 +40,7 @@ export default function NewResourceForm({ unitId, onSubmit, className }: NewReso
             title: values.title,
             description: values.description ?? '',
             id: '',
-            unitId: unitId ?? null,
+            unitId: unitId ?? null
           } as Resource)
         })}>
 

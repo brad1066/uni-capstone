@@ -28,7 +28,8 @@ model User {
   teacher          Teacher?
   userSessions     UserSession[]
   resources        Resource[]
-  UserVerification UserVerification[]
+  userVerification UserVerification[]
+  submissions      Submission[]
 
   @@index([contactId], name: "contactId")
 }
@@ -88,14 +89,15 @@ model Module {
 }
 
 model Assignment {
-  id          String     @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
   description String?
   dueDate     DateTime?
   resources   Resource[]
+  module      Module?      @relation(fields: [moduleId], references: [id])
   // Auto Gen
-  Module      Module?    @relation(fields: [moduleId], references: [id])
   moduleId    String?
+  submissions Submission[]
 
   @@index([moduleId])
 }
@@ -137,21 +139,37 @@ model Resource {
   assignments    Assignment[]
   // Auto Gen
   authorUsername String?
-  unitId         String
+  unitId         String?
 
   @@index([authorUsername])
   @@index([unitId])
 }
 
 model Upload {
-  id         String    @id @default(uuid())
+  id         String       @id @default(uuid())
   title      String
   publicURL  String
   path       String
-  Resource   Resource? @relation(fields: [resourceId], references: [id])
+  resource   Resource?    @relation(fields: [resourceId], references: [id])
   resourceId String?
+  submission Submission[]
 
   @@index([resourceId])
+}
+
+model Submission {
+  id             String     @id @default(uuid())
+  author         User?      @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
+  assignment     Assignment @relation(fields: [assignmentId], references: [id])
+  upload         Upload     @relation(fields: [uploadId], references: [id])
+  // Auto Gen
+  authorUsername String?
+  assignmentId   String
+  uploadId       String
+
+  @@index([authorUsername])
+  @@index([assignmentId])
+  @@index([uploadId])
 }
 
 // Collections

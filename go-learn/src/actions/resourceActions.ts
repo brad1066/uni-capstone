@@ -35,8 +35,8 @@ export async function deleteResource(id: string) {
   return await prisma.resource.delete({ where: { id } }) ?? undefined
 }
 
-export async function createResource({ title, description = '', unitId }: Resource, sectionId?: string) {
-  if (!unitId) return undefined
+export async function createResource({ title, description = '', unitId }: Resource, sectionId?: string, assignmentId?: string) {
+  if (!unitId && !sectionId && !assignmentId) return undefined
 
   const session = await getCurrentUserSession()
   if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
@@ -46,9 +46,10 @@ export async function createResource({ title, description = '', unitId }: Resour
       title,
       description,
       content: '',
-      authorUsername: session.user.username,
-      unitId,
-      sections: sectionId ? { connect: { id: sectionId } } : undefined
+      author: { connect: { username: session.user.username } },
+      unit: unitId ? { connect: { id: unitId } } : undefined,
+      sections: sectionId ? { connect: { id: sectionId } } : undefined,
+      assignments: assignmentId ? { connect: { id: assignmentId } } : undefined
     }
   }) ?? undefined
 

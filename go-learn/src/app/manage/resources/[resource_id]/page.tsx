@@ -105,7 +105,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 <UnitItem editable unit={resource.unit} />
               </div>
             )}
-            {resource?.sections?.length && resource?.sections?.length > 0 && (
+            {!!resource?.sections?.length && (
               <div>
                 <h2 className='text-lg font-bold flex'>Sections</h2>
                 <div className='flex flex-col gap-2'>
