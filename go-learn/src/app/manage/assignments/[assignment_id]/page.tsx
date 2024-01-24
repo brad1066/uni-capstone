@@ -15,7 +15,7 @@ import EditAssignmentForm from '@/components/forms/EditAssignmentForm'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Separator } from '@/components/ui/separator'
 import NewResourceForm from '@/components/forms/NewResourceForm'
-import { createResource } from '@/actions/resourceActions'
+import { createResource, deleteResource } from '@/actions/resourceActions'
 
 type SingleAssignmentManagePageProps = {
   params: { assignment_id: string }
@@ -78,8 +78,10 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
                 <DialogHeader><DialogTitle>Edit Assignment</DialogTitle></DialogHeader>
                 <EditAssignmentForm onUpdateSave={async ({ title, description, dueDate }) => {
                   await updateAssignment(assignment.id, { title, description, dueDate } as Assignment)
-                  await refreshAssignmentData()
-                  setEditAssignmentDetailsDialogOpen(false)
+                    .then(async () => {
+                      await refreshAssignmentData()
+                      setEditAssignmentDetailsDialogOpen(false)
+                    })
                 }} assignment={assignment} />
               </DialogContent>
             </Dialog>
@@ -135,7 +137,9 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
               assignment?.resources?.length ? <ul className='flex gap-2'>
                 {assignment.resources?.map?.(resource => <ResourceItem editable key={resource.id} resource={resource} onDelete={async () => {
                   //   await removeAssignmentTeacher(assignment.id, teacher.id)
-                  await refreshAssignmentData()
+                  deleteResource(resource.id).then(() => {
+                    refreshAssignmentData()
+                  })
                 }} />)}
               </ul>
                 : <p>No Resources</p>
