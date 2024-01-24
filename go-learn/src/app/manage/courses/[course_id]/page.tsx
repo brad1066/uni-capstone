@@ -143,14 +143,17 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
             </Dialog>
           </CardHeader>
           <CardContent>
-            <ul>
-              {course?.modules?.map(module => <ModuleItem editable key={module.id} module={module} onDelete={async () => {
-                const resp = await removeCourseModule(course.id, module.id)
-                if (resp) {
-                  setCourse(await getCourse(course.id, ['modules']))
-                }
-              }} />)}
-            </ul>
+            {course?.modules?.length ?
+              <ul>
+                {course.modules.map(module => <ModuleItem editable key={module.id} module={module} onDelete={async () => {
+                  const resp = await removeCourseModule(course.id, module.id)
+                  if (resp) {
+                    setCourse(await getCourse(course.id, ['modules']))
+                  }
+                }} />)}
+              </ul>
+              : <p>No modules</p>
+            }
           </CardContent>
         </Card>
       </div>

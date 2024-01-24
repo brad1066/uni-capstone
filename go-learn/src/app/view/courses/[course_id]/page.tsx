@@ -52,11 +52,12 @@ export default function ViewCoursePage({ params: { course_id } }: ViewCoursePage
           <Card className='col-span-2'>
             <CardHeader><CardTitle>Course Modules</CardTitle></CardHeader>
             <CardContent>
-              <ul className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2">
+              {course.modules?.length ? <ul className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-2">
                 {course?.modules?.map(module => (
                   <ModuleItem key={module.id} module={module} onClick={() => { router.push(`/view/modules/${module.id}`) }} />
                 ))}
               </ul>
+                : <p>This course has no modules.</p>}
             </CardContent>
           </Card>
         </div>

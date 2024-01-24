@@ -45,7 +45,8 @@ export async function getModule(id: string, extraFields: string[] = [], roles: U
                 }
               } : false,
             }
-          } : false
+          } : false,
+          assignments: extraFields.includes('assignments')
         }
       })
     ])
