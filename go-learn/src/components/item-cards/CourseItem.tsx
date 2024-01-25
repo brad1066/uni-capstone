@@ -25,7 +25,7 @@ const CourseItem = ({ className, course, editable, onClick, onDelete }: CourseIt
       <div className="actions flex gap-1">
         {course?.websiteURL && <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={course.websiteURL ?? ''}>
+            <Link href={course.websiteURL ?? ''} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="ghost"><GlobeIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -33,7 +33,7 @@ const CourseItem = ({ className, course, editable, onClick, onDelete }: CourseIt
         </Tooltip>}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/courses/${course.id}`}>
+            <Link href={`/view/courses/${course.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -41,7 +41,7 @@ const CourseItem = ({ className, course, editable, onClick, onDelete }: CourseIt
         </Tooltip>
         {user?.role === 'admin' && editable && <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/manage/courses/${course.id}`} className="">
+            <Link href={`/manage/courses/${course.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
             </Link>
           </TooltipTrigger>
@@ -50,7 +50,7 @@ const CourseItem = ({ className, course, editable, onClick, onDelete }: CourseIt
         }
         {onDelete && user?.role === 'admin' && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove course</TooltipContent>

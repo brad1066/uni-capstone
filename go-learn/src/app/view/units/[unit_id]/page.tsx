@@ -52,7 +52,13 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
               <h4 className="mb-2">Description</h4>
               {unit.description ? unit.description : 'No description'}
               <h4 className="mt-4 mb-2">Module</h4>
-              {unit?.module ? <ModuleItem module={unit.module} onClick={() => { router.push(`/view/modules/${module.id}`) }} /> : 'Not assigned to a module'}
+              {unit?.module ? (
+                <ModuleItem
+                  module={unit.module}
+                  editable={user?.role == 'admin' || user?.role == 'teacher'}
+                  onClick={() => { router.push(`/view/modules/${module.id}`) }} />
+              )
+                : 'Not assigned to a module'}
             </CardContent>
           </Card>
 
@@ -60,11 +66,20 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
           <Card className='col-span-2'>
             <CardHeader><CardTitle>Sections</CardTitle></CardHeader>
             <CardContent>
-              <ul className="grid grid-cols-1 md:grid-cols-2">
-                {unit?.sections?.map(section => (
-                  <SectionItem key={section.id} section={section} onClick={() => { router.push(`/view/sections/${section.id}`) }} />
-                ))}
-              </ul>
+              {!unit.sections?.length
+                ? <p>No sections</p>
+                : (
+                  <ul className="grid grid-cols-1 md:grid-cols-2">
+                    {unit?.sections?.map(section => (
+                      <SectionItem
+                        key={section.id}
+                        section={section}
+                        editable={user?.role == 'admin' || user?.role == 'teacher'}
+                        onClick={() => { router.push(`/view/sections/${section.id}`) }} />
+                    ))}
+                  </ul>
+                )}
+
             </CardContent>
           </Card>
 
@@ -72,14 +87,19 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
           <Card className='col-span-3'>
             <CardHeader><CardTitle>Resources</CardTitle></CardHeader>
             <CardContent>
-              <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-                {unit?.resources?.map(resource => (
-                  <ResourceItem
-                    key={resource.id}
-                    resource={resource}
-                    onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
-                ))}
-              </ul>
+              {!unit.resources?.length
+                ? <p>No resources</p>
+                : (
+                  <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                    {unit?.resources?.map(resource => (
+                      <ResourceItem
+                        key={resource.id}
+                        resource={resource}
+                        editable={user?.role == 'admin' || user?.role == 'teacher'}
+                        onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
+                    ))}
+                  </ul>
+                )}
             </CardContent>
           </Card>
         </div>

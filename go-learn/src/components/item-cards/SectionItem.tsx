@@ -22,7 +22,7 @@ const SectionItem = ({ className, section, editable, onClick, onDelete }: Sectio
       <div className="actions flex gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/sections/${section.id}`}>
+            <Link href={`/view/sections/${section.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -31,7 +31,7 @@ const SectionItem = ({ className, section, editable, onClick, onDelete }: Sectio
         {editable && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/sections/${section.id}`} className="">
+              <Link href={`/manage/sections/${section.id}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -41,7 +41,7 @@ const SectionItem = ({ className, section, editable, onClick, onDelete }: Sectio
         {onDelete && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+              <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Remove section</TooltipContent>

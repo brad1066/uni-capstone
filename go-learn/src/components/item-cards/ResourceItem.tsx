@@ -22,7 +22,7 @@ const ResourceItem = ({ className, resource, editable, onClick, onDelete }: Reso
       <div className="actions flex gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/resources/${resource.id}`}>
+            <Link href={`/view/resources/${resource.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -31,7 +31,7 @@ const ResourceItem = ({ className, resource, editable, onClick, onDelete }: Reso
         {editable && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/resources/${resource.id}`} className="">
+              <Link href={`/manage/resources/${resource.id}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -40,7 +40,7 @@ const ResourceItem = ({ className, resource, editable, onClick, onDelete }: Reso
         )}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove resource</TooltipContent>

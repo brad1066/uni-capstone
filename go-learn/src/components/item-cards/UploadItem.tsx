@@ -19,7 +19,7 @@ export default function UploadItem({ upload, className, onDelete }: UploadItemPr
         {upload?.publicURL && <Tooltip>
           <TooltipTrigger asChild>
             <Button type="button" size="icon" variant="outline" asChild>
-              <Link href={`${upload.publicURL}?download` ?? ''}><DownloadIcon /></Link>
+              <Link href={`${upload.publicURL}?download` ?? ''} onClick={(e) => e.stopPropagation()}><DownloadIcon /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>Download</TooltipContent>
@@ -28,7 +28,7 @@ export default function UploadItem({ upload, className, onDelete }: UploadItemPr
           onDelete && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+                <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Remove upload</TooltipContent>

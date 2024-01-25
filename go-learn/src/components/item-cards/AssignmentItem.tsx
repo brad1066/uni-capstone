@@ -22,7 +22,7 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
       <div className="actions flex gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/assignments/${assignment.id}`}>
+            <Link href={`/view/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -31,7 +31,7 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
         {editable && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/assignments/${assignment.id}`} className="">
+              <Link href={`/manage/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -40,7 +40,7 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
         )}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove assignment</TooltipContent>

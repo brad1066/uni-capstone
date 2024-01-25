@@ -23,7 +23,7 @@ const UserItem = ({ className, user, editable, onClick, onDelete }: UserItemProp
         <Tooltip>
           <TooltipTrigger asChild>
             <Button type='button' size='icon' variant='outline'>
-              <Link href={`/profile/${user.username}`}><EyeOpenIcon /></Link>
+              <Link href={`/profile/${user.username}`} onClick={(e) => e.stopPropagation()}><EyeOpenIcon /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>View Profile</TooltipContent>
@@ -32,7 +32,7 @@ const UserItem = ({ className, user, editable, onClick, onDelete }: UserItemProp
           <Tooltip>
             <TooltipTrigger asChild>
               <Button type='button' size='icon' variant='secondary'>
-                <Link href={`/manage/users/${user.username}`}><Pencil2Icon /></Link>
+                <Link href={`/manage/users/${user.username}`} onClick={(e) => e.stopPropagation()}><Pencil2Icon /></Link>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Edit user</TooltipContent>
@@ -41,7 +41,7 @@ const UserItem = ({ className, user, editable, onClick, onDelete }: UserItemProp
         {onDelete && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button type='button' size='icon' variant='destructive' onClick={() => { onDelete?.() }}><TrashIcon />
+              <Button type='button' size='icon' variant='destructive' onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Remove user</TooltipContent>

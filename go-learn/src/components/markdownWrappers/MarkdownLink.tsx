@@ -8,12 +8,14 @@ import { ExtraProps } from 'react-markdown'
 const MarkdownLink = ({ href, children }: ClassAttributes<HTMLAnchorElement> & AnchorHTMLAttributes<HTMLAnchorElement> & ExtraProps) => {
   return (
     <Tooltip>
-      <TooltipTrigger asChild><Link href={href ?? ''}> {children} </Link></TooltipTrigger>
+      <TooltipTrigger asChild>
+        <Link href={href ?? ''} onClick={(e) => e.stopPropagation()}> {children} </Link>
+      </TooltipTrigger>
       <TooltipContent sideOffset={5} side="top" align="center">
         {href}
       </TooltipContent>
     </Tooltip>
-    
+
   )
 }
 

@@ -22,7 +22,7 @@ export default function StudentItem({ className, student, editable, onClick, onD
       <div className="actions flex gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/profile/${student.username}`}>
+            <Link href={`/profile/${student.username}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -31,7 +31,7 @@ export default function StudentItem({ className, student, editable, onClick, onD
         {editable && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/users/${student.username}`} className="">
+              <Link href={`/manage/users/${student.username}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -39,7 +39,7 @@ export default function StudentItem({ className, student, editable, onClick, onD
         )}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove Student</TooltipContent>

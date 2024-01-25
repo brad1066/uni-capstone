@@ -114,23 +114,20 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0 justify-between">
             <CardTitle>Resources</CardTitle>
-            {user?.role == 'admin' && <Dialog open={addingResource} onOpenChange={setAddingResource}>
-              <DialogTrigger><Button>Add Resource</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Add Resource</DialogTitle></DialogHeader>
-                <p>Coming soon...</p>
-                <NewResourceForm onSubmit={async (resource) => {
-                  createResource(resource, undefined, assignment.id).then(() => {
-                    refreshAssignmentData()
-                  })
-                }} />
-                {/* <AssignTeacherAssignmentForm onSave={async ({ id: teacherId }) => {
-                  await addAssignmentTeacher(assignment.id, teacherId)
-                  await refreshAssignmentData()
-                  setAddingTeacher(false)
-                }} exclude={assignment.teachers?.map(teacher => teacher.id)} /> */}
-              </DialogContent>
-            </Dialog>}
+            {user?.role == 'admin' && (
+              <Dialog open={addingResource} onOpenChange={setAddingResource}>
+                <DialogTrigger><Button>Add Resource</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Add Resource</DialogTitle></DialogHeader>
+                  <p>Coming soon...</p>
+                  <NewResourceForm onSubmit={async (resource) => {
+                    createResource(resource, undefined, assignment.id).then(() => {
+                      refreshAssignmentData()
+                    })
+                  }} />
+                </DialogContent>
+              </Dialog>
+            )}
           </CardHeader>
           <CardContent>
             {

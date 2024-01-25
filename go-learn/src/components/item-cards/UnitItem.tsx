@@ -24,7 +24,7 @@ export default function UnitItem({ className, unit, editable, onClick, onDelete 
         {/* View Action */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/units/${unit.id}`}>
+            <Link href={`/view/units/${unit.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -35,7 +35,7 @@ export default function UnitItem({ className, unit, editable, onClick, onDelete 
         {editable && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/units/${unit.id}`}>
+              <Link href={`/manage/units/${unit.id}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -46,7 +46,7 @@ export default function UnitItem({ className, unit, editable, onClick, onDelete 
         {/* Remove Action */}
         {onDelete && <Tooltip>
           <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete() }}><TrashIcon />
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete() }}><TrashIcon />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Remove Unit</TooltipContent>

@@ -22,7 +22,7 @@ const ModuleItem = ({ className, module, editable, onClick, onDelete }: ModuleIt
       <div className="actions flex gap-1">
         {module?.websiteURL && <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={module.websiteURL ?? ''}>
+            <Link href={module.websiteURL ?? ''} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="ghost"><GlobeIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -30,7 +30,7 @@ const ModuleItem = ({ className, module, editable, onClick, onDelete }: ModuleIt
         </Tooltip>}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Link href={`/view/modules/${module.id}`}>
+            <Link href={`/view/modules/${module.id}`} onClick={(e) => e.stopPropagation()}>
               <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
             </Link>
           </TooltipTrigger>
@@ -39,7 +39,7 @@ const ModuleItem = ({ className, module, editable, onClick, onDelete }: ModuleIt
         {
           editable && <Tooltip>
             <TooltipTrigger asChild>
-              <Link href={`/manage/modules/${module.id}`} className="">
+              <Link href={`/manage/modules/${module.id}`} onClick={(e) => e.stopPropagation()}>
                 <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
               </Link>
             </TooltipTrigger>
@@ -50,7 +50,7 @@ const ModuleItem = ({ className, module, editable, onClick, onDelete }: ModuleIt
         {onDelete &&
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}><TrashIcon />
+              <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Remove module</TooltipContent>

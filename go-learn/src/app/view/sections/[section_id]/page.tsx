@@ -53,7 +53,13 @@ export default function ViewSectionPage({ params: { section_id } }: ViewSectionP
               </div>
               <div>
                 <h4>Unit</h4>
-                {section?.unit ? <UnitItem unit={section.unit} onClick={() => { router.push(`/view/units/${section.unitId}`) }} /> : 'Not assigned to a unit'}
+                {section?.unit ? (
+                  <UnitItem
+                    unit={section.unit}
+                    editable={user?.role == 'admin' || user?.role == 'teacher'}
+                    onClick={() => { router.push(`/view/units/${section.unitId}`) }} />
+                )
+                  : 'Not assigned to a unit'}
               </div>
             </CardContent>
           </Card>
@@ -62,17 +68,19 @@ export default function ViewSectionPage({ params: { section_id } }: ViewSectionP
           <Card>
             <CardHeader><CardTitle>Resources</CardTitle></CardHeader>
             <CardContent>
-              <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-                {section?.resources?.map(resource => (
-                  <ResourceItem
-                    key={resource.id}
-                    resource={resource}
-                    onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
-                ))}
-                {
-                  section?.resources?.length === 0 && <p>No resources are available for this section</p>
-                }
-              </ul>
+              {!section?.resources?.length
+                ? <p>There are no resources in this section</p>
+                : <ul className="flex flex-row flex-wrap">
+                  {section.resources.map(resource => (
+                    <ResourceItem
+                      key={resource.id}
+                      resource={resource}
+                      className='max-w-fit min-w-sm'
+                      onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
+                  ))}
+                </ul>
+              }
+
             </CardContent>
           </Card>
         </div>
