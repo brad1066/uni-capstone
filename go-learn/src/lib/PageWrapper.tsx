@@ -1,5 +1,6 @@
 'use client'
 
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { SupabaseProvider } from '@/providers/SupabaseProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
@@ -12,7 +13,9 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
     enableSystem
   ><AuthProvider>
       <SupabaseProvider>
-        {children}
+        <TooltipProvider>
+          {children}
+        </TooltipProvider>
       </SupabaseProvider>
     </AuthProvider>
   </ThemeProvider>
