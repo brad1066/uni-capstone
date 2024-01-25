@@ -38,27 +38,24 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
 
   const [newModuleId, setNewModuleId] = useState<string>('')
 
+  const extraFields = ['modules', 'students', 'students.user', 'student.contactDetails']
+
   const refreshCourseData = async () => {
-    if (user && course_id) {
-      const course = await getCourse(course_id, ['modules', 'students', 'students.user', 'student.contactDetails'])
-      if (course) setCourse(course)
-    }
+    if (!(user && course_id)) { return }
+    getCourse(course_id, extraFields)
+      .then(course => course && setCourse(course))
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-    })()
+    if (user) { return }
+    validateLoggedIn?.()
+      .then(({ loggedIn }) =>
+        !loggedIn && router.replace('/login'))
   }, [])
 
   useEffect(() => {
-    (async () => {
-      if (user?.role != 'admin') router.replace(`/view/courses/${course_id}`)
-      refreshCourseData()
-      setLoading(false)
-    })()
+    if (user?.role != 'admin') { router.replace(`/view/courses/${course_id}`) }
+    refreshCourseData().then(() => setLoading(false))
   }, [user, course_id])
 
   return (<>
@@ -75,12 +72,13 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Course</DialogTitle></DialogHeader>
-                <EditCourseForm course={course} onUpdateSave={updatedCourse => {
-                  updateCourse({ id: course.id, ...updatedCourse }).then(async () => {
-                    await refreshCourseData()
-                    setEditCourseDialogOpen(false)
-                  })
-                }} />
+                <EditCourseForm
+                  course={course}
+                  onUpdateSave={updatedCourse => {
+                    updateCourse({ id: course.id, ...updatedCourse })
+                      .then(refreshCourseData)
+                      .then(() => setEditCourseDialogOpen(false))
+                  }} />
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -90,11 +88,16 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
                 {
                   course?.students?.length ? (
                     <ul className="max-h-[25rem] overflow-auto flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-
-                      {course.students?.map(student => <StudentItem editable key={student.id} student={student} onDelete={async () => {
-                        await removeStudentCourse(student.id)
-                        await refreshCourseData()
-                      }} />)}
+                      {course.students?.map(student => (
+                        <StudentItem
+                          key={student.id}
+                          student={student}
+                          editable
+                          onDelete={async () => {
+                            removeStudentCourse(student.id)
+                              .then(refreshCourseData)
+                          }} />
+                      ))}
                     </ul>
                   ) : <>No students enrolled</>
                 }
@@ -118,12 +121,12 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
                 <ModulesSelectCombobox unassignedOnly value={newModuleId} setValue={setNewModuleId} exclusions={course.modules?.map(mod => mod.id)} />
                 <DialogFooter>
                   <Button className="ml-auto" onClick={async () => {
-                    if (newModuleId !== '') {
-                      await addCourseModule(course.id, newModuleId)
-                      await refreshCourseData()
-                      setNewModuleId('')
-                      setAddingModuleDialogOpen(false)
-                    }
+                    newModuleId && addCourseModule(course.id, newModuleId)
+                      .then(refreshCourseData)
+                      .then(() => {
+                        setNewModuleId('')
+                        setAddingModuleDialogOpen(false)
+                      })
                   }}>Add</Button>
                 </DialogFooter>
               </DialogContent>
@@ -135,9 +138,9 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
               <DialogContent>
                 <DialogHeader><DialogTitle>New Module</DialogTitle></DialogHeader>
                 <NewModuleForm courseId={course.id} submitModule={async (module) => {
-                  await createModule(module, course.id)
-                  await refreshCourseData()
-                  setNewModuleDialogOpen(false)
+                  module && createModule(module, course.id)
+                    .then(refreshCourseData)
+                    .then(() => setNewModuleDialogOpen(false))
                 }} />
               </DialogContent>
             </Dialog>
@@ -145,12 +148,18 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
           <CardContent>
             {course?.modules?.length ?
               <ul>
-                {course.modules.map(module => <ModuleItem editable key={module.id} module={module} onDelete={async () => {
-                  const resp = await removeCourseModule(course.id, module.id)
-                  if (resp) {
-                    setCourse(await getCourse(course.id, ['modules']))
-                  }
-                }} />)}
+                {course.modules.map(module => (
+                  <ModuleItem
+                    key={module.id}
+                    module={module}
+                    editable
+                    onDelete={async () => {
+                      removeCourseModule(course.id, module.id)
+                        .then(resp => resp && getCourse(course.id, extraFields)
+                          .then(course => course && setCourse(course))
+                        )
+                    }} />
+                ))}
               </ul>
               : <p>No modules</p>
             }

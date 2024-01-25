@@ -85,7 +85,7 @@ export async function getUsers(roles: UserRole[] = []): Promise<User[]> {
 
 export async function getUsersByRole(roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
-  if (!authCookie) return undefined
+  if (!authCookie) { return [] }
 
   const [session, admin, teachers, students] = await prisma.$transaction([
     prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
@@ -102,14 +102,14 @@ export async function getUsersByRole(roles: UserRole[] = []) {
       take: 5
     })
   ])
-  if (!session) return undefined
+  if (!session) { return [] }
 
-  const users = []
-  if (roles.length == 0) return [...admin, ...teachers, ...students]
-  if ('admin' in roles) users.push(...admin)
-  if ('teacher' in roles) users.push(...teachers)
-  if ('student' in roles) users.push(...students)
-  return roles
+  const users: User[] = []
+  if (roles.length == 0) { return [...admin, ...teachers, ...students] }
+  if ('admin' in roles) { users.push(...admin) }
+  if ('teacher' in roles) { users.push(...teachers) }
+  if ('student' in roles) { users.push(...students) }
+  return users
 }
 
 export async function getUser(username: string, extraFields: string[] = [], roles: UserRole[] = []) {

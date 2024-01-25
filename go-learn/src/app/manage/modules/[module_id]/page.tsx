@@ -50,28 +50,23 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
 
   const [courseSelection, setCourseSelection] = useState<string>('')
 
+  const extraFields = ['course', 'students', 'students.user', 'student.contactDetails', 'units', 'teachers', 'teachers.user', 'assignments']
   const refreshModuleData = async () => {
-    if (user && module_id) {
-      const _module = await getModule(module_id, ['course', 'students', 'students.user', 'student.contactDetails', 'units', 'teachers', 'teachers.user', 'assignments'])
-      if (_module) {
-        setModule(_module)
-      }
-    }
+    (user && module_id) && getModule(module_id, extraFields)
+      .then(module => module && setModule(module))
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
+    if (user) { return }
+    validateLoggedIn?.()
+      .then(({ loggedIn }) => {
+        !loggedIn && router.replace('/login')
       })
-    })()
   }, [])
 
   useEffect(() => {
-    (async () => {
-      refreshModuleData()
-      setLoading(false)
-    })()
+    refreshModuleData()
+      .then(() => setLoading(false))
   }, [user, module_id])
 
   return (<>
@@ -92,12 +87,13 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Module</DialogTitle></DialogHeader>
-                <EditModuleForm module={module} onUpdateSave={updatedModule => {
-                  updateModule({ id: module.id, ...updatedModule }).then(async () => {
-                    await refreshModuleData()
-                    setEditModuleDetailsDialogOpen(false)
-                  })
-                }} />
+                <EditModuleForm
+                  module={module}
+                  onUpdateSave={updatedModule => {
+                    updatedModule && updateModule({ id: module.id, ...updatedModule })
+                      .then(async () => await refreshModuleData)
+                      .then(() => setEditModuleDetailsDialogOpen(false))
+                  }} />
               </DialogContent>
             </Dialog>
 
@@ -134,18 +130,13 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                     <CoursesSelectCombobox value={courseSelection} setValue={setCourseSelection} />
                     <DialogFooter>
                       <Button className="ml-auto" onClick={async () => {
-                        if (module.course?.id == courseSelection) return
-                        module?.courseId && await removeCourseModule(module.courseId, module.id)
-                        const newModule: Module = {
-                          id: module.id,
-                          title: module.title,
-                          description: module.description,
-                          websiteURL: module.description,
-                          courseId: courseSelection,
-                        }
-                        await updateModule(newModule)
-                        await refreshModuleData()
-                        setAssigningCourse(false)
+                        if (!(courseSelection || module.courseId)
+                          || module.courseId == courseSelection) { return }
+
+                        module?.course?.id && removeCourseModule(module.course.id, module.id)
+                          .then(async () => await updateModule({ ...module, courseId: courseSelection, }))
+                          .then(async () => await refreshModuleData())
+                          .then(() => setAssigningCourse(false))
                       }}>Assign</Button>
                     </DialogFooter>
                   </DialogContent>
@@ -153,10 +144,15 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                 }
               </h2>
 
-              {module.course?.id ? <CourseItem editable course={module.course} onDelete={async () => {
-                module.course && await removeCourseModule(module.course.id, module.id)
-                await refreshModuleData()
-              }} /> : <p>No Course</p>
+              {module.course?.id
+                ? <CourseItem
+                  course={module.course}
+                  editable
+                  onDelete={async () => {
+                    module.course && removeCourseModule(module.course.id, module.id)
+                      .then(refreshModuleData)
+                  }} />
+                : <p>No Course</p>
               }
             </div>
           </CardContent>
@@ -170,21 +166,28 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
               <DialogTrigger><Button>Add Teacher</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add Teacher</DialogTitle></DialogHeader>
-                <AssignTeacherModuleForm onSave={async ({ id: teacherId }) => {
-                  await addModuleTeacher(module.id, teacherId)
-                  await refreshModuleData()
-                  setAddingTeacher(false)
-                }} exclude={module.teachers?.map(teacher => teacher.id)} />
+                <AssignTeacherModuleForm
+                  exclude={module.teachers?.map(teacher => teacher.id)}
+                  onSave={async ({ id: teacherId }) => {
+                    addModuleTeacher(module.id, teacherId)
+                      .then(async () => await refreshModuleData())
+                      .then(() => setAddingTeacher(false))
+                  }} />
               </DialogContent>
             </Dialog>}
           </CardHeader>
           <CardContent>
             {
               module?.teachers?.length ? <ul className='flex gap-2'>
-                {module.teachers?.map?.(teacher => <UserItem editable key={teacher.id} user={teacher?.user as User} onDelete={async () => {
-                  await removeModuleTeacher(module.id, teacher.id)
-                  await refreshModuleData()
-                }} />)}
+                {module.teachers?.map?.(teacher => (
+                  <UserItem
+                    key={teacher.id}
+                    user={teacher?.user as User} editable
+                    onDelete={async () => {
+                      removeModuleTeacher(module.id, teacher.id)
+                        .then(refreshModuleData)
+                    }} />
+                ))}
               </ul>
                 : <>No teachers assigned</>
             }
@@ -200,23 +203,27 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
               <DialogTrigger asChild><Button className="ml-auto">Add Unit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add Unit</DialogTitle></DialogHeader>
-                <NewUnitForm moduleId={module.id} onSubmit={async (unit) => {
-                  if (unit) {
-                    await createUnit(unit)
-                    await refreshModuleData()
-                  }
-                  setCreatingUnit(false)
-                }} />
+                <NewUnitForm
+                  moduleId={module.id}
+                  onSubmit={async (unit) => {
+                    unit && createUnit(unit)
+                      .then(async () => { await refreshModuleData() })
+                      .then(() => setCreatingUnit(false))
+                  }} />
               </DialogContent>
             </Dialog>
           </CardHeader>
           <CardContent>
             {module.units?.length ? <ul className="flex gap-2">
               {module.units.map(unit => <>
-                <UnitListItem editable key={unit.id} unit={unit} onDelete={async () => {
-                  const result = await deleteUnit(unit.id)
-                  if (result) await refreshModuleData()
-                }} />
+                <UnitListItem
+                  key={unit.id}
+                  unit={unit}
+                  editable
+                  onDelete={async () => {
+                    deleteUnit(unit.id)
+                      .then(result => result && refreshModuleData())
+                  }} />
               </>)}
             </ul>
               : 'No Units'}
@@ -234,9 +241,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                 <DialogHeader><DialogTitle>Add Assignment</DialogTitle></DialogHeader>
                 <NewAssignmentForm submitAssignment={async ({ title, description }) => {
                   createAssignment({ title, description, moduleId: module.id } as Assignment)
-                    .then(async () => {
-                      await refreshModuleData()
-                    })
+                    .then(refreshModuleData)
                 }} />
               </DialogContent>
             </Dialog>
@@ -249,8 +254,8 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                   assignment={assignment}
                   editable={user?.role == 'admin' || user?.role == 'teacher'}
                   onDelete={async () => {
-                    await deleteAssignment(assignment.id)
-                    await refreshModuleData()
+                    deleteAssignment(assignment.id)
+                      .then(refreshModuleData)
                   }}
                 />
               ))}

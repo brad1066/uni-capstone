@@ -63,13 +63,9 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
   })
 
   useEffect(() => {
-    (async () => {
-      if (!loggedInUser) await validateLoggedIn?.().then(async ({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-
-      setLoading(false)
-    })()
+    !loggedInUser && validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
+      .then(() => setLoading(false))
   }, [])
 
   useEffect(() => {
@@ -102,15 +98,17 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
       <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>
       <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
         {/* User Data Card */}
-        <EditUserForm user={user} setUser={setUser} onUpdateSave={async (user) => {
-          if (!user) return
-          updateUser(user as User)
-            .then(validateLoggedIn)
-            .then(userUpdateSuccess)
-            .then(() => { setInitialUser(user) })
-            .catch(userUpdateFailed)
+        <EditUserForm
+          user={user}
+          setUser={setUser}
+          onUpdateSave={async (user) => {
+            user && updateUser(user as User)
+              .then(async () => await validateLoggedIn)
+              .then(userUpdateSuccess)
+              .then(() => { setInitialUser(user) })
+              .catch(userUpdateFailed)
 
-        }} canEdit />
+          }} canEdit />
 
         {user.role == 'admin' && <Card className="flex-1">
           <CardHeader><CardTitle>Manage actions</CardTitle></CardHeader>
@@ -162,7 +160,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
                     let updatedAddresses: Address[] = []
                     if (student.homeAddressId) updatedAddresses = [...updatedAddresses, homeAddress]
                     if (student.termAddressId) updatedAddresses = [...updatedAddresses, termAddress]
-                    updateAddresses(updatedAddresses)
+                    await updateAddresses(updatedAddresses)
 
                     setAddressEntryOpen(false)
                   }}>Save</Button>
@@ -172,10 +170,12 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
           <CardContent className="flex flex-col gap-4">
             {
               student?.enrolledCourse
-                ? <CourseItem editable course={student.enrolledCourse} onDelete={async () => {
-                  const updatedStudent = await removeStudentCourse(student.id)
-                  if (updatedStudent) setStudent({ ...student, ...updatedStudent })
-                }} />
+                ? <CourseItem
+                  course={student.enrolledCourse}
+                  editable
+                  onDelete={async () => removeStudentCourse(student.id)
+                    .then(updatedStudent => updatedStudent && setStudent({ ...student, ...updatedStudent }))
+                  } />
                 : <span className="flex flex-row items-center justify-center">
                   This student is not enrolled on a course
                   <Dialog open={addingCourse} onOpenChange={setAddingCourse}>
@@ -183,11 +183,12 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
                       <Button className="ml-auto">Enrol on Course</Button></DialogTrigger>
                     <DialogContent>
                       <DialogHeader><DialogTitle>Enrol on Course</DialogTitle></DialogHeader>
-                      <AssignStudentCourseForm student={student} onSave={async (course: Course) => {
-                        const updatedStudent = await addStudentCourse(student.id, course.id)
-                        if (updatedStudent) setStudent({ ...student, ...updatedStudent })
-                        setAddingCourse(false)
-                      }} />
+                      <AssignStudentCourseForm
+                        student={student}
+                        onSave={async (course: Course) => addStudentCourse(student.id, course.id)
+                          .then(updatedStudent => updatedStudent && setStudent({ ...student, ...updatedStudent }))
+                          .finally(() => setAddingCourse(false))
+                        } />
                     </DialogContent>
                   </Dialog>
                 </span>
@@ -198,10 +199,12 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
               <div className="flex flex-col gap-2">
                 {student.modules.map((module) => {
                   return <>
-                    <ModuleItem editable module={module} onDelete={async () => {
-                      const updatedStudent = await removeStudentModule(student.id, module.id)
-                      if (updatedStudent) setStudent({ ...student, ...updatedStudent })
-                    }} />
+                    <ModuleItem
+                      module={module}
+                      editable
+                      onDelete={async () => removeStudentModule(student.id, module.id)
+                        .then(updatedStudent => updatedStudent && setStudent({ ...student, ...updatedStudent }))
+                      } />
                   </>
                 })}
               </div>
@@ -214,11 +217,13 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
                 <Button className="ml-auto w-full">Add module</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add Module</DialogTitle></DialogHeader>
-                <AssignStudentModuleForm student={student} exclude={student.modules?.map?.(module => module.id)} onSave={async (module: Module) => {
-                  const updatedStudent = await addStudentModule(student.id, module.id)
-                  if (updatedStudent) setStudent({ ...student, ...updatedStudent })
-                  setAddingModule(false)
-                }} />
+                <AssignStudentModuleForm
+                  student={student}
+                  exclude={student.modules?.map?.(module => module.id)}
+                  onSave={async (module) => addStudentModule(student.id, module.id)
+                    .then(updatedStudent => updatedStudent && setStudent({ ...student, ...updatedStudent }))
+                    .finally(() => setAddingModule(false))
+                  } />
               </DialogContent>
             </Dialog>
           </CardFooter>

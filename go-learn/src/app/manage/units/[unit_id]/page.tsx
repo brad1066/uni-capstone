@@ -38,27 +38,18 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
   const [creatingSection, setCreatingSection] = useState<boolean>(false)
 
   const refreshUnitData = async () => {
-    if (user && unit_id) {
-      const unit = await getUnit(unit_id, ['module', 'resources', 'sections'])
-      if (unit) {
-        setUnit(unit)
-      }
-    }
+    user && unit_id && getUnit(unit_id, ['module', 'resources', 'sections'])
+      .then(unit => unit && setUnit(unit))
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-    })()
+    !user && validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
   }, [])
 
   useEffect(() => {
-    (async () => {
-      refreshUnitData()
-      setLoading(false)
-    })()
+    refreshUnitData()
+      .then(() => setLoading(false))
   }, [user, unit_id])
 
   return (<>
@@ -75,11 +66,12 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
               <DialogTrigger asChild><Button className="ml-auto">Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Unit</DialogTitle></DialogHeader>
-                <EditUnitForm unit={unit} onUpdateSave={updatedUnit => {
-                  updateUnit({ id: unit.id, ...updatedUnit }).then(async () => {
-                    await refreshUnitData()
-                  })
-                }} />
+                <EditUnitForm
+                  unit={unit}
+                  onUpdateSave={updatedUnit => {
+                    updateUnit({ id: unit.id, ...updatedUnit })
+                      .then(async () => refreshUnitData)
+                  }} />
               </DialogContent>
             </Dialog>
           </CardHeader>
@@ -109,23 +101,26 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
               <DialogTrigger asChild><Button className="ml-auto">New Section</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
-                <NewSectionForm unitId={unit.id} onSubmit={async (section: Section) => {
-                  if (unit) {
-                    await createSection(section)
-                    await refreshUnitData()
-                  }
-                  setCreatingSection(false)
-                }} />
+                <NewSectionForm
+                  unitId={unit.id}
+                  onSubmit={async (section: Section) => {
+                    unit && createSection(section)
+                      .then(async () => await refreshUnitData())
+                      .finally(() => setCreatingResource(false))
+                  }} />
               </DialogContent>
             </Dialog>
           </CardHeader>
           <CardContent>
             {unit.sections?.length ? <ul className="flex flex-col gap-2">
               {unit.sections.map(section => <>
-                <SectionItem editable key={section.id} section={section} onDelete={async () => {
-                  const result = await deleteSection(section.id)
-                  if (result) await refreshUnitData()
-                }} />
+                <SectionItem
+                  key={section.id}
+                  section={section}
+                  editable
+                  onDelete={async () => deleteSection(section.id)
+                    .then(result => result && refreshUnitData())
+                  } />
               </>)}
             </ul>
               : 'No Sections'}
@@ -142,11 +137,9 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
               <DialogContent>
                 <DialogHeader><DialogTitle>New Resource</DialogTitle></DialogHeader>
                 <NewResourceForm unitId={unit.id} onSubmit={async (resource: Resource) => {
-                  if (unit) {
-                    await createResource(resource)
-                    await refreshUnitData()
-                  }
-                  setCreatingResource(false)
+                  unit && createResource(resource)
+                    .then(async () => await refreshUnitData())
+                    .finally(() => setCreatingResource(false))
                 }} />
               </DialogContent>
             </Dialog>
@@ -155,8 +148,8 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
             {unit.resources?.length ? <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
               {unit.resources.map(resource => <>
                 <ResourceItem editable key={resource.id} resource={resource} onDelete={async () => {
-                  const result = await deleteResource(resource.id)
-                  if (result) await refreshUnitData()
+                  deleteResource(resource.id)
+                    .then(result => result && refreshUnitData())
                 }} />
               </>)}
             </ul>

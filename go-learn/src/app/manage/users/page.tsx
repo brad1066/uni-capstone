@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/userActions'
-import { Contact, User } from '@prisma/client'
+import { Contact, User, UserRole } from '@prisma/client'
 import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
 
 export default function UsersManagePage() {
@@ -23,7 +23,7 @@ export default function UsersManagePage() {
   const [loading, setLoading] = useState(true)
   const [formDisabled, setFormDisabled] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [filter, setFilter] = useState<string | undefined>()
+  const [filter, setFilter] = useState<UserRole>(UserRole.unassigned)
   const [users, setUsers] = useState<User[]>()
   const [userToDelete, setUserToDelete] = useState<User>()
   const [userDeleteConfirmOpen, setUserDeleteConfirmOpen] = useState<boolean>(false)
@@ -34,20 +34,23 @@ export default function UsersManagePage() {
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-      const allUsers = await getUsersByRole() as User[] ?? []
-      await setUsers([...allUsers])
-      setLoading(false)
-    })()
+    !user && validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
+    filter
+
+    !user && getUsersByRole(filter ? [filter] as UserRole[] : undefined)
+      .then((allUsers) => allUsers && setUsers([...allUsers]))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
     setLoading(true)
     const filter = searchParams?.get('filter') as string | null
-    if (filter && filter in ['students', 'teachers']) setFilter(filter)
+    if (filter && filter in Object.keys(UserRole)) {
+      setFilter(filter as UserRole)
+    } else {
+      setFilter(UserRole.unassigned)
+    }
     setLoading(false)
   }, [searchParams])
 
@@ -60,40 +63,48 @@ export default function UsersManagePage() {
             <DialogTrigger asChild><Button variant="outline" className="bg-card border shadow">New<PlusIcon className="ml-1" /></Button></DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>New User</DialogTitle></DialogHeader>
-              <NewUserForm disabled={loading || formDisabled} submitUser={async (user: User & { contactDetails: Contact }) => {
-                setFormDisabled(true)
-                const createdUser = await createUser(user)
-                setFormDisabled(false)
-                router.push(`/profile/${createdUser.username}`)
-                setDialogOpen(false)
-              }} />
+              <NewUserForm
+                disabled={loading || formDisabled}
+                submitUser={async (user: User & { contactDetails: Contact }) => {
+                  setFormDisabled(true)
+                  createUser(user)
+                    .then(createdUser => {
+                      setFormDisabled(false)
+                      router.push(`/manage/users/${createdUser.username}`)
+                      setDialogOpen(false)
+                    })
+                }} />
             </DialogContent>
           </Dialog>
         </h1>
         {users ? <div className={cn('w-full', !filter ? 'grid md:grid-cols-2 gap-4' : '')}>
-          {(!filter || filter == 'teachers') && <Card>
+          {(!filter || filter == UserRole.teacher) && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>
-              <ul className={cn('grid grid-cols-1 gap-4', filter == 'students' ? 'flex flex-wrap flex-row' : '')}>
+              <ul className={cn('grid grid-cols-1 gap-4', filter != UserRole.teacher ? 'flex flex-wrap flex-row' : '')}>
                 {
-                  users.filter(user => user.role == 'teacher').map((user: User) => (
-                    <UserItem editable user={user} key={user.username} onDelete={async () => { confirmUserDelete(user) }} />
+                  users.filter(user => user.role == UserRole.teacher).map((user: User) => (
+                    <UserItem
+                      key={user.username}
+                      user={user}
+                      editable
+                      onDelete={async () => { confirmUserDelete(user) }} />
                   ))
                 }
                 {
-                  users.filter(user => user.role == 'teacher').length == 0 && 'No teachers found'
+                  users.filter(user => user.role == UserRole.teacher).length == 0 && 'No teachers found'
                 }
               </ul>
             </CardContent>
           </Card>
           }
-          {(!filter || filter == 'students') &&
+          {(!filter || filter == UserRole.student) &&
             <Card>
               <CardHeader>Students</CardHeader>
               <CardContent>
-                <ul className={cn('grid grid-cols-1 gap-4', filter == 'students' ? 'flex flex-wrap flex-row' : '')}>
+                <ul className={cn('grid grid-cols-1 gap-4', filter == UserRole.student ? 'flex flex-wrap flex-row' : '')}>
                   {
-                    users && users.filter(user => user.role == 'student').map(user => (
+                    users && users.filter(user => user.role == UserRole.student).map(user => (
                       <UserItem
                         key={user.username}
                         user={user}
@@ -103,7 +114,7 @@ export default function UsersManagePage() {
                     ))
                   }
                   {
-                    users.filter(user => user.role == 'student').length == 0 && 'No students found'
+                    users.filter(user => user.role == UserRole.student).length == 0 && 'No students found'
                   }
                 </ul>
               </CardContent>
@@ -125,7 +136,10 @@ export default function UsersManagePage() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={async () => { await deleteUser(userToDelete); router.replace('/manage/users') }}>Confirm</AlertDialogAction>
+              <AlertDialogAction onClick={async () => {
+                deleteUser(userToDelete)
+                  .then(() => router.replace('/manage/users'))
+              }}>Confirm</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

@@ -35,27 +35,20 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
   const [addingResource, setAddingResource] = useState<boolean>(false)
 
   const refreshAssignmentData = async () => {
-    if (user && assignment_id) {
-      const _assignment = await getAssignment(assignment_id, ['module', 'resources'])
-      if (_assignment) {
-        setAssignment(_assignment)
-      }
-    }
+    if (!(user && assignment_id)) { return }
+    getAssignment(assignment_id, ['module', 'resources'])
+      .then((assignment) => assignment && setAssignment(assignment))
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-    })()
+    if (user) { return }
+    validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
   }, [])
 
   useEffect(() => {
-    (async () => {
-      refreshAssignmentData()
-      setLoading(false)
-    })()
+    refreshAssignmentData()
+      .then(() => setLoading(false))
   }, [user, assignment_id])
 
   return (<>
@@ -77,11 +70,9 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Assignment</DialogTitle></DialogHeader>
                 <EditAssignmentForm onUpdateSave={async ({ title, description, dueDate }) => {
-                  await updateAssignment(assignment.id, { title, description, dueDate } as Assignment)
-                    .then(async () => {
-                      await refreshAssignmentData()
-                      setEditAssignmentDetailsDialogOpen(false)
-                    })
+                  updateAssignment(assignment.id, { title, description, dueDate } as Assignment)
+                    .then(refreshAssignmentData)
+                    .then(() => setEditAssignmentDetailsDialogOpen(false))
                 }} assignment={assignment} />
               </DialogContent>
             </Dialog>
@@ -121,9 +112,8 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
                   <DialogHeader><DialogTitle>Add Resource</DialogTitle></DialogHeader>
                   <p>Coming soon...</p>
                   <NewResourceForm onSubmit={async (resource) => {
-                    createResource(resource, undefined, assignment.id).then(() => {
-                      refreshAssignmentData()
-                    })
+                    createResource(resource, undefined, assignment.id)
+                      .then(refreshAssignmentData)
                   }} />
                 </DialogContent>
               </Dialog>
@@ -132,12 +122,16 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
           <CardContent>
             {
               assignment?.resources?.length ? <ul className='flex gap-2'>
-                {assignment.resources?.map?.(resource => <ResourceItem editable key={resource.id} resource={resource} onDelete={async () => {
-                  //   await removeAssignmentTeacher(assignment.id, teacher.id)
-                  deleteResource(resource.id).then(() => {
-                    refreshAssignmentData()
-                  })
-                }} />)}
+                {assignment.resources?.map?.(resource => (
+                  <ResourceItem
+                    key={resource.id}
+                    resource={resource}
+                    editable
+                    onDelete={async () => {
+                      deleteResource(resource.id)
+                        .then(refreshAssignmentData)
+                    }} />
+                ))}
               </ul>
                 : <p>No Resources</p>
             }

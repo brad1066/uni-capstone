@@ -23,19 +23,16 @@ export default function CoursesManagePage() {
 
   const refreshCourses = async () => {
     setLoading(true)
-    const courses = await getCourses()
-    if (courses) setCourses(courses)
-    setLoading(false)
+    getCourses()
+      .then(courses => courses && setCourses(courses))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-
-      refreshCourses()
-    })()
+    if (user) { return }
+    validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
+      .then(refreshCourses)
   }, [])
 
   return (
@@ -48,9 +45,9 @@ export default function CoursesManagePage() {
             <DialogContent>
               <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
               <NewCourseForm submitCourse={async course => {
-                await createCourse(course)
-                setDialogOpen(false)
-                await refreshCourses()
+                course && createCourse(course)
+                  .then(() => setDialogOpen(false))
+                  .then(refreshCourses)
               }} />
             </DialogContent>
           </Dialog>
@@ -62,7 +59,7 @@ export default function CoursesManagePage() {
               course={course}
               className='bg-card'
               editable
-              onDelete={async () => { await deleteCourse(course.id); await refreshCourses() }} />
+              onDelete={async () => { deleteCourse(course.id).then(refreshCourses) }} />
           ))}
         </div>}
       </>}

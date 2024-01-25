@@ -21,7 +21,7 @@ type ViewAssignmentPageProps = {
 export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAssignmentPageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
-  const {supabase} = useSupabase()
+  const { supabase } = useSupabase()
 
   const [loading, setLoading] = useState(true)
   const [assignment, setAssignment] = useState<Assignment & {
@@ -32,26 +32,27 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
 
   const refreshAssignmentData = async () => {
     if (user && assignment_id) {
-      const _assignment = await getAssignment(assignment_id, ['module', 'resources', 'user.submissions'])
-      if (_assignment) {
-        setAssignment(_assignment)
-      }
+      getAssignment(assignment_id, ['module', 'resources', 'user.submissions'])
+        .then((assignment) => {
+          if (assignment) {
+            setAssignment(assignment)
+          }
+        })
     }
   }
 
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-    })()
+    if (!user) {
+      validateLoggedIn?.()
+        .then(({ loggedIn }) => {
+          if (!loggedIn) { router.replace('/login') }
+        })
+    }
   }, [])
 
   useEffect(() => {
-    (async () => {
-      refreshAssignmentData()
-      setLoading(false)
-    })()
+    refreshAssignmentData()
+      .then(() => setLoading(false))
   }, [user, assignment_id])
 
   return (<>
@@ -127,12 +128,13 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                       onDelete={async () => {
                         deleteSubmission(submission.id)
                           .then((resp) => {
-                            if (!resp?.deletedUpload) return
+                            if (!resp?.deletedUpload) { return }
                             supabase.storage
                               .from('golearn-resources')
                               .remove([resp.deletedUpload.path])
                           })
-                          .then(refreshAssignmentData) }} />
+                          .then(refreshAssignmentData)
+                      }} />
                   ))}
                 </ul>)
                 : <p>No Submissions</p>

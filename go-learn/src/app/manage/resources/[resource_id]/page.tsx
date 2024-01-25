@@ -30,6 +30,8 @@ type SingleResourceManagePageProps = {
 export default function SingleResourceManagePage({ params: { resource_id } }: SingleResourceManagePageProps) {
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
+  const { supabase } = useSupabase()
+
   const [loading, setLoading] = useState(true)
   const [resource, setResource] = useState<Resource & {
     unit?: Unit | null
@@ -43,29 +45,17 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
   const [creatingUpload, setCreatingUpload] = useState<boolean>(false)
 
   const refreshResourceData = async () => {
-    if (user && resource_id) {
-      const resource = await getResource(resource_id, ['unit', 'sections', 'uploads', 'author'])
-      if (resource) setResource(resource)
-    }
+    user && resource_id && getResource(resource_id, ['unit', 'sections', 'uploads', 'author'])
+      .then(resource => resource && setResource(resource))
   }
-
-  const { supabase } = useSupabase()
-
   useEffect(() => {
-    (async () => {
-      if (!user) await validateLoggedIn?.().then(({ loggedIn }) => {
-        if (!loggedIn) router.replace('/login')
-      })
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    !user && validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
   }, [])
 
   useEffect(() => {
-    (async () => {
-      refreshResourceData()
-      setLoading(false)
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    user && resource_id && refreshResourceData()
+      .then(() => setLoading(false))
   }, [user, resource_id])
 
   return (<>
@@ -84,13 +74,13 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
               <DialogTrigger asChild><Button className='ml-auto'>Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit Resource</DialogTitle></DialogHeader>
-                <EditResourceForm resource={resource} onUpdateSave={updatedResource => {
-                  updateResource(resource.id, { ...updatedResource } as Resource).then(async () => {
-                    await refreshResourceData()
-                  }).finally(() => {
-                    setEditingResource(false)
-                  })
-                }} />
+                <EditResourceForm
+                  resource={resource}
+                  onUpdateSave={updatedResource => {
+                    updateResource(resource.id, { ...updatedResource } as Resource)
+                      .then(async () => await refreshResourceData())
+                      .finally(() => setEditingResource(false))
+                  }} />
               </DialogContent>
             </Dialog>
           </CardHeader>
@@ -110,10 +100,14 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 <h2 className='text-lg font-bold flex'>Sections</h2>
                 <div className='flex flex-col gap-2'>
                   {resource.sections.map(section => (
-                    <SectionItem editable key={section.id} section={section} onDelete={async () => {
-                      await updateResourceRemoveSection(resource.id, section.id)
-                      await refreshResourceData()
-                    }} />
+                    <SectionItem
+                      key={section.id}
+                      section={section}
+                      editable
+                      onDelete={async () => {
+                        updateResourceRemoveSection(resource.id, section.id)
+                          .then(refreshResourceData)
+                      }} />
                   ))}
                 </div>
               </div>
@@ -127,10 +121,12 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
               <DialogTrigger asChild><Button className='ml-auto'>Edit</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Edit content</DialogTitle></DialogHeader>
-                <EditResourceContentForm resource={resource} onUpdateSave={async (content) => {
-                  await updateResource(resource.id, { ...resource, content } as Resource)
-                  await refreshResourceData()
-                }} />
+                <EditResourceContentForm
+                  resource={resource}
+                  onUpdateSave={async (content) => {
+                    content && updateResource(resource.id, { ...resource, content } as Resource)
+                      .then(refreshResourceData)
+                  }} />
               </DialogContent>
             </Dialog>
           </CardHeader>
@@ -155,20 +151,21 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 <DialogContent>
                   <DialogHeader><DialogTitle>Add Upload</DialogTitle></DialogHeader>
                   <AddUploadForm onUploadSave={async (file: File) => {
-                    if (!file) return
-                    const upload = await supabase.storage
+                    if (!file) { return }
+
+                    const { error, data } = await supabase.storage
                       .from('golearn-resources')
                       .upload(`${resource.id}/${file.name}`, file)
 
-                    if (upload.error) {
-                      console.error(upload.error)
+                    if (error) {
+                      console.error(error)
                       return
                     }
-                    const path = upload.data.path
-                    const publicURL = supabase.storage.from('golearn-resources').getPublicUrl(upload.data.path).data.publicUrl
-                    if (await createUpload({ title: file.name, publicURL, path, resourceId: resource.id } as Upload))
-                      await refreshResourceData()
-                    setCreatingUpload(false)
+                    const { path } = data
+                    const publicURL = supabase.storage.from('golearn-resources').getPublicUrl(data.path).data.publicUrl
+                    createUpload({ title: file.name, publicURL, path, resourceId: resource.id } as Upload)
+                      .then(async () => await refreshResourceData())
+                      .then(() => setCreatingUpload(false))
                   }} />
                 </DialogContent>
               </Dialog>
@@ -182,10 +179,11 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
                 className='w-fit'
                 upload={upload}
                 onDelete={async () => {
-                  const { data } = await supabase.storage.from('golearn-resources').remove([upload.path])
-                  if (!data) return
-                  if (!await deleteUpload(upload.id)) return
-                  await refreshResourceData()
+                  supabase.storage.from('golearn-resources').remove([upload.path])
+                    .then(({ data }) => {
+                      data && deleteUpload(upload.id)
+                        .then(upload => upload && refreshResourceData())
+                    })
                 }} />
             ))}
           </CardContent>

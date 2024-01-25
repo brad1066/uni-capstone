@@ -15,11 +15,11 @@ export default function ForgotPasswordPage() {
 
       <p>Enter your username and we&apos;ll send you a link to reset your password.</p>
 
-      <form onSubmit={async (e) => {
+      <form onSubmit={(e) => {
         e.preventDefault()
-        await requestUserPasswordChange(username)
+        requestUserPasswordChange(username)
       }}>
-        <Input placeholder="username" value={username} onChange={(e)=>{ setUsername(e.target.value) }} />
+        <Input placeholder="username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
         <Button type="submit">Submit</Button>
       </form>
     </div>

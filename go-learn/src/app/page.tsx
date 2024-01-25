@@ -13,18 +13,15 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    (async () => {
-      if (!user)
-        await validateLoggedIn?.().then(({ loggedIn }) => {
-          if (!loggedIn) router.replace('/login')
-        })
-      setLoading(false)
-    })()
+    if (user) { setLoading(false); return }
+    validateLoggedIn?.()
+      .then(({ loggedIn }) => { if (!loggedIn) { router.replace('/login') } })
+      .finally(() => setLoading(false))
   }, [])
 
   return <>
     {!loading && user?.role === 'admin' && <h1>Admin Dashboard</h1>}
     {!loading && user?.role === 'teacher' && <TeacherDashboard user={user} />}
-    {!loading && user?.role === 'student' && <StudentDashboard user={user}/>}
+    {!loading && user?.role === 'student' && <StudentDashboard user={user} />}
   </>
 }
