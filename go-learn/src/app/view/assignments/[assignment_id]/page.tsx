@@ -1,34 +1,38 @@
 
 'use client'
 
-import NoAccessNotice from '@/components/ui/NoAccessNotice'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Module, Resource } from '@prisma/client'
+import { Assignment, Module, Resource, Submission } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ResourceItem from '@/components/item-cards/ResourceItem'
 import { getAssignment } from '@/actions/assignmentActions'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Separator } from '@/components/ui/separator'
+import SubmissionItem from '@/components/item-cards/SubmissionItem'
+import { deleteSubmission } from '@/actions/submissionActions'
+import { useSupabase } from '@/hooks/useSupabase'
 
 type ViewAssignmentPageProps = {
   params: { assignment_id: string }
 }
 
 export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAssignmentPageProps) {
-
   const { user, validateLoggedIn } = useAuth()
   const router = useRouter()
+  const {supabase} = useSupabase()
+
   const [loading, setLoading] = useState(true)
   const [assignment, setAssignment] = useState<Assignment & {
     module?: Module | null
     resources?: Resource[] | null
+    submissions?: Submission[] | null
   }>()
 
   const refreshAssignmentData = async () => {
     if (user && assignment_id) {
-      const _assignment = await getAssignment(assignment_id, ['module', 'resources'])
+      const _assignment = await getAssignment(assignment_id, ['module', 'resources', 'user.submissions'])
       if (_assignment) {
         setAssignment(_assignment)
       }
@@ -51,9 +55,6 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
   }, [user, assignment_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
-      <NoAccessNotice />
-    </>}
     {!loading && assignment && <>
       <h1 className="mb-[2rem]">{assignment.title}</h1>
       <div className="grid gap-[2rem] w-full xl:grid-cols-2">
@@ -107,6 +108,34 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                 ))}
               </ul>
                 : <p>No Resources</p>
+            }
+          </CardContent>
+        </Card>
+
+        {/* My Submissions Card */}
+        <Card className="w-full">
+          <CardHeader><CardTitle>My Submissions</CardTitle></CardHeader>
+          <CardContent>
+            {
+              assignment?.submissions?.length
+                ? (<ul className='flex gap-2 flex-row flex-wrap'>
+                  {assignment.submissions?.map?.(submission => (
+                    <SubmissionItem
+                      key={submission.id}
+                      submission={submission}
+                      className='max-w-fit min-w-sm'
+                      onDelete={async () => {
+                        deleteSubmission(submission.id)
+                          .then((resp) => {
+                            if (!resp?.deletedUpload) return
+                            supabase.storage
+                              .from('golearn-resources')
+                              .remove([resp.deletedUpload.path])
+                          })
+                          .then(refreshAssignmentData) }} />
+                  ))}
+                </ul>)
+                : <p>No Submissions</p>
             }
           </CardContent>
         </Card>

@@ -159,6 +159,7 @@ model Upload {
 
 model Submission {
   id             String     @id @default(uuid())
+  title          String     @default("Untitled")
   author         User?      @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   assignment     Assignment @relation(fields: [assignmentId], references: [id])
   upload         Upload     @relation(fields: [uploadId], references: [id])

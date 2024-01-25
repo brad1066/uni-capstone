@@ -23,6 +23,9 @@ export async function getAssignment(id: string, extraFields: string[] = []) {
     include: {
       resources: extraFields.includes('resources'),
       module: extraFields.includes('module'),
+      submissions: extraFields.includes('user.submissions') ? {
+        where: { authorUsername: session.user.username }
+      } : undefined,
     }
   })
 
