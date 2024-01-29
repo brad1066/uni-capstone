@@ -1,4 +1,3 @@
-
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -38,7 +37,7 @@ export default function UsersManagePage() {
       .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
     filter
 
-    !user && getUsersByRole(filter ? [filter] as UserRole[] : undefined)
+    !user && getUsersByRole(filter != UserRole.unassigned ? [filter] as UserRole[] : undefined)
       .then((allUsers) => allUsers && setUsers([...allUsers]))
       .finally(() => setLoading(false))
   }, [])
@@ -77,8 +76,8 @@ export default function UsersManagePage() {
             </DialogContent>
           </Dialog>
         </h1>
-        {users ? <div className={cn('w-full', !filter ? 'grid md:grid-cols-2 gap-4' : '')}>
-          {(!filter || filter == UserRole.teacher) && <Card>
+        {users ? <div className={cn('w-full', filter == UserRole.unassigned ? 'grid md:grid-cols-2 gap-4' : '')}>
+          {(filter == UserRole.unassigned || filter == UserRole.teacher) && <Card>
             <CardHeader>Teachers</CardHeader>
             <CardContent>
               <ul className={cn('grid grid-cols-1 gap-4', filter != UserRole.teacher ? 'flex flex-wrap flex-row' : '')}>
@@ -98,7 +97,7 @@ export default function UsersManagePage() {
             </CardContent>
           </Card>
           }
-          {(!filter || filter == UserRole.student) &&
+          {(filter == UserRole.unassigned || filter == UserRole.student) &&
             <Card>
               <CardHeader>Students</CardHeader>
               <CardContent>
@@ -108,7 +107,6 @@ export default function UsersManagePage() {
                       <UserItem
                         key={user.username}
                         user={user}
-                        className='w-fit'
                         editable
                         onDelete={async () => { confirmUserDelete(user) }} />
                     ))
