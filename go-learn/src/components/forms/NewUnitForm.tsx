@@ -34,7 +34,7 @@ export default function NewUnitForm({ moduleId, onSubmit, className }: NewUnitFo
   return (<>
     <Form {...form}>
       <form className={cn(className, 'max-w-[50rem] flex flex-col gap-[1rem]')}
-        onSubmit={form.handleSubmit((values) => { onSubmit?.({ title: values.title, description: values.description ?? '', moduleId, id: -1 } as Unit) })}>
+        onSubmit={form.handleSubmit((values) => { onSubmit?.({ title: values.title, description: values.description ?? '', moduleId, id: '' } as Unit) })}>
 
         {/* Unit 'title' input */}
         <FormField

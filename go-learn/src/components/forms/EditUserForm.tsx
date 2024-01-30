@@ -46,7 +46,7 @@ const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUse
                   <NewPasswordForm disabled={loading || passwordDialogDisabled} username={user?.username} submitPassword={async (password) => {
                     setPasswordDialogDisabled(true)
                     await changePassword(user?.username, password).then(user => {
-                      if (user) setUser(user)
+                      if (user) { setUser(user) }
                     })
                     setPasswordDialogDisabled(false)
                     setPasswordDialogOpen(false)

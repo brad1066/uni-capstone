@@ -11,8 +11,12 @@ import { getAssignment } from '@/actions/assignmentActions'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Separator } from '@/components/ui/separator'
 import SubmissionItem from '@/components/item-cards/SubmissionItem'
-import { deleteSubmission } from '@/actions/submissionActions'
+import { createSubmission, deleteSubmission } from '@/actions/submissionActions'
 import { useSupabase } from '@/hooks/useSupabase'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import NewSubmissionForm from '@/components/forms/NewSubmissionForm'
+import { createUpload } from '@/actions/uploadActions'
 
 type ViewAssignmentPageProps = {
   params: { assignment_id: string }
@@ -29,6 +33,8 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
     resources?: Resource[] | null
     submissions?: Submission[] | null
   }>()
+
+  const [addingSubmission, setAddingSubmission] = useState(false)
 
   const refreshAssignmentData = async () => {
     if (user && assignment_id) {
@@ -115,7 +121,34 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
 
         {/* My Submissions Card */}
         <Card className="w-full">
-          <CardHeader><CardTitle>My Submissions</CardTitle></CardHeader>
+          <CardHeader className='flex flex-row justify-between items-center'>
+            <CardTitle>My Submissions</CardTitle>
+            <Dialog open={addingSubmission} onOpenChange={setAddingSubmission}>
+              <DialogTrigger asChild><Button>Add Submission</Button></DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Add Submission</DialogTitle></DialogHeader>
+                <p>Coming soon...</p>
+                <NewSubmissionForm submitSubmission={(title, file) => {
+                  if (!(title && file && user)) { return }
+                  supabase.storage
+                    .from('golearn-uploads')
+                    .upload(`assignments/${assignment.id}/submissions/${user.username}/${file.name}`, file)
+                    .then(async ({ data, error }) => {
+                      if (error) { throw error }
+                      const publicURL = (await supabase.storage.from('golearn-uploads').getPublicUrl(data.path)).data.publicUrl
+                      if (!publicURL) { throw 'File not uploaded correctly' }
+                      const upload = await createUpload({ id: '', title: file.name, path: data.path, publicURL, resourceId: null })
+                      if (!upload) { throw 'Upload process was interrupted. Please try again' }
+
+                      await createSubmission(upload.id, assignment.id, title)
+                    })
+                    .catch(console.error)
+                    .then(refreshAssignmentData)
+                    .then(() => setAddingSubmission(false))
+                }} />
+              </DialogContent>
+            </Dialog>
+          </CardHeader>
           <CardContent>
             {
               assignment?.submissions?.length
