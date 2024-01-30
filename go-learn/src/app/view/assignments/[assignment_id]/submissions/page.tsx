@@ -1,13 +1,13 @@
 'use client'
 
-import { getAssignment } from "@/actions/assignmentActions"
-import { deleteSubmission } from "@/actions/submissionActions"
-import SubmissionItem from "@/components/item-cards/SubmissionItem"
-import { useAuth } from "@/hooks/useAuth"
-import { useSupabase } from "@/hooks/useSupabase"
-import { Assignment, Module, Resource, Submission, UserRole } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { getAssignment } from '@/actions/assignmentActions'
+import { deleteSubmission } from '@/actions/submissionActions'
+import SubmissionItem from '@/components/item-cards/SubmissionItem'
+import { useAuth } from '@/hooks/useAuth'
+import { useSupabase } from '@/hooks/useSupabase'
+import { Assignment, Submission, UserRole } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type ViewAssignmentSubmissionsPageProps = {
   params: { assignment_id: string }
@@ -47,9 +47,9 @@ export default function ViewAssignmentSubmissionsPage({ params: { assignment_id 
   return <>
     {loading && <p>Loading...</p>}
     {!loading && assignment && <>
-      <h1 className="mb-4">My submissions for assignment: {assignment?.title}</h1>
-      <div className={assignment?.submissions?.length ? "grid gap-4 w-full md:grid-cols-2 xl:grid-cols-3" : ''}>
-        {!!assignment?.submissions?.length
+      <h1 className='mb-4'>My submissions for assignment: {assignment?.title}</h1>
+      <div className={assignment?.submissions?.length ? 'grid gap-4 w-full md:grid-cols-2 xl:grid-cols-3' : ''}>
+        {assignment?.submissions?.length
           ? assignment?.submissions?.map(submission => (
             <SubmissionItem
               key={submission.id}
@@ -66,7 +66,7 @@ export default function ViewAssignmentSubmissionsPage({ params: { assignment_id 
                   .then(refreshAssignmentData)
               }} />
           ))
-          : <p className="block m-auto text-2xl">No submissions yet.</p>}
+          : <p className='block m-auto text-2xl'>No submissions yet.</p>}
       </div>
     </>
     }

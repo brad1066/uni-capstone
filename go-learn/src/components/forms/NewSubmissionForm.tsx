@@ -54,7 +54,7 @@ const NewSubmissionForm = ({ className, submitSubmission, disabled }: NewSubmiss
         <FormField
           control={form.control}
           name='file'
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Submission File</FormLabel>
               <FormControl>
