@@ -1,9 +1,8 @@
-import Link from 'next/link'
-import { Button } from '../ui/button'
+import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Assignment } from '@prisma/client'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 type AssignmentItemProps = {
   className?: string
@@ -20,32 +19,21 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
     >
       {assignment.title}
       <div className="actions flex gap-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/view/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}>
-              <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>View assignment</TooltipContent>
-        </Tooltip>
+        <Link href={`/view/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}
+          className={buttonVariants({variant: 'outline', size: 'icon'})}>
+          <EyeOpenIcon role='view-icon'/>
+        </Link>
         {editable && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={`/manage/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}>
-                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>Edit assignment</TooltipContent>
-          </Tooltip>
+          <Link href={`/manage/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}
+            className={buttonVariants({variant: 'secondary', size: 'icon'})}>
+            <Pencil2Icon role='edit-icon' />
+          </Link>
         )}
-        {onDelete && <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove assignment</TooltipContent>
-        </Tooltip>
-        }
+        {onDelete && (
+          <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}>
+            <TrashIcon role='remove-icon' />
+          </Button>
+        )}
       </div>
     </li>
   </>)

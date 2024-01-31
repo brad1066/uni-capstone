@@ -7,11 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function genRandomPassword() {
-  return Math.random().toString(36).slice(-8)
+  return genRandomString(8)
 }
 
 export function genVerificationCode() {
-  return Math.random().toString(36).slice(-16)
+  return genRandomString(16)
+}
+
+export function genRandomString(length: number) {
+  return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1)
 }
 
 export const EMPTY_ADDRESS: Address = {

@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { Button } from '../ui/button'
+import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Module } from '@prisma/client'
 import { cn } from '@/lib/utils'
 
@@ -20,42 +19,35 @@ const ModuleItem = ({ className, module, editable, onClick, onDelete }: ModuleIt
     >
       {module.title}
       <div className="actions flex gap-1">
-        {module?.websiteURL && <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={module.websiteURL ?? ''} onClick={(e) => e.stopPropagation()}>
-              <Button type="button" size="icon" variant="ghost"><GlobeIcon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>External Link</TooltipContent>
-        </Tooltip>}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/view/modules/${module.id}`} onClick={(e) => e.stopPropagation()}>
-              <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>View module</TooltipContent>
-        </Tooltip>
+        {module?.websiteURL && (
+          <Link
+            href={module.websiteURL}
+            onClick={(e) => e.stopPropagation()}
+            className={buttonVariants({variant: 'ghost', size: 'icon'})}>
+            <GlobeIcon role='external-view-icon'/>
+          </Link>
+        )}
+        <Link
+          href={`/view/modules/${module.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className={buttonVariants({variant: 'outline', size: 'icon'})}>
+          <EyeOpenIcon role='view-icon'/>
+        </Link>
         {
-          editable && <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={`/manage/modules/${module.id}`} onClick={(e) => e.stopPropagation()}>
-                <Button type="button" size="icon" variant="secondary"><Pencil2Icon /></Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>Edit module</TooltipContent>
-          </Tooltip>
-        }
+          editable && (
+            <Link
+              href={`/manage/modules/${module.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className={buttonVariants({variant: 'secondary', size: 'icon'})}>
+              <Pencil2Icon role='edit-icon'/>
+            </Link>
+          )}
         
-        {onDelete &&
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Remove module</TooltipContent>
-          </Tooltip>
-        }
+        {onDelete && (
+          <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}>
+            <TrashIcon role='remove-icon'/>
+          </Button>
+        )}
       </div>
     </li>
   </>)
