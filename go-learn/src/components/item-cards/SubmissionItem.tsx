@@ -1,7 +1,6 @@
 import { Submission } from '@prisma/client'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import Link from 'next/link'
-import { Button } from '../ui/button'
+import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, TrashIcon } from '@radix-ui/react-icons'
 import { cn } from '@/lib/utils'
 
@@ -19,22 +18,17 @@ export default function SubmissionItem({ className, submission, onClick, onDelet
     >
       {submission.title}
       <div className="actions flex gap-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href={`/view/submissions/${submission.id}`} onClick={(e) => e.stopPropagation()}>
-              <Button type="button" size="icon" variant="outline"><EyeOpenIcon /></Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent>View Profile</TooltipContent>
-        </Tooltip>
-        {onDelete && <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove Submission</TooltipContent>
-        </Tooltip>
-        }
+        <Link
+          href={`/view/submissions/${submission.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className={buttonVariants({variant: 'outline'})}>
+          <EyeOpenIcon role='view-icon'/>
+        </Link>
+        {onDelete && (
+          <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}>
+            <TrashIcon role='remove-icon'/>
+          </Button>
+        )}
       </div>
     </li>
   </>)

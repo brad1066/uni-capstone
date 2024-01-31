@@ -1,7 +1,6 @@
 import { Upload } from '@prisma/client'
 import Link from 'next/link'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
-import { Button } from '../ui/button'
+import { Button, buttonVariants } from '../ui/button'
 import { DownloadIcon, TrashIcon } from '@radix-ui/react-icons'
 import { cn } from '@/lib/utils'
 
@@ -16,23 +15,18 @@ export default function UploadItem({ upload, className, onDelete }: UploadItemPr
     <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]', className)}>
       {upload.title}
       <div className="actions flex gap-1">
-        {upload?.publicURL && <Tooltip>
-          <TooltipTrigger asChild>
-            <Button type="button" size="icon" variant="outline" asChild>
-              <Link href={`${upload.publicURL}?download` ?? ''} onClick={(e) => e.stopPropagation()}><DownloadIcon /></Link>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Download</TooltipContent>
-        </Tooltip>}
+        {upload?.publicURL && (
+          <Link
+            href={`${upload.publicURL}?download`}
+            className={buttonVariants({variant: 'outline', size: 'icon'})}>
+            <DownloadIcon role='download-icon'/>
+          </Link>
+        )}
         {
           onDelete && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button type="button" size="icon" variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete?.() }}><TrashIcon />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Remove upload</TooltipContent>
-            </Tooltip>
+            <Button type="button" size="icon" variant="destructive" onClick={(e) => { onDelete?.() }}>
+              <TrashIcon role='remove-icon'/>
+            </Button>
           )
         }
       </div>
