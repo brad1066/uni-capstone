@@ -24,7 +24,7 @@ export default function UploadItem({ upload, className, onDelete }: UploadItemPr
         )}
         {
           onDelete && (
-            <Button type="button" size="icon" variant="destructive" onClick={(e) => { onDelete?.() }}>
+            <Button type="button" size="icon" variant="destructive" onClick={() => { onDelete?.() }}>
               <TrashIcon role='remove-icon'/>
             </Button>
           )
