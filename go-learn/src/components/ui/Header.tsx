@@ -1,6 +1,5 @@
 'use client'
 
-import Navbar from '../navigation/Navbar'
 import Image from 'next/image'
 import UserDropdown from '../navigation/UserDropdown'
 import Link from 'next/link'
@@ -15,7 +14,6 @@ const Header = ({className }: HeaderProps) => {
     <Link href="/" className="site-icon" >
       <Image src="/icon.png" height="50" width="50" alt="Image" priority/>
     </Link>
-    <Navbar className="navbar" />
     <UserDropdown className="account-button" />
   </header>
 }
