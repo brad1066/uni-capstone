@@ -75,7 +75,7 @@ export async function getUsers(roles: UserRole[] = []): Promise<User[]> {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, users] = await prisma.$transaction([
-      await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
+      prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
       prisma.user.findMany()
     ])
     if (roles.length == 0 || roles.includes(session?.user.role as UserRole)) {
@@ -87,19 +87,18 @@ export async function getUsers(roles: UserRole[] = []): Promise<User[]> {
 
 export async function getUsersByRole(roles: UserRole[] = []) {
   const authCookie = cookies().get('auth')
-  if (!authCookie) { return null }
 
   const [session, admin, teachers, students] = await prisma.$transaction([
-    await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
-    await prisma.user.findMany({
+    prisma.userSession.findFirst({ where: { cookieValue: authCookie?.value }, select: { user: true } }),
+    prisma.user.findMany({
       where: { role: 'admin' },
       take: 5
     }),
-    await prisma.user.findMany({
+    prisma.user.findMany({
       where: { role: 'teacher' },
       take: 5
     }),
-    await prisma.user.findMany({
+    prisma.user.findMany({
       where: { role: 'student' },
       take: 5
     })
@@ -118,14 +117,14 @@ export async function getUser(username: string, extraFields: string[] = [], role
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const [session, user] = await prisma.$transaction([
-      await prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
+      prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
       prisma.user.findUnique({
         where: { username }, include: {
           contactDetails: extraFields.includes('contactDetails'),
         }
       })
     ])
-    if (roles.length == 0 || roles.includes(session?.user.role as UserRole)) {
+    if (roles.length == 0 || roles.includes(session?.user?.role as UserRole)) {
       return user
     }
   }
@@ -140,8 +139,7 @@ export async function getUser(username: string, extraFields: string[] = [], role
  */
 export async function checkLoginCredentials(username: string, password: string): Promise<User | null> {
   password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
-  const user = await prisma.user
-    .findFirst({ where: { 'username': username, password } })
+  const user = await prisma.user.findFirst({ where: { 'username': username, password } })
 
   return user as User
 
@@ -156,7 +154,6 @@ export async function updateUser({ username, forename, middleNames, surname, tit
 
 export async function changePassword(username: string, password: string): Promise<User | undefined> {
   const session = await getCurrentUserSession()
-  console.log(session, username)
   if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return undefined }
 
   return prisma.user.update({
@@ -186,6 +183,7 @@ export async function updatePasswordWithCode(authKey: string, authVal: string, p
   if (typeof resp === 'boolean') {
     return { success: false, message: 'Invalid verification code'}
   }
+  
   const updatedUser = await prisma.user.update({
     where: { username: resp.username },
     data: {

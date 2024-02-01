@@ -1,6 +1,6 @@
 import { User } from '@prisma/client'
 import { prismaMock } from '../../prismaMock'
-import { changePassword, checkLoginCredentials, createUser, getUser, getUsers, getUsersByRole, updateUser } from '@/actions/userActions'
+import { changePassword, checkLoginCredentials, createUser, deleteUser, getUser, getUsers, getUsersByRole, updatePasswordWithCode, updateUser } from '@/actions/userActions'
 
 describe('createUser', () => {
   it('should create a new user', async () => {
@@ -209,18 +209,21 @@ describe('getUsers', () => {
   ]
   it('should return all users', async () => {
     prismaMock.user.findMany.mockResolvedValue(users)
+    prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
 
     await expect(getUsers()).resolves.toEqual(users)
   })
 
   it('should return all users if current user has specific role', async () => {
     prismaMock.user.findMany.mockResolvedValue(users)
+    prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
 
     await expect(getUsers(['admin'])).resolves.toEqual(users)
   })
 
   it('should return no users if current user does not have specific role', async () => {
     prismaMock.user.findMany.mockResolvedValue(users)
+    prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
 
     await expect(getUsers(['teacher'])).resolves.toEqual([])
   })
@@ -247,32 +250,36 @@ describe('getUserByRole', () => {
       role: 'admin',
     },
   ]
-  it('should return all users if no role is specified', async () => {
-    prismaMock.user.findMany.mockResolvedValueOnce(users.filter(user => user.role === 'admin'))
-    prismaMock.user.findMany.mockResolvedValueOnce(users.filter(user => user.role === 'teacher'))
-    prismaMock.user.findMany.mockResolvedValueOnce(users.filter(user => user.role === 'student'))
 
+  beforeEach(() => {
+    prismaMock.$transaction.mockResolvedValue([
+      { user: users[0], cookieValue: 'cookie' },
+      users.filter(user => user.role == 'admin'),
+      users.filter(user => user.role == 'teacher'),
+      users.filter(user => user.role == 'student'),
+    ])
+  })
+
+  it('should return all users if no role is specified', async () => {
     await expect(getUsersByRole()).resolves.toEqual(expect.arrayContaining(users))
   })
 
-  it('should return all users of the selected type', async () => {
-    const users = [
-      {
-        username: 'tu12345',
-        forename: 'Test',
-        surname: 'User',
-        role: 'admin',
-      },
-      {
-        username: 'tu12346',
-        forename: 'Test',
-        surname: 'User',
-        role: 'admin',
-      },
-    ]
-    prismaMock.user.findMany.mockResolvedValueOnce(users)
+  it('should return all admin when requests', async () => {
+    await expect(getUsersByRole(['admin'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'admin')))
+  })
 
-    await expect(getUsersByRole(['admin'])).resolves.toEqual(users)
+  it('should return all teachers when requests', async () => {
+    await expect(getUsersByRole(['teacher'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'teacher')))
+  })
+
+  it('should return all students when requests', async () => {
+    await expect(getUsersByRole(['student'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'student')))
+  })
+
+  it('should return [] if the user is not signed in', async () => {
+    prismaMock.$transaction.mockResolvedValue([null, [], [], []])
+
+    await expect(getUsersByRole()).resolves.toEqual([])
   })
 })
 
@@ -285,20 +292,23 @@ describe('getUser', () => {
   }
 
   it('should return a user', async () => {
-
     prismaMock.user.findUnique.mockResolvedValue(user)
+    prismaMock.$transaction.mockResolvedValue([{user, cookieValue: 'cookie'}, {...user}])
 
     await expect(getUser('tu12345')).resolves.toEqual(user)
   })
 
   it('should return a user when the current user has the correct role', async () => {
     prismaMock.user.findUnique.mockResolvedValue(user)
+    prismaMock.$transaction.mockResolvedValue([{user, cookieValue: 'cookie'}, {...user}])
 
     await expect(getUser('tu12345', [], ['admin'])).resolves.toEqual(user)
   })
 
   it('should return undefined when the current user does not have the correct role', async () => {
     prismaMock.user.findUnique.mockResolvedValue(user)
+
+    prismaMock.$transaction.mockResolvedValue([{user, cookieValue: 'cookie'}, {...user}])
 
     await expect(getUser('tu12345', [], ['teacher'])).resolves.toBeUndefined()
   })
@@ -406,5 +416,66 @@ describe('changePassword', () => {
     prismaMock.user.update.mockResolvedValue(user)
 
     await expect(changePassword(user.username, 'newPassword')).resolves.toBeUndefined()
+  })
+})
+
+describe('deleteUser', () => {
+  it('should delete a user', async () => {
+    const user = {
+      username: 'tu12345',
+      forename: 'Test',
+      surname: 'User',
+      role: 'admin',
+    }
+
+    prismaMock.$transaction.mockResolvedValue([{count: 0}, {...user}])
+
+    await expect(deleteUser(user)).resolves.toEqual([{count: 0}, {...user}])
+  })
+
+  it('should return undefined if the current user does not have the correct role', async () => {
+    const user = {
+      username: 'tu12345',
+      forename: 'Test',
+      surname: 'User',
+      role: 'admin',
+    }
+
+    prismaMock.userSession.findFirst.mockResolvedValue({user: {
+      username: 'tu12345',
+      role: 'teacher',
+    }})
+
+    await expect(deleteUser(user)).resolves.toBeUndefined()
+  })
+})
+
+describe('updatePasswordWithCode', () => {
+  const user = {
+    username: 'tu12345',
+    forename: 'Test',
+    surname: 'User',
+    role: 'admin',
+    password: 'newHashedPassword',
+  }
+
+  it('should update a user\'s password with a verification code', async () => {
+    prismaMock.userVerification.update.mockResolvedValue({used: true})
+    prismaMock.user.update.mockResolvedValue(user)
+
+    await expect(updatePasswordWithCode('authKey', 'authVal', 'newPassword')).resolves.toEqual({success: true, message: 'Password updated successfully'})
+  })
+
+  it('should return undefined if the verification code is invalid', async () => {
+    prismaMock.userVerification.update.mockRejectedValue(undefined)
+
+    await expect(updatePasswordWithCode('authKey', 'authVal', 'newPassword')).resolves.toEqual({success: false, message: 'Invalid verification code'})
+  })
+
+  it('should return undefined if the password cannot be updated', async () => {
+    prismaMock.userVerification.update.mockResolvedValue({used: true})
+    prismaMock.user.update.mockResolvedValue(undefined)
+
+    await expect(updatePasswordWithCode('authKey', 'authVal', 'newPassword')).resolves.toEqual({success: false, message: 'Failed to update password'})
   })
 })

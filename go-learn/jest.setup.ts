@@ -34,16 +34,11 @@ jest.mock('nodemailer', () => {
 beforeEach(() => {
   jest.resetModules() // this is important - it clears the cache
   process.env = { ...OLD_ENV } // make a copy
-  
-  prismaMock.$transaction.mockImplementation(requests => requests)
+  jest.clearAllMocks()
   prismaMock.userSession.findFirst.mockResolvedValue({user: {
     username: 'test',
     role: 'admin',
   }})
-})
-
-afterEach(() => {
-  jest.clearAllMocks()
 })
 
 afterAll(() => {
