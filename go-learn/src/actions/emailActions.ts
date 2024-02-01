@@ -17,10 +17,11 @@ export async function sendWelcomeEmail(
     html: render(NewUserWelcomeEmail({ username, authKey, authVal })),
   })
 
-  if (resp.accepted)
+  if (resp.accepted) {
     return { success: true, message: 'Email sent successfully' }
-  else 
+  } else {
     return { success: false, message: 'Email failed to send' }
+  }
 }
 
 export async function sendPasswordResetEmail(
@@ -34,9 +35,10 @@ export async function sendPasswordResetEmail(
     html: render(PasswordResetEmail({ username, authKey, authVal })),
   })
 
-  if (resp.accepted)
+  if (resp.accepted) {
     return { success: true, message: 'Email sent successfully' }
-  else 
+  } else {
     return { success: false, message: 'Email failed to send' }
+  }
   
 }
