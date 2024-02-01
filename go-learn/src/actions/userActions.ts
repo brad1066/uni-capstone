@@ -183,7 +183,6 @@ export async function updatePasswordWithCode(authKey: string, authVal: string, p
   if (typeof resp === 'boolean') {
     return { success: false, message: 'Invalid verification code'}
   }
-  
   const updatedUser = await prisma.user.update({
     where: { username: resp.username },
     data: {
