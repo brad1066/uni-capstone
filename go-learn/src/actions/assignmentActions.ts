@@ -4,10 +4,15 @@ import prisma from '@/lib/db'
 import { getCurrentUserSession } from './authActions'
 import { Assignment, UserRole } from '@prisma/client'
 
-
 export async function createAssignment(assignment: Assignment) {
   const session = await getCurrentUserSession()
-  if (!session || !(session.user.role == UserRole.admin || session.user.role == UserRole.teacher)) { return null }
+  if (!session
+    || !(session.user.role == UserRole.admin
+        || session.user.role == UserRole.teacher
+    )
+  ) {
+    return undefined
+  }
 
   return await prisma.assignment.create({ data: assignment })
 }
@@ -15,8 +20,6 @@ export async function createAssignment(assignment: Assignment) {
 export async function getAssignment(id: string, extraFields: string[] = [], allowedRoles: UserRole[] = []) {
   const session = await getCurrentUserSession()
   if (!session) { return null }
-  console.log((allowedRoles.length && !(session.user.role in allowedRoles)))
-  console.log(session.user.role), console.log(allowedRoles)
   if (!session || (allowedRoles.length && !(session.user.role in allowedRoles))) { return null }
 
   return await prisma.assignment.findUnique({

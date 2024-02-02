@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { Contact, User, UserVerification } from '@prisma/client'
 import { prismaMock } from '../../prismaMock'
 import { changePassword, checkLoginCredentials, createUser, deleteUser, getUser, getUsers, getUsersByRole, updatePasswordWithCode, updateUser } from '@/actions/userActions'
 
@@ -21,7 +21,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'admin',
-      }
+      } as User
 
       prismaMock.user.create.mockResolvedValue({
         username: 'tu12345',
@@ -31,7 +31,7 @@ describe('userActions', () => {
         letters: '',
         role: 'admin',
         password: 'hashedPassword'
-      })
+      } as User)
 
       await expect(createUser(user)).resolves.toEqual({
         ...user,
@@ -48,7 +48,6 @@ describe('userActions', () => {
         surname: 'User',
         role: 'admin',
         contactDetails: {
-          email: 'test@test.com',
           mobile: '01234567890',
         },
       }
@@ -63,12 +62,12 @@ describe('userActions', () => {
         letters: '',
         role: 'admin',
         password: 'hashedPassword'
-      })
+      } as User)
     
       // Contact creation
       prismaMock.contact.create.mockResolvedValue({
         id: 'contactId',
-        email: 'test@test.com',
+        email: '',
         mobile: '01234567890',
         label: 'primary',
       })
@@ -90,9 +89,9 @@ describe('userActions', () => {
       prismaMock.userVerification.create.mockResolvedValue({
         username: 'tu12345',
         verificationCode: 'verificationCode',
-      })
+      } as UserVerification)
 
-      await expect(createUser(user)).resolves.toEqual({
+      await expect(createUser(user as User & {contactDetails: Contact})).resolves.toEqual({
         username: 'tu12345',
         password: 'hashedPassword',
         title: 'Mr',
@@ -110,7 +109,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'student',
-      }
+      } as User
 
       // Initial user creation
       prismaMock.user.create.mockResolvedValue({
@@ -121,7 +120,7 @@ describe('userActions', () => {
         letters: '',
         role: 'student',
         password: 'hashedPassword'
-      })
+      } as User)
 
       // Student creation
       prismaMock.student.create.mockResolvedValue({
@@ -153,7 +152,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'teacher',
-      }
+      } as User
 
       // Initial user creation
       prismaMock.user.create.mockResolvedValue({
@@ -164,7 +163,7 @@ describe('userActions', () => {
         letters: '',
         role: 'teacher',
         password: 'hashedPassword'
-      })
+      } as User)
 
       // Student creation
       prismaMock.teacher.create.mockResolvedValue({
@@ -268,7 +267,7 @@ describe('userActions', () => {
         surname: 'User',
         role: 'admin',
       },
-    ]
+    ] as User[]
     it('should return all users', async () => {
       prismaMock.user.findMany.mockResolvedValue(users)
       prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
@@ -363,7 +362,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'admin',
-      }
+      } as User
 
       prismaMock.user.findFirst.mockResolvedValue(user)
 
@@ -371,7 +370,7 @@ describe('userActions', () => {
     })
 
     it('should return undefined if the credentials are incorrect', async () => {
-      prismaMock.user.findFirst.mockResolvedValue(undefined)
+      prismaMock.user.findFirst.mockResolvedValue(null)
 
       await expect(checkLoginCredentials('tu12345', 'incorrectPassword')).resolves.toBeUndefined()
     })
@@ -414,9 +413,13 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'admin',
+      } as User
+      prismaMock.userSession.findFirst.mockResolvedValue({user: {
+        username: 'tu12346',
+        role: 'teacher',
       }
-      prismaMock.userSession.findFirst.mockResolvedValue(undefined)
-      prismaMock.user.update.mockResolvedValue(user)
+      })
+      prismaMock.user.update.mockResolvedValue(undefined)
 
       await expect(updateUser(user)).resolves.toBeUndefined()
     })

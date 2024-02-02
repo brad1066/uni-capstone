@@ -16,7 +16,9 @@ import { sendWelcomeEmail } from './emailActions'
  * @returns Promise of a User object (as defined by Prisma)
  */
 
-export async function createUser(userInfo: User & { contactDetails?: Contact }): Promise<User> {
+export async function createUser(userInfo: User & { contactDetails?: Contact }){
+  const session = await getCurrentUserSession()
+  if (!session || session.user.role != 'admin') { return undefined }
   const rNum = Math.floor((Math.random()) * 100000)
   let user = await prisma.user.create({
     data: {
@@ -141,8 +143,7 @@ export async function checkLoginCredentials(username: string, password: string):
   password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
   const user = await prisma.user.findFirst({ where: { 'username': username, password } })
 
-  return user as User
-
+  return user as User 
 }
 
 export async function updateUser({ username, forename, middleNames, surname, title, letters }: User) {

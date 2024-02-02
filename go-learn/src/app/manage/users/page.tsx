@@ -136,7 +136,7 @@ export default function UsersManagePage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={async () => {
                 deleteUser(userToDelete)
-                  .then((out) => { console.log(out); router.replace('/manage/users') })
+                  .then(() => router.replace('/manage/users'))
               }}>Confirm</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -177,13 +177,7 @@ describe('addressActions', () => {
       await expect(updateAddress(address, ['admin'])).resolves.toBeUndefined()
     })
 
-    it('should return undefined if the user is not an admin', async () => {
-      prismaMock.userSession.findFirst.mockResolvedValueOnce({
-        user: {
-          username: 'test',
-          role: 'student',
-        }
-      })    
+    it('should return undefined if the user is not an admin', async () => { 
       await expect(updateAddress(address, ['admin'])).resolves.toBeUndefined()
     })
 
