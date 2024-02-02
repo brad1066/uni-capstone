@@ -69,7 +69,7 @@ export default function UsersManagePage() {
                   createUser(user)
                     .then(createdUser => {
                       setFormDisabled(false)
-                      router.push(`/manage/users/${createdUser.username}`)
+                      if (createdUser) { router.push(`/manage/users/${createdUser.username}`) }
                       setDialogOpen(false)
                     })
                 }} />

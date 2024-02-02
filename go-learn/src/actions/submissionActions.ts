@@ -7,8 +7,6 @@ export async function createSubmission(uploadId: string, assignmentId: string, t
   const session = await getCurrentUserSession()
   if (!session) { return null }
 
-  console.log(title, uploadId, assignmentId, session.user.username)
-
   return await prisma.submission.create({
     data: {
       title,
