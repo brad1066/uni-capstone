@@ -8,21 +8,21 @@ import { genVerificationCode } from '@/lib/utils'
 export async function getCurrentUserSession() {
   const authCookie = cookies().get('auth')
     
-  if (!authCookie) return undefined
+  if (!authCookie) { return undefined }
   return await prisma.userSession.findFirst({where: {cookieValue: authCookie.value}, select: {user: true}})
 }
 
 export async function requestUserPasswordChange(username:string) {
   const user = await prisma.user.findUnique({where: {username}, include: {contactDetails: true}})
-  if (!user) return false
-  const verfication = await prisma.userVerification.create({
+  if (!user) { return false }
+  const verification = await prisma.userVerification.create({
     data: {
       username: user.username,
       verificationCode: genVerificationCode(),
     }
   })
 
-  if (!(user.contactDetails && user.contactDetails.email)) return false
+  if (!(user.contactDetails && user.contactDetails.email)) { return false }
 
-  return await sendPasswordResetEmail(user, user.contactDetails, verfication)
+  return await sendPasswordResetEmail(user, user.contactDetails, verification)
 }
