@@ -223,7 +223,7 @@ describe('userActions', () => {
       forename: 'Test',
       surname: 'User',
       role: 'admin',
-    }
+    } as User
 
     it('should return a user', async () => {
       prismaMock.user.findUnique.mockResolvedValue(user)
@@ -372,7 +372,7 @@ describe('userActions', () => {
     it('should return undefined if the credentials are incorrect', async () => {
       prismaMock.user.findFirst.mockResolvedValue(null)
 
-      await expect(checkLoginCredentials('tu12345', 'incorrectPassword')).resolves.toBeUndefined()
+      await expect(checkLoginCredentials('tu12345', 'incorrectPassword')).resolves.toBeNull()
     })
   })
   //#endregion
@@ -396,7 +396,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'admin',
-      }
+      } as User
 
       prismaMock.user.update.mockResolvedValue(user)
 
@@ -404,7 +404,7 @@ describe('userActions', () => {
     })
 
     it ('should return undefined if no username is passed', async () => {
-      await expect(updateUser({} as User)).resolves.toBeUndefined()
+      await expect(updateUser({} as User)).resolves.toBeNull()
     })
 
     it ('should return undefined if the current user does not have the correct role or username', async () => {
@@ -417,11 +417,10 @@ describe('userActions', () => {
       prismaMock.userSession.findFirst.mockResolvedValue({user: {
         username: 'tu12346',
         role: 'teacher',
-      }
-      })
-      prismaMock.user.update.mockResolvedValue(undefined)
+      }})
+      prismaMock.user.update.mockResolvedValue(null)
 
-      await expect(updateUser(user)).resolves.toBeUndefined()
+      await expect(updateUser(user)).resolves.toBeNull()
     })
 
     it('should update the user if the current user does not have the correct role, but is has the same username as the user being updated', async () => {
@@ -430,7 +429,7 @@ describe('userActions', () => {
         forename: 'Test',
         surname: 'User',
         role: 'teacher',
-      }
+      } as User
 
       prismaMock.userSession.findFirst.mockResolvedValue({user: {
         username: 'tu12345',
@@ -473,12 +472,12 @@ describe('userActions', () => {
         surname: 'User',
         role: 'admin',
         password: 'newHashedPassword',
-      }
+      } as User
 
-      prismaMock.userSession.findFirst.mockResolvedValue(undefined)
+      prismaMock.userSession.findFirst.mockResolvedValue(null)
       prismaMock.user.update.mockResolvedValue(user)
 
-      await expect(changePassword(user.username, 'newPassword')).resolves.toBeUndefined()
+      await expect(changePassword(user.username, 'newPassword')).resolves.toBeNull()
     })
   })
 

@@ -143,19 +143,19 @@ export async function checkLoginCredentials(username: string, password: string):
   password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
   const user = await prisma.user.findFirst({ where: { 'username': username, password } })
 
-  return user as User 
+  return user as User
 }
 
 export async function updateUser({ username, forename, middleNames, surname, title, letters }: User) {
-  if (!username) { return undefined }
+  if (!username) { return null }
   const session = await getCurrentUserSession()
-  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return undefined }
+  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return null }
   return await prisma.user.update({ where: { username }, data: { forename, middleNames, surname, title, letters } })
 }
 
-export async function changePassword(username: string, password: string): Promise<User | undefined> {
+export async function changePassword(username: string, password: string) {
   const session = await getCurrentUserSession()
-  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return undefined }
+  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return null }
 
   return prisma.user.update({
     where: { username },
