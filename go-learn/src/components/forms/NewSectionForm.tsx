@@ -37,7 +37,7 @@ export default function NewSectionForm({ unitId, onSubmit, className }: NewSecti
         onSubmit={form.handleSubmit((values) => { onSubmit?.({
           title: values.title,
           description: values.description ?? '',
-          id: -1,
+          id: '',
           unitId } as Section) })}>
 
         {/* Section 'title' input */}

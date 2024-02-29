@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 import Header from '@/components/ui/Header'
 import PageWrapper from '@/lib/PageWrapper'
 import { Toaster } from '@/components/ui/toaster'
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +24,9 @@ export default async function RootLayout({
         <PageWrapper>
           <Header />
           <main className='flex flex-col items-center px-24 min-h-[100%]'>
-            {children}
+            <Suspense>
+              {children}
+            </Suspense>
           </main>
           <Toaster />
         </PageWrapper>
