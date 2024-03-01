@@ -9,8 +9,7 @@ const nextConfig = {
     }
     return config
   },
-  poweredByHeader: false,
-  distDir: 'build'
+  poweredByHeader: false
 }
 
 module.exports = nextConfig
