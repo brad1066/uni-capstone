@@ -1,0 +1,11 @@
+jest.*
+prismaMock.ts
+build/
+.vscode/
+.vercel/
+.swc/
+certificates/
+coverage/
+node_modules/
+__tests__/
+.env
