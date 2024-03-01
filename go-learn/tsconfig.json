@@ -31,7 +31,7 @@
       ],
       "~/*": [
         "./*"
-      ],
+      ]
     }
   },
   "include": [
@@ -39,7 +39,8 @@
     "**/*.ts",
     "**/*.tsx",
     "__tests__/*.test.tsx",
-    "build/types/**/*.ts"
+    "build/types/**/*.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

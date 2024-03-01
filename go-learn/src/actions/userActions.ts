@@ -29,7 +29,7 @@ export async function createUser(userInfo: User & { contactDetails?: Contact }){
       middleNames: userInfo.middleNames || '',
       letters: userInfo.letters || '',
       role: userInfo?.role || 'unassigned',
-      password: bcrypt.hashSync(userInfo.password || genRandomPassword(), env.PASSWORD_HASH as string)
+      password: await bcrypt.hash(userInfo.password || genRandomPassword(), 10)
     }
   })
   if (userInfo.contactDetails?.email || userInfo.contactDetails?.mobile) {
@@ -139,11 +139,13 @@ export async function getUser(username: string, extraFields: string[] = [], role
  * @param password The provided password to check in the data store
  * @returns User if user is found, otherwise null
  */
-export async function checkLoginCredentials(username: string, password: string): Promise<User | null> {
-  password = await bcrypt.hash(password, env.PASSWORD_HASH as string)
-  const user = await prisma.user.findFirst({ where: { 'username': username, password } })
+export async function checkLoginCredentials(username: string, password: string) {
+  password = await bcrypt.hash(password, 10)
+  const user = await prisma.user.findFirst({ where: { 'username': username } })
 
-  return user as User
+  if (user && await bcrypt.compare(password, user.password)) {
+    return user
+  }
 }
 
 export async function updateUser({ username, forename, middleNames, surname, title, letters }: User) {
@@ -160,7 +162,7 @@ export async function changePassword(username: string, password: string) {
   return prisma.user.update({
     where: { username },
     data: {
-      password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
+      password: await bcrypt.hash(password, 10)
     }
   })
 }
@@ -187,7 +189,7 @@ export async function updatePasswordWithCode(authKey: string, authVal: string, p
   const updatedUser = await prisma.user.update({
     where: { username: resp.username },
     data: {
-      password: bcrypt.hashSync(password, env.PASSWORD_HASH as string)
+      password: await bcrypt.hash(password, 10)
     }
   }).catch(() => false)
 
