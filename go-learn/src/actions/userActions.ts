@@ -139,7 +139,7 @@ export async function getUser(username: string, extraFields: string[] = [], role
  * @returns User if user is found, otherwise null
  */
 export async function checkLoginCredentials(username: string, password: string) {
-  password = await bcrypt.hash(password, 10)
+  // password = await bcrypt.hash(password, 10)
   const user = await prisma.user.findFirst({ where: { 'username': username } })
 
   if (user && await bcrypt.compare(password, user.password)) {
