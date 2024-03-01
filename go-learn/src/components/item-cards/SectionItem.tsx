@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Section } from '@prisma/client'
+import { Section } from './../../prisma/generated/client'
 import { cn } from '@/lib/utils'
 
 type SectionItemProps = {

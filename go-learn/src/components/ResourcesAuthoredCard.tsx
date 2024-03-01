@@ -1,6 +1,6 @@
 'use client'
 
-import { Resource, User } from '@prisma/client'
+import { Resource, User } from './../../prisma/generated/client'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { useEffect, useState } from 'react'
 import { getResources } from '@/actions/resourceActions'

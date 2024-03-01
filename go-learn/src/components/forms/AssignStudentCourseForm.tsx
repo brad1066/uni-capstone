@@ -1,7 +1,7 @@
 'use client'
 
 import { getCourses } from '@/actions/courseActions'
-import { Course, Student } from '@prisma/client'
+import { Course, Student } from './../../prisma/generated/client'
 import { useEffect, useState } from 'react'
 import { CoursesSelectCombobox } from './CoursesSelectCombobox'
 import { z } from 'zod'

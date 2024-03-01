@@ -12,7 +12,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 import { Separator } from '../ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { cn } from '@/lib/utils'
-import { Contact, User } from '@prisma/client'
+import { Contact, User } from './../../prisma/generated/client'
 
 type NewUserFormProps = {
   className?: string

@@ -2,7 +2,7 @@
 
 import { render } from '@react-email/render'
 import { sendEmail } from '../lib/emails'
-import { Contact, User, UserVerification } from '@prisma/client'
+import { Contact, User, UserVerification } from './../../prisma/generated/client'
 import NewUserWelcomeEmail from '../emails/NewUserWelcome'
 import PasswordResetEmail from '@/emails/PasswordResetEmail'
 

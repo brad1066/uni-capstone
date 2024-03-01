@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import sha1 from 'js-sha1'
 import prisma from '@/lib/db'
 import { checkLoginCredentials } from '@/actions/userActions'
-import { User } from '@prisma/client'
+import { User } from './../../prisma/generated/client'
 
 export type TLoginSuccessResponse = {
   success: true,

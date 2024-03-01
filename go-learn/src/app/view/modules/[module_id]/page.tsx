@@ -7,7 +7,7 @@ import CourseItem from '@/components/item-cards/CourseItem'
 import UnitItem from '@/components/item-cards/UnitItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Course, Module, Unit } from '@prisma/client'
+import { Assignment, Course, Module, Unit } from './../../prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, GlobeIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Course } from '@prisma/client'
+import { Course } from './../../prisma/generated/client'
 import { cn } from '@/lib/utils'
 
 type CourseItemProps = {

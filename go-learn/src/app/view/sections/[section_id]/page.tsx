@@ -6,7 +6,7 @@ import ResourceItem from '@/components/item-cards/ResourceItem'
 import UnitItem from '@/components/item-cards/UnitItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Section, Resource, Unit } from '@prisma/client'
+import { Section, Resource, Unit } from './../../prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

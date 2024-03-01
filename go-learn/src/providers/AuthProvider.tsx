@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { AuthContext } from '@/hooks/useAuth'
-import { User } from '@prisma/client'
+import { User } from './../../prisma/generated/client'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 

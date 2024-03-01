@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/userActions'
-import { Contact, User, UserRole } from '@prisma/client'
+import { Contact, User, UserRole } from './../../prisma/generated/client'
 import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
 
 export default function UsersManagePage() {

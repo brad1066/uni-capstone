@@ -8,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Contact, User } from '@prisma/client'
+import { Contact, User } from './../../prisma/generated/client'
 import { ChevronDownIcon, ChevronUpIcon, Pencil2Icon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 

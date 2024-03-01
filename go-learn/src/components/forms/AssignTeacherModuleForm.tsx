@@ -1,7 +1,7 @@
 
 'use client'
 
-import { Teacher, User } from '@prisma/client'
+import { Teacher, User } from './../../prisma/generated/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'

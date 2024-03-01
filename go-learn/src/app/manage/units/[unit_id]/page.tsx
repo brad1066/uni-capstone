@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Unit, Module, Resource, Section } from '@prisma/client'
+import { Unit, Module, Resource, Section } from './../../prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

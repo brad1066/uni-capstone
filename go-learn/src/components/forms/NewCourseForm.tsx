@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '../ui/textarea'
 import { cn } from '@/lib/utils'
-import { Course } from '@prisma/client'
+import { Course } from './../../prisma/generated/client'
 
 type NewCourseFormProps = {
   className?: string

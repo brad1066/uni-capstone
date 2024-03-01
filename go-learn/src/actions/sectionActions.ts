@@ -1,6 +1,6 @@
 'use server'
 
-import { Section } from '@prisma/client'
+import { Section } from './../../prisma/generated/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 import { cookies } from 'next/headers'

@@ -1,4 +1,4 @@
-import { Address } from '@prisma/client'
+import { Address } from './../../prisma/generated/client'
 import { prismaMock } from '../../prismaMock'
 import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from '@/actions/addressActions'
 

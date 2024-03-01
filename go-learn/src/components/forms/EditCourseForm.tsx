@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Course } from '@prisma/client'
+import { Course } from './../../prisma/generated/client'
 import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

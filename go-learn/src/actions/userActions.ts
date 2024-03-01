@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/db'
 import { genRandomPassword, genVerificationCode } from '@/lib/utils'
-import { Contact, User, UserRole } from '@prisma/client'
+import { Contact, User, UserRole } from './../../prisma/generated/client'
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
 import { env } from 'process'

@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/db'
 import { getCurrentUserSession } from './authActions'
-import { Assignment, UserRole } from '@prisma/client'
+import { Assignment, UserRole } from './../../prisma/generated/client'
 
 export async function createAssignment(assignment: Assignment) {
   const session = await getCurrentUserSession()

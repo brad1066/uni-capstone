@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Section } from '@prisma/client'
+import { Section } from './../../prisma/generated/client'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { cn } from '@/lib/utils'

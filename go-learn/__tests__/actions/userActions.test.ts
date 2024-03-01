@@ -1,4 +1,4 @@
-import { Contact, User, UserVerification } from '@prisma/client'
+import { Contact, User, UserVerification } from './../../prisma/generated/client'
 import { prismaMock } from '../../prismaMock'
 import { changePassword, checkLoginCredentials, createUser, deleteUser, getUser, getUsers, getUsersByRole, updatePasswordWithCode, updateUser } from '@/actions/userActions'
 

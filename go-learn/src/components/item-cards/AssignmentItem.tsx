@@ -1,6 +1,6 @@
 import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
-import { Assignment } from '@prisma/client'
+import { Assignment } from './../../prisma/generated/client'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { getResources, getUnitResources } from '@/actions/resourceActions'
-import { Resource } from '@prisma/client'
+import { Resource } from './../../prisma/generated/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
