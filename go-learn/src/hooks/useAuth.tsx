@@ -1,4 +1,4 @@
-import { User } from './../../prisma/generated/client'
+import { User } from '~/prisma/generated/client'
 import { createContext, useContext } from 'react'
 
 export const AuthContext = createContext<{

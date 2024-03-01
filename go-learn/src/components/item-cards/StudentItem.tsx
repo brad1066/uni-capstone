@@ -1,4 +1,4 @@
-import { Contact, Student, User } from './../../prisma/generated/client'
+import { Contact, Student, User } from '~/prisma/generated/client'
 import Link from 'next/link'
 import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'

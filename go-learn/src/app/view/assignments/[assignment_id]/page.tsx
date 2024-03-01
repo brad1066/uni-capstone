@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Module, Resource, Submission } from './../../prisma/generated/client'
+import { Assignment, Module, Resource, Submission } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ResourceItem from '@/components/item-cards/ResourceItem'

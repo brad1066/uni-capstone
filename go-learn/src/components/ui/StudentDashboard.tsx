@@ -1,5 +1,5 @@
 import { getStudent } from '@/actions/studentActions'
-import { Course, Module, Student, User } from './../../prisma/generated/client'
+import { Course, Module, Student, User } from '~/prisma/generated/client'
 import { useEffect, useState } from 'react'
 import ModuleItem from '../item-cards/ModuleItem'
 import { Card, CardContent, CardHeader, CardTitle } from './card'

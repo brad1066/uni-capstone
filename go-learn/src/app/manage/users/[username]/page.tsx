@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { EMPTY_ADDRESS } from '@/lib/utils'
-import { Address, Contact, Course, Module, Student, Teacher, User } from './../../prisma/generated/client'
+import { Address, Contact, Course, Module, Student, Teacher, User } from '~/prisma/generated/client'
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'

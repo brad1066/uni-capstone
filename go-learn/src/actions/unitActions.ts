@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
-import { Unit } from './../../prisma/generated/client'
+import { Unit } from '~/prisma/generated/client'
 
 export async function getUnits(moduleId: string = '') {
   const authCookie = cookies().get('auth')

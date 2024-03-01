@@ -1,6 +1,6 @@
 'use server'
 
-import { Upload } from './../../prisma/generated/client'
+import { Upload } from '~/prisma/generated/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 

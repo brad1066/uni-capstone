@@ -1,6 +1,6 @@
 import { Label } from '@radix-ui/react-dropdown-menu'
 import { Input } from '../ui/input'
-import { Address } from './../../prisma/generated/client'
+import { Address } from '~/prisma/generated/client'
 import { Dispatch, SetStateAction } from 'react'
 import { cn } from '@/lib/utils'
 

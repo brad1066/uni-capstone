@@ -5,7 +5,7 @@ import NotFoundPage from '@/app/not-found'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Course, Module } from './../../prisma/generated/client'
+import { Course, Module } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-import { Assignment } from './../../prisma/generated/client'
+import { Assignment } from '~/prisma/generated/client'
 import { Input } from '../ui/input'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

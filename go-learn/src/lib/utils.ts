@@ -1,4 +1,4 @@
-import { Address, Contact } from './../../prisma/generated/client'
+import { Address, Contact } from '~/prisma/generated/client'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 

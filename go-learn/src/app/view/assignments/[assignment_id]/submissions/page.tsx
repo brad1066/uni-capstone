@@ -5,7 +5,7 @@ import { deleteSubmission } from '@/actions/submissionActions'
 import SubmissionItem from '@/components/item-cards/SubmissionItem'
 import { useAuth } from '@/hooks/useAuth'
 import { useSupabase } from '@/hooks/useSupabase'
-import { Assignment, Submission, UserRole } from './../../prisma/generated/client'
+import { Assignment, Submission, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

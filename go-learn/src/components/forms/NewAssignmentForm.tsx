@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '../ui/textarea'
 import { cn } from '@/lib/utils'
-import { Assignment } from './../../prisma/generated/client'
+import { Assignment } from '~/prisma/generated/client'
 
 type NewAssignmentFormProps = {
   className?: string

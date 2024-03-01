@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { Address, UserRole } from './../../prisma/generated/client'
+import { Address, UserRole } from '~/prisma/generated/client'
 import { getCurrentUserSession } from './authActions'
 
 export async function createTeacherAddress(teacherId: string, address: Address, roles: UserRole[] = []) {

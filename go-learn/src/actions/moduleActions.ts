@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { Module, UserRole } from './../../prisma/generated/client'
+import { Module, UserRole } from '~/prisma/generated/client'
 import { cookies } from 'next/headers'
 import { getCurrentUserSession } from './authActions'
 

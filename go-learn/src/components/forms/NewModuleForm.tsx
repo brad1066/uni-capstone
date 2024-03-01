@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '../ui/textarea'
 import { CoursesSelectCombobox } from './CoursesSelectCombobox'
 import { cn } from '@/lib/utils'
-import { Module } from './../../prisma/generated/client'
+import { Module } from '~/prisma/generated/client'
 
 type NewModuleFormProps = {
   className?: string

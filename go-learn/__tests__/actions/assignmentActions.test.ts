@@ -1,6 +1,5 @@
 import { createAssignment, getAssignment } from '@/actions/assignmentActions'
-import { prismaMock } from '../../prismaMock'
-import { Assignment, UserRole } from './../../prisma/generated/client'
+import { Assignment, UserRole } from '~/prisma/generated/client'
 
 describe('assignmentActions', () => {
   // #region Create Actions

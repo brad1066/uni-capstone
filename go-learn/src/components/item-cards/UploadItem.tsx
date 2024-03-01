@@ -1,4 +1,4 @@
-import { Upload } from './../../prisma/generated/client'
+import { Upload } from '~/prisma/generated/client'
 import Link from 'next/link'
 import { Button, buttonVariants } from '../ui/button'
 import { DownloadIcon, TrashIcon } from '@radix-ui/react-icons'

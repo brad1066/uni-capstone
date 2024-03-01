@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import EditAddressForm from './EditAddressForm'
-import { Address } from './../../prisma/generated/client'
+import { Address } from '~/prisma/generated/client'
 import { cn } from '@/lib/utils'
 
 type EditStudentAddressFormProps = {

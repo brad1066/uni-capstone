@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/lib/db'
-import { Address, Teacher, UserRole } from './../../prisma/generated/client'
+import { Address, Teacher, UserRole } from '~/prisma/generated/client'
 import { cookies } from 'next/headers'
 
 

@@ -1,6 +1,6 @@
-// Comment out to allow for building
+// // Comment out to allow for building
 
-// import { PrismaClient } from './../../prisma/generated/client'
+// import { PrismaClient } from './prisma/generated/client'
 // import { mockDeep, mockReset, DeepMockProxy } from 'jest-mock-extended'
 
 // import prisma from '@/lib/db'

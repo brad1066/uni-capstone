@@ -1,6 +1,6 @@
 'use server'
 
-import { Contact, UserRole } from './../../prisma/generated/client'
+import { Contact, UserRole } from '~/prisma/generated/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 

@@ -2,7 +2,7 @@
 'use client'
 
 import { getModules } from '@/actions/moduleActions'
-import { Module, Student } from './../../prisma/generated/client'
+import { Module, Student } from '~/prisma/generated/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
