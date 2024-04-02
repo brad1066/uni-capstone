@@ -7,7 +7,7 @@ import NoAccessNotice from '@/components/ui/NoAccessNotice'
 import EditUserForm from '@/components/forms/EditUserForm'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
-import { Contact, User } from '~/prisma/generated/client'
+import { Contact, User, UserRole } from '~/prisma/generated/client'
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -52,12 +52,12 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
   }, [user])
 
   return <>
-    {!loading && !(signedInUser?.role == 'admin' || signedInUser?.username == user?.username) && <NoAccessNotice />}
+    {!loading && !(signedInUser?.role == UserRole.admin || signedInUser?.username == user?.username) && <NoAccessNotice />}
     <h1 className="mb-[2rem]">Hi {user?.forename} {user?.surname}</h1>
     <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
       <EditUserForm
         user={user as User} setUser={setUser as Dispatch<SetStateAction<User | undefined>>}
-        canEdit={user?.username == signedInUser?.username || signedInUser?.role == 'admin'} onUpdateSave={(updatedUser) => {
+        canEdit={user?.username == signedInUser?.username || signedInUser?.role == UserRole.admin} onUpdateSave={(updatedUser) => {
           // if (!updated) return
           updateUser(updatedUser as User)
             .then(validateLoggedIn)

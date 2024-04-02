@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Course, Module, Student } from '~/prisma/generated/client'
+import { Course, Module, Student, UserRole } from '~/prisma/generated/client'
 import { DialogTitle, DialogTrigger } from '@radix-ui/react-dialog'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -54,15 +54,15 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
   }, [])
 
   useEffect(() => {
-    if (user?.role != 'admin') { router.replace(`/view/courses/${course_id}`) }
+    if (user?.role != UserRole.admin) { router.replace(`/view/courses/${course_id}`) }
     refreshCourseData().then(() => setLoading(false))
   }, [user, course_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin') && <>
+    {!loading && !(user?.role == UserRole.admin) && <>
       <NoAccessNotice />
     </>}
-    {!loading && (user?.role == 'admin') && course && <>
+    {!loading && (user?.role == UserRole.admin) && course && <>
       <h1 className="mb-[2rem]">{course.title}</h1>
       <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
         <Card className="w-full xl:w-1/2">

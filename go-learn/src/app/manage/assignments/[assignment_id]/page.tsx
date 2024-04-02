@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Module, Resource } from '~/prisma/generated/client'
+import { Assignment, Module, Resource, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ResourceItem from '@/components/item-cards/ResourceItem'
@@ -52,7 +52,7 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
   }, [user, assignment_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+    {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}
     {!loading && assignment && <>
@@ -105,7 +105,7 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0 justify-between">
             <CardTitle>Resources</CardTitle>
-            {user?.role == 'admin' && (
+            {user?.role == UserRole.admin && (
               <Dialog open={addingResource} onOpenChange={setAddingResource}>
                 <DialogTrigger><Button>Add Resource</Button></DialogTrigger>
                 <DialogContent>

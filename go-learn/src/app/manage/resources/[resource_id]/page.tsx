@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DialogHeader } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Resource, Section, Unit, Upload, User } from '~/prisma/generated/client'
+import { Resource, Section, Unit, Upload, User, UserRole } from '~/prisma/generated/client'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -59,7 +59,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
   }, [user, resource_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+    {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}
     {!loading && resource && <>

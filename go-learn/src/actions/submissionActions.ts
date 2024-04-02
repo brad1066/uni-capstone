@@ -26,3 +26,10 @@ export async function deleteSubmission(id: string) {
 
   return {deleted, deletedUpload}
 }
+
+export async function getSubmission(assignmentId: string, submissionId: string) {
+  return await prisma.submission.findUnique({
+    where: { id: submissionId },
+    include: { upload: true }
+  })
+}

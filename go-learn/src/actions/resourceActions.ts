@@ -31,7 +31,7 @@ export async function getResources(username: string = '',roles: UserRole[] = [])
 
 export async function deleteResource(id: string) {
   const session = await getCurrentUserSession()
-  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
+  if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) return undefined
   return await prisma.resource.delete({ where: { id } }) ?? undefined
 }
 
@@ -39,7 +39,7 @@ export async function createResource({ title, description = '', unitId }: Resour
   if (!unitId && !sectionId && !assignmentId) return undefined
 
   const session = await getCurrentUserSession()
-  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
+  if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) return undefined
 
   return await prisma.resource.create({
     data: {
@@ -65,14 +65,14 @@ export async function getUnitResources(unitId: string) {
 
 export async function updateResource(id: string, { title, description, content }: Resource) {
   const session = await getCurrentUserSession()
-  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
+  if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) return undefined
 
   return await prisma.resource.update({ where: { id }, data: { title, description, content } }) ?? undefined
 }
 
 export async function updateResourceRemoveSection(id: string, sectionId: string) {
   const session = await getCurrentUserSession()
-  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return undefined
+  if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) return undefined
 
   return await prisma.resource.update({ where: { id }, data: { sections: { disconnect: { id: sectionId } } } }) ?? undefined
 }
@@ -81,6 +81,6 @@ export async function updateResourceRemoveSection(id: string, sectionId: string)
 // export async function removeAllResources() {
 //   const session = await getCurrentUserSession()
 //   await prisma.resource.deleteMany()
-//   if (!session || session.user.role != 'admin') return undefined
+//   if (!session || session.user.role != UserRole.admin) return undefined
 //   return 
 // }

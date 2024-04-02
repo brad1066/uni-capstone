@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { EMPTY_ADDRESS } from '@/lib/utils'
-import { Address, Contact, Course, Module, Student, Teacher, User } from '~/prisma/generated/client'
+import { Address, Contact, Course, Module, Student, Teacher, User, UserRole } from '~/prisma/generated/client'
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -73,12 +73,12 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
       setUser(user as User & { contactDetails?: Contact | null })
       // Use of initialUser state allows stops the initial definition of user at runtime on client
       await setUser(user => { setInitialUser(user); return user })
-      if (user?.role == 'teacher') {
+      if (user?.role == UserRole.teacher) {
         const teacher = await getTeacher(username, ['address'])
         await setTeacher(teacher)
         setHomeAddress(teacher?.address ?? EMPTY_ADDRESS)
       }
-      if (user?.role == 'student') {
+      if (user?.role == UserRole.student) {
         const student = await getStudent(username, ['homeAddress', 'termAddress', 'enrolledCourse', 'modules'])
         setHomeAddress(student?.homeAddress ?? EMPTY_ADDRESS)
         setTermAddress(student?.termAddress ?? EMPTY_ADDRESS)
@@ -89,7 +89,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
   }, [urlParams])
 
   return (<>
-    {!loading && !(loggedInUser?.role == 'admin') && <NoAccessNotice />}
+    {!loading && !(loggedInUser?.role == UserRole.admin) && <NoAccessNotice />}
     {!user && <>
       {username} could not be found in the database. <Button variant={'secondary'} onClick={router?.back}>Go Back</Button>
     </>}
@@ -109,7 +109,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
 
           }} canEdit />
 
-        {user.role == 'admin' && <Card className="flex-1">
+        {user.role == UserRole.admin && <Card className="flex-1">
           <CardHeader><CardTitle>Manage actions</CardTitle></CardHeader>
           <CardContent className="flex flex-col gap-4">
 
@@ -117,7 +117,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
         </Card>}
 
         {/* Teacher Info Card */}
-        {user.role == 'teacher' && <Card className="flex-1">
+        {user.role == UserRole.teacher && <Card className="flex-1">
           <CardHeader><CardTitle>
             <Dialog open={addressEntryOpen} onOpenChange={setAddressEntryOpen}>
               <DialogTrigger asChild>

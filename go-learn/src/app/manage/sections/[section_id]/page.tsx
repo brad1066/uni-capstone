@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Resource, Section, Unit, User } from '~/prisma/generated/client'
+import { Resource, Section, Unit, User, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -53,7 +53,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
   }, [user, section_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+    {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}
     {!loading && section && <>

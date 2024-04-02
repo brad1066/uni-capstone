@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Course, Module, Student, Teacher, Unit, User } from '~/prisma/generated/client'
+import { Assignment, Course, Module, Student, Teacher, Unit, User, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AssignmentItem from '@/components/item-cards/AssignmentItem'
@@ -70,7 +70,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
   }, [user, module_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <>
+    {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}
     {!loading && module && <>
@@ -122,7 +122,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
             {/* Course Information */}
             <div>
               <h2 className='flex flex-row justify-between mb-2'>Course
-                {user?.role == 'admin' && <Dialog open={assigningCourse} onOpenChange={setAssigningCourse}>
+                {user?.role == UserRole.admin && <Dialog open={assigningCourse} onOpenChange={setAssigningCourse}>
                   <DialogTrigger asChild><Button className="ml-auto">{module.course?.id ? 'Reassign' : 'Assign'}</Button></DialogTrigger>
                   <DialogContent>
                     <DialogHeader><DialogTitle>Assign Course</DialogTitle></DialogHeader>
@@ -162,7 +162,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center gap-2 space-y-0 justify-between">
             <CardTitle>Teachers</CardTitle>
-            {user?.role == 'admin' && <Dialog open={addingTeacher} onOpenChange={setAddingTeacher}>
+            {user?.role == UserRole.admin && <Dialog open={addingTeacher} onOpenChange={setAddingTeacher}>
               <DialogTrigger><Button>Add Teacher</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Add Teacher</DialogTitle></DialogHeader>
@@ -252,7 +252,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
                 <AssignmentItem
                   key={assignment.id}
                   assignment={assignment}
-                  editable={user?.role == 'admin' || user?.role == 'teacher'}
+                  editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                   onDelete={async () => {
                     deleteAssignment(assignment.id)
                       .then(refreshModuleData)

@@ -5,7 +5,7 @@ import NotFoundPage from '@/app/not-found'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Course, Module } from '~/prisma/generated/client'
+import { Course, Module, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -58,7 +58,7 @@ export default function ViewCoursePage({ params: { course_id } }: ViewCoursePage
                     key={module.id}
                     module={module}
                     className='max-w-fit min-w-sm'
-                    editable={user?.role == 'admin' || user?.role == 'teacher'}
+                    editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                     onClick={() => { router.push(`/view/modules/${module.id}`) }} />
                 ))}
               </ul>

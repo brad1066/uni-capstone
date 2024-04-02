@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation'
 import { ThemeToggler } from '../ui/ThemeToggler'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { UserRole } from '~/prisma/generated/client'
 
 type UserDropdownProps = {
   className?: string
@@ -48,7 +49,7 @@ export function UserDropdown({ className }: UserDropdownProps) {
 
         <DropdownMenuGroup>
           {/* Stuff Admin can do in this group */}
-          {(user?.role == 'admin') && (<>
+          {(user?.role == UserRole.admin) && (<>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Users</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
@@ -62,11 +63,11 @@ export function UserDropdown({ className }: UserDropdownProps) {
             <DropdownMenuItem><Link href="/manage/courses" className="w-full">Courses</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Teachers can do in this group */}
-          {(user?.role == 'teacher') && (<>
+          {(user?.role == UserRole.teacher) && (<>
             <DropdownMenuItem><Link href="/" className="w-full">Dashboard</Link></DropdownMenuItem>
           </>)}
           {/* Stuff Students can do in this group */}
-          {(user?.role == 'student') && (<>
+          {(user?.role == UserRole.student) && (<>
             <DropdownMenuItem><Link href="/" className="w-full">Dashboard</Link></DropdownMenuItem>
           </>)}
         </DropdownMenuGroup>

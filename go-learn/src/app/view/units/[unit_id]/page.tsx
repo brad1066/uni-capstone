@@ -7,7 +7,7 @@ import ResourceItem from '@/components/item-cards/ResourceItem'
 import SectionItem from '@/components/item-cards/SectionItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Unit, Module, Resource, Section } from '~/prisma/generated/client'
+import { Unit, Module, Resource, Section, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -55,7 +55,7 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
               {unit?.module ? (
                 <ModuleItem
                   module={unit.module}
-                  editable={user?.role == 'admin' || user?.role == 'teacher'}
+                  editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                   onClick={() => { router.push(`/view/modules/${module.id}`) }} />
               )
                 : 'Not assigned to a module'}
@@ -74,7 +74,7 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
                       <SectionItem
                         key={section.id}
                         section={section}
-                        editable={user?.role == 'admin' || user?.role == 'teacher'}
+                        editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                         onClick={() => { router.push(`/view/sections/${section.id}`) }} />
                     ))}
                   </ul>
@@ -95,7 +95,7 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
                       <ResourceItem
                         key={resource.id}
                         resource={resource}
-                        editable={user?.role == 'admin' || user?.role == 'teacher'}
+                        editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                         onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
                     ))}
                   </ul>

@@ -59,7 +59,7 @@ export async function createCourse({ title, description = '', websiteURL = '' }:
 
 export async function deleteCourse(id: string) {
   const session = await getCurrentUserSession()
-  if (!session || session.user?.role != 'admin') return null
+  if (!session || session.user?.role != UserRole.admin) return null
 
   const deleted = await prisma.course.delete({ where: { id } })
 

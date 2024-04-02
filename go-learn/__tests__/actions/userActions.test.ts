@@ -1,4 +1,4 @@
-import { Contact, User, UserVerification } from '~/prisma/generated/client'
+import { Contact, User, UserRole, UserVerification } from '~/prisma/generated/client'
 import { prismaMock } from '../../prismaMock'
 import { changePassword, checkLoginCredentials, createUser, deleteUser, getUser, getUsers, getUsersByRole, updatePasswordWithCode, updateUser } from '@/actions/userActions'
 
@@ -20,7 +20,7 @@ describe('userActions', () => {
       const user = {
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       } as User
 
       prismaMock.user.create.mockResolvedValue({
@@ -29,7 +29,7 @@ describe('userActions', () => {
         surname: 'User',
         middleNames: '',
         letters: '',
-        role: 'admin',
+        role: UserRole.admin,
         password: 'hashedPassword'
       } as User)
 
@@ -46,7 +46,7 @@ describe('userActions', () => {
       const user = {
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
         contactDetails: {
           mobile: '01234567890',
         },
@@ -60,7 +60,7 @@ describe('userActions', () => {
         surname: 'User',
         middleNames: '',
         letters: '',
-        role: 'admin',
+        role: UserRole.admin,
         password: 'hashedPassword'
       } as User)
     
@@ -80,7 +80,7 @@ describe('userActions', () => {
         surname: 'User',
         middleNames: '',
         letters: '',
-        role: 'admin',
+        role: UserRole.admin,
         password: 'hashedPassword',
         contactId: 'contactId',
       })
@@ -99,7 +99,7 @@ describe('userActions', () => {
         middleNames: '',
         surname: 'User',
         letters: '',
-        role: 'admin',
+        role: UserRole.admin,
         contactId: 'contactId',
       })
     })
@@ -108,7 +108,7 @@ describe('userActions', () => {
       const user = {
         forename: 'Test',
         surname: 'User',
-        role: 'student',
+        role: UserRole.student,
       } as User
 
       // Initial user creation
@@ -118,7 +118,7 @@ describe('userActions', () => {
         surname: 'User',
         middleNames: '',
         letters: '',
-        role: 'student',
+        role: UserRole.student,
         password: 'hashedPassword'
       } as User)
 
@@ -132,7 +132,7 @@ describe('userActions', () => {
           surname: 'User',
           middleNames: '',
           letters: '',
-          role: 'student',
+          role: UserRole.student,
           password: 'hashedPassword'
         }
       })
@@ -142,7 +142,7 @@ describe('userActions', () => {
         username: 'tu12345',
         middleNames: '',
         letters: '',
-        role: 'student',
+        role: UserRole.student,
         password: 'hashedPassword',
       })
     })
@@ -151,7 +151,7 @@ describe('userActions', () => {
       const user = {
         forename: 'Test',
         surname: 'User',
-        role: 'teacher',
+        role: UserRole.teacher,
       } as User
 
       // Initial user creation
@@ -161,7 +161,7 @@ describe('userActions', () => {
         surname: 'User',
         middleNames: '',
         letters: '',
-        role: 'teacher',
+        role: UserRole.teacher,
         password: 'hashedPassword'
       } as User)
 
@@ -175,7 +175,7 @@ describe('userActions', () => {
           surname: 'User',
           middleNames: '',
           letters: '',
-          role: 'teacher',
+          role: UserRole.teacher,
           password: 'hashedPassword'
         }
       })
@@ -185,7 +185,7 @@ describe('userActions', () => {
         username: 'tu12345',
         middleNames: '',
         letters: '',
-        role: 'teacher',
+        role: UserRole.teacher,
         password: 'hashedPassword',
       })
     })
@@ -195,7 +195,7 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       } as User
 
       prismaMock.user.create.mockRejectedValue(new Error('User already exists'))
@@ -222,7 +222,7 @@ describe('userActions', () => {
       username: 'tu12345',
       forename: 'Test',
       surname: 'User',
-      role: 'admin',
+      role: UserRole.admin,
     } as User
 
     it('should return a user', async () => {
@@ -236,7 +236,7 @@ describe('userActions', () => {
       prismaMock.user.findUnique.mockResolvedValue(user)
       prismaMock.$transaction.mockResolvedValue([{user, cookieValue: 'cookie'}, {...user}])
 
-      await expect(getUser('tu12345', [], ['admin'])).resolves.toEqual(user)
+      await expect(getUser('tu12345', [], [UserRole.admin])).resolves.toEqual(user)
     })
 
     it('should return undefined when the current user does not have the correct role', async () => {
@@ -244,7 +244,7 @@ describe('userActions', () => {
 
       prismaMock.$transaction.mockResolvedValue([{user, cookieValue: 'cookie'}, {...user}])
 
-      await expect(getUser('tu12345', [], ['teacher'])).resolves.toBeUndefined()
+      await expect(getUser('tu12345', [], [UserRole.teacher])).resolves.toBeUndefined()
     })
   })
 
@@ -259,13 +259,13 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       },
       {
         username: 'tu12346',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       },
     ] as User[]
     it('should return all users', async () => {
@@ -279,14 +279,14 @@ describe('userActions', () => {
       prismaMock.user.findMany.mockResolvedValue(users)
       prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
 
-      await expect(getUsers(['admin'])).resolves.toEqual(users)
+      await expect(getUsers([UserRole.admin])).resolves.toEqual(users)
     })
 
     it('should return no users if current user does not have specific role', async () => {
       prismaMock.user.findMany.mockResolvedValue(users)
       prismaMock.$transaction.mockResolvedValue([{user: users[0], cookieValue: 'cookie'}, users])
 
-      await expect(getUsers(['teacher'])).resolves.toEqual([])
+      await expect(getUsers([UserRole.teacher])).resolves.toEqual([])
     })
   })
 
@@ -303,28 +303,28 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'teacher',
+        role: UserRole.teacher,
       },
       {
         username: 'tu12346',
         forename: 'Test',
         surname: 'User',
-        role: 'student',
+        role: UserRole.student,
       },
       {
-        username: 'admin',
+        username: UserRole.admin,
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       },
     ]
 
     beforeEach(() => {
       prismaMock.$transaction.mockResolvedValue([
         { user: users[0], cookieValue: 'cookie' },
-        users.filter(user => user.role == 'admin'),
-        users.filter(user => user.role == 'teacher'),
-        users.filter(user => user.role == 'student'),
+        users.filter(user => user.role == UserRole.admin),
+        users.filter(user => user.role == UserRole.teacher),
+        users.filter(user => user.role == UserRole.student),
       ])
     })
 
@@ -333,15 +333,15 @@ describe('userActions', () => {
     })
 
     it('should return all admin when requests', async () => {
-      await expect(getUsersByRole(['admin'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'admin')))
+      await expect(getUsersByRole([UserRole.admin])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == UserRole.admin)))
     })
 
     it('should return all teachers when requests', async () => {
-      await expect(getUsersByRole(['teacher'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'teacher')))
+      await expect(getUsersByRole([UserRole.teacher])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == UserRole.teacher)))
     })
 
     it('should return all students when requests', async () => {
-      await expect(getUsersByRole(['student'])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == 'student')))
+      await expect(getUsersByRole([UserRole.student])).resolves.toEqual(expect.arrayContaining(users.filter(user => user.role == UserRole.student)))
     })
 
     it('should return [] if the user is not signed in', async () => {
@@ -361,7 +361,7 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       } as User
 
       prismaMock.user.findFirst.mockResolvedValue(user)
@@ -395,7 +395,7 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       } as User
 
       prismaMock.user.update.mockResolvedValue(user)
@@ -412,11 +412,11 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
       } as User
       prismaMock.userSession.findFirst.mockResolvedValue({user: {
         username: 'tu12346',
-        role: 'teacher',
+        role: UserRole.teacher,
       }})
       prismaMock.user.update.mockResolvedValue(null)
 
@@ -428,12 +428,12 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'teacher',
+        role: UserRole.teacher,
       } as User
 
       prismaMock.userSession.findFirst.mockResolvedValue({user: {
         username: 'tu12345',
-        role: 'teacher',
+        role: UserRole.teacher,
       }})
       prismaMock.user.update.mockResolvedValue(user)
 
@@ -452,7 +452,7 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
         password: 'newHashedPassword',
       }
 
@@ -470,7 +470,7 @@ describe('userActions', () => {
         username: 'tu12345',
         forename: 'Test',
         surname: 'User',
-        role: 'admin',
+        role: UserRole.admin,
         password: 'newHashedPassword',
       } as User
 
@@ -491,7 +491,7 @@ describe('userActions', () => {
       username: 'tu12345',
       forename: 'Test',
       surname: 'User',
-      role: 'admin',
+      role: UserRole.admin,
       password: 'newHashedPassword',
     }
 
@@ -530,7 +530,7 @@ describe('userActions', () => {
       username: 'tu12345',
       forename: 'Test',
       surname: 'User',
-      role: 'admin',
+      role: UserRole.admin,
     }
     it('should delete a user', async () => {
 
@@ -543,7 +543,7 @@ describe('userActions', () => {
 
       prismaMock.userSession.findFirst.mockResolvedValue({user: {
         username: 'tu12345',
-        role: 'teacher',
+        role: UserRole.teacher,
       }})
 
       await expect(deleteUser(user)).resolves.toBeUndefined()

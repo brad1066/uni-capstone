@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Unit, Module, Resource, Section } from '~/prisma/generated/client'
+import { Unit, Module, Resource, Section, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -53,7 +53,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
   }, [user, unit_id])
 
   return (<>
-    {!loading && !(user?.role == 'admin' || user?.role == 'teacher') && <NoAccessNotice />}
+    {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <NoAccessNotice />}
     {!loading && unit && <>
       <h1 className="mb-[2rem]">{unit.title}</h1>
       <div className="grid gap-[2rem] w-full xl:grid-cols-2">

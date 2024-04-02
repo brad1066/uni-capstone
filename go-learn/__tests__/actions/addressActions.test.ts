@@ -1,4 +1,4 @@
-import { Address } from '~/prisma/generated/client'
+import { Address, UserRole } from '~/prisma/generated/client'
 import { prismaMock } from '../../prismaMock'
 import { createStudentAddress, createTeacherAddress, updateAddress, updateAddresses } from '@/actions/addressActions'
 
@@ -17,6 +17,7 @@ describe('addressActions', () => {
      * it: should return undefined if the address is not created
      */
     const address: Address = {
+      id: 'addressId',
       addressLine1: '123 Fake Street',
       addressLine2: 'Apartment 4',
       town: 'Fake Town',
@@ -45,17 +46,17 @@ describe('addressActions', () => {
 
     it('should return undefined if the user is not logged in', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce(null)    
-      await expect(createTeacherAddress('teacherId', address, ['admin'])).resolves.toBeUndefined()
+      await expect(createTeacherAddress('teacherId', address, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the user is not an admin', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce({
         user: {
           username: 'test',
-          role: 'student',
+          role: UserRole.student,
         }
       })    
-      await expect(createTeacherAddress('teacherId', address, ['admin'])).resolves.toBeUndefined()
+      await expect(createTeacherAddress('teacherId', address, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the address is not created', async () => {
@@ -73,6 +74,7 @@ describe('addressActions', () => {
      * it: should return undefined if the address is not created
      */
     const address: Address = {
+      id: 'addressId',
       addressLine1: '123 Fake Street',
       addressLine2: 'Apartment 4',
       town: 'Fake Town',
@@ -120,17 +122,17 @@ describe('addressActions', () => {
 
     it('should return undefined if the user is not logged in', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce(null)    
-      await expect(createStudentAddress('studentId', address, true, ['admin'])).resolves.toBeUndefined()
+      await expect(createStudentAddress('studentId', address, true, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the user is not an admin', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce({
         user: {
           username: 'test',
-          role: 'student',
+          role: UserRole.student,
         }
       })    
-      await expect(createStudentAddress('studentId', address, true, ['admin'])).resolves.toBeUndefined()
+      await expect(createStudentAddress('studentId', address, true, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the address is not created', async () => {
@@ -174,11 +176,11 @@ describe('addressActions', () => {
 
     it('should return undefined if the user is not logged in', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce(null)    
-      await expect(updateAddress(address, ['admin'])).resolves.toBeUndefined()
+      await expect(updateAddress(address, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the user is not an admin', async () => { 
-      await expect(updateAddress(address, ['admin'])).resolves.toBeUndefined()
+      await expect(updateAddress(address, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the address is not updated', async () => {
@@ -220,17 +222,17 @@ describe('addressActions', () => {
 
     it('should return undefined if the user is not logged in', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce(null)    
-      await expect(updateAddresses(addresses, ['admin'])).resolves.toBeUndefined()
+      await expect(updateAddresses(addresses, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the user is not an admin', async () => {
       prismaMock.userSession.findFirst.mockResolvedValueOnce({
         user: {
           username: 'test',
-          role: 'student',
+          role: UserRole.student,
         }
       })    
-      await expect(updateAddresses(addresses, ['admin'])).resolves.toBeUndefined()
+      await expect(updateAddresses(addresses, [UserRole.admin])).resolves.toBeUndefined()
     })
 
     it('should return undefined if the addresses are not updated', async () => {

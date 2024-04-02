@@ -12,7 +12,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons'
 import { Separator } from '../ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { cn } from '@/lib/utils'
-import { Contact, User } from '~/prisma/generated/client'
+import { Contact, User, UserRole } from '~/prisma/generated/client'
 
 type NewUserFormProps = {
   className?: string
@@ -58,7 +58,7 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
             middleNames: values.middleNames ?? null,
             surname: values.surname,
             letters: values.letters ?? null,
-            role: values.role as 'student' | 'teacher' | 'admin',
+            role: values.role as UserRole,
             contactId: null,
             contactDetails: { id: '', label: '', mobile: values.contactMobile ?? null, email: values.contactEmail ?? null }
           }
@@ -195,9 +195,9 @@ const NewUserForm = ({ className, submitUser, disabled }: NewUserFormProps) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='student'>Student</SelectItem>
-                  <SelectItem value='teacher'>Teacher</SelectItem>
-                  <SelectItem value='admin'>Admin</SelectItem>
+                  <SelectItem value={UserRole.student}>Student</SelectItem>
+                  <SelectItem value={UserRole.teacher}>Teacher</SelectItem>
+                  <SelectItem value={UserRole.admin}>Admin</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

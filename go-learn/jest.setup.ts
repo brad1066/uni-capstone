@@ -39,7 +39,7 @@
 //   jest.clearAllMocks()
   
 //   // @ts-expect-error - This is a mock
-//   prismaMock.userSession.findFirst.mockResolvedValue({user: {username: 'test', role: 'admin',}})
+//   prismaMock.userSession.findFirst.mockResolvedValue({user: {username: 'test', role: UserRole.admin,}})
 // })
 
 // afterAll(() => {

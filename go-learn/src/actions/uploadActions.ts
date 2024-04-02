@@ -1,6 +1,6 @@
 'use server'
 
-import { Upload } from '~/prisma/generated/client'
+import { Upload, UserRole } from '~/prisma/generated/client'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
 
@@ -20,7 +20,7 @@ export async function getUploads() {
 
 export async function deleteUpload(id: string) {
   const session = await getCurrentUserSession()
-  if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) { return undefined }
+  if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) { return undefined }
   return await prisma.upload.delete({ where: { id } }) ?? undefined
 }
 

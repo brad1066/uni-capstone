@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Module, Resource, Submission } from '~/prisma/generated/client'
+import { Assignment, Module, Resource, Submission, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ResourceItem from '@/components/item-cards/ResourceItem'
@@ -91,7 +91,7 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                 <ModuleItem
                   className='max-w-fit min-w-sm'
                   module={assignment.module}
-                  editable={(user?.role == 'admin' || user?.role == 'teacher')} />
+                  editable={(user?.role == UserRole.admin || user?.role == UserRole.teacher)} />
               )
                 : 'No Module'}
 
@@ -110,7 +110,7 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                     key={resource.id}
                     resource={resource}
                     className='max-w-fit min-w-sm'
-                    editable={(user?.role == 'admin' || user?.role == 'teacher')}
+                    editable={(user?.role == UserRole.admin || user?.role == UserRole.teacher)}
                     onClick={() => router.push(`/view/resources/${resource.id}`)} />
                 ))}
               </ul>
@@ -119,61 +119,100 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
           </CardContent>
         </Card>
 
-        {/* My Submissions Card */}
-        <Card className="w-full">
-          <CardHeader className='flex flex-row justify-between items-center'>
-            <CardTitle>My Submissions</CardTitle>
-            <Dialog open={addingSubmission} onOpenChange={setAddingSubmission}>
-              <DialogTrigger asChild><Button>Add Submission</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Add Submission</DialogTitle></DialogHeader>
-                <p>Coming soon...</p>
-                <NewSubmissionForm submitSubmission={(title, file) => {
-                  if (!(title && file && user)) { return }
-                  supabase.storage
-                    .from('golearn-uploads')
-                    .upload(`assignments/${assignment.id}/submissions/${user.username}/${file.name}`, file)
-                    .then(async ({ data, error }) => {
-                      if (error) { throw error }
-                      const publicURL = (await supabase.storage.from('golearn-uploads').getPublicUrl(data.path)).data.publicUrl
-                      if (!publicURL) { throw 'File not uploaded correctly' }
-                      const upload = await createUpload({ id: '', title: file.name, path: data.path, publicURL, resourceId: null })
-                      if (!upload) { throw 'Upload process was interrupted. Please try again' }
+        {/* My Submissions Card - Students only */}
+        {
+          user?.role == UserRole.student && <>
+            <Card className="w-full">
+              <CardHeader className='flex flex-row justify-between items-center'>
+                <CardTitle>My Submissions</CardTitle>
+                <Dialog open={addingSubmission} onOpenChange={setAddingSubmission}>
+                  <DialogTrigger asChild><Button>Add Submission</Button></DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader><DialogTitle>Add Submission</DialogTitle></DialogHeader>
+                    <p>Coming soon...</p>
+                    <NewSubmissionForm submitSubmission={(title, file) => {
+                      if (!(title && file && user)) { return }
 
-                      await createSubmission(upload.id, assignment.id, title)
-                    })
-                    .catch(console.error)
-                    .then(refreshAssignmentData)
-                    .then(() => setAddingSubmission(false))
-                }} />
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent>
-            {
-              assignment?.submissions?.length
-                ? (<ul className='flex gap-2 flex-row flex-wrap'>
-                  {assignment.submissions?.map?.(submission => (
-                    <SubmissionItem
-                      key={submission.id}
-                      submission={submission}
-                      className='max-w-fit min-w-sm'
-                      onDelete={async () => {
-                        deleteSubmission(submission.id)
-                          .then((resp) => {
-                            if (!resp?.deletedUpload) { return }
-                            supabase.storage
-                              .from('golearn-resources')
-                              .remove([resp.deletedUpload.path])
-                          })
-                          .then(refreshAssignmentData)
-                      }} />
-                  ))}
-                </ul>)
-                : <p>No Submissions</p>
-            }
-          </CardContent>
-        </Card>
+                      supabase.storage
+                        .from('golearn-uploads')
+                        .upload(`assignments/${assignment.id}/submissions/${user.username}/${file.name}`, file)
+                        .then(async ({ data, error }) => {
+                          if (error) { throw error }
+                          const publicURL = (await supabase.storage.from('golearn-uploads').getPublicUrl(data.path)).data.publicUrl
+                          if (!publicURL) { throw 'File not uploaded correctly' }
+                          const upload = await createUpload({ id: '', title: file.name, path: data.path, publicURL, resourceId: null })
+                          if (!upload) { throw 'Upload process was interrupted. Please try again' }
+
+                          await createSubmission(upload.id, assignment.id, title)
+                        })
+                        .catch(console.error)
+                        .then(refreshAssignmentData)
+                        .then(() => setAddingSubmission(false))
+                    }} />
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent>
+                {
+                  assignment?.submissions?.length
+                    ? (<ul className='flex gap-2 flex-row flex-wrap'>
+                      {assignment.submissions?.map?.(submission => (
+                        <SubmissionItem
+                          key={submission.id}
+                          submission={submission}
+                          className='max-w-fit min-w-sm'
+                          onDelete={async () => {
+                            deleteSubmission(submission.id)
+                              .then((resp) => {
+                                if (!resp?.deletedUpload) { return }
+                                supabase.storage
+                                  .from('golearn-resources')
+                                  .remove([resp.deletedUpload.path])
+                              })
+                              .then(refreshAssignmentData)
+                          }} />
+                      ))}
+                    </ul>)
+                    : <p>No Submissions</p>
+                }
+              </CardContent>
+            </Card>
+          </>
+        }
+
+        {/* Submissions Card - Teachers and admin only */}
+        {
+          (user?.role == UserRole.teacher || user?.role == UserRole.admin) && <>
+            <Card className="w-full">
+              <CardHeader><CardTitle>Submissions</CardTitle></CardHeader>
+              <CardContent>
+                {
+                  assignment?.submissions?.length
+                    ? (<ul className='flex gap-2 flex-row flex-wrap'>
+                      {assignment.submissions?.map?.(submission => (
+                        <SubmissionItem
+                          key={submission.id}
+                          submission={submission}
+                          className='max-w-fit min-w-sm'
+                          onDelete={async () => {
+                            deleteSubmission(submission.id)
+                              .then((resp) => {
+                                if (!resp?.deletedUpload) { return }
+                                supabase.storage
+                                  .from('golearn-resources')
+                                  .remove([resp.deletedUpload.path])
+                              })
+                              .then(refreshAssignmentData)
+                          }} />
+                      ))}
+                    </ul>)
+                    : <p>No Submissions</p>
+                }
+              </CardContent>
+            </Card>
+          </>
+        }
+        
       </div>
     </>}
   </>

@@ -73,7 +73,7 @@ export async function createModule({ title, description = '', websiteURL = '' }:
 
 export async function deleteModule(id: string) {
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != 'admin') return null
+  if (!session || session.user.role != UserRole.admin) return null
 
   const deleted = await prisma.module.delete({ where: { id } })
 
@@ -89,14 +89,14 @@ export async function updateModule(module: Module, roles: UserRole[] = []) {
 
 export async function removeModuleTeacher(moduleId: string, teacherId: string) {
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != 'admin') return null
+  if (!session || session.user.role != UserRole.admin) return null
 
   return await prisma.module.update({ where: { id: moduleId }, data: { teachers: { disconnect: { id: teacherId } } } })
 }
 
 export async function addModuleTeacher(moduleId: string, teacherId: string) {
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != 'admin') return null
+  if (!session || session.user.role != UserRole.admin) return null
 
   return await prisma.module.update({ where: { id: moduleId }, data: { teachers: { connect: { id: teacherId } } } })
 }

@@ -17,7 +17,7 @@ import { sendWelcomeEmail } from './emailActions'
 
 export async function createUser(userInfo: User & { contactDetails?: Contact }){
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != 'admin') { return undefined }
+  if (!session || session.user.role != UserRole.admin) { return undefined }
   const rNum = Math.floor((Math.random()) * 100000)
   let user = await prisma.user.create({
     data: {
@@ -45,14 +45,14 @@ export async function createUser(userInfo: User & { contactDetails?: Contact }){
     }
   }
 
-  if (user?.role == 'teacher') {
+  if (user?.role == UserRole.teacher) {
     await prisma.teacher.create({
       data: { username: user.username },
       select: { user: true }
     }).then(teacher => { user = teacher.user })
   }
 
-  if (user?.role == 'student') {
+  if (user?.role == UserRole.student) {
     await prisma.student.create({
       data: { username: user.username },
       select: { user: true }
@@ -92,15 +92,15 @@ export async function getUsersByRole(roles: UserRole[] = []) {
   const [session, admin, teachers, students] = await prisma.$transaction([
     prisma.userSession.findFirst({ where: { cookieValue: authCookie?.value }, select: { user: true } }),
     prisma.user.findMany({
-      where: { role: 'admin' },
+      where: { role: UserRole.admin },
       take: 5
     }),
     prisma.user.findMany({
-      where: { role: 'teacher' },
+      where: { role: UserRole.teacher },
       take: 5
     }),
     prisma.user.findMany({
-      where: { role: 'student' },
+      where: { role: UserRole.student },
       take: 5
     })
   ])
@@ -108,9 +108,9 @@ export async function getUsersByRole(roles: UserRole[] = []) {
 
   const users: User[] = []
   if (roles.length == 0) { return [...admin, ...teachers, ...students] }
-  if (roles.includes('admin')) { users.push(...admin) }
-  if (roles.includes('teacher')) { users.push(...teachers) }
-  if (roles.includes('student')) { users.push(...students) }
+  if (roles.includes(UserRole.admin)) { users.push(...admin) }
+  if (roles.includes(UserRole.teacher)) { users.push(...teachers) }
+  if (roles.includes(UserRole.student)) { users.push(...students) }
   return users
 }
 
@@ -149,13 +149,13 @@ export async function checkLoginCredentials(username: string, password: string) 
 export async function updateUser({ username, forename, middleNames, surname, title, letters }: User) {
   if (!username) { return null }
   const session = await getCurrentUserSession()
-  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return null }
+  if (!(session?.user?.username == username || session?.user?.role == UserRole.admin)) { return null }
   return await prisma.user.update({ where: { username }, data: { forename, middleNames, surname, title, letters } })
 }
 
 export async function changePassword(username: string, password: string) {
   const session = await getCurrentUserSession()
-  if (!(session?.user?.username == username || session?.user?.role == 'admin')) { return null }
+  if (!(session?.user?.username == username || session?.user?.role == UserRole.admin)) { return null }
 
   return prisma.user.update({
     where: { username },
@@ -167,7 +167,7 @@ export async function changePassword(username: string, password: string) {
 
 export async function deleteUser(user: User) {
   const session = await getCurrentUserSession()
-  if (!(session?.user?.role == 'admin')) { return undefined }
+  if (!(session?.user?.role == UserRole.admin)) { return undefined }
 
   return await prisma.$transaction([
     prisma.userSession.deleteMany({ where: { username: user.username } }),

@@ -9,7 +9,7 @@ import NewCourseForm from '@/components/forms/NewCourseForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/useAuth'
-import { Course } from '~/prisma/generated/client'
+import { Course, UserRole } from '~/prisma/generated/client'
 import { PlusIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -37,8 +37,8 @@ export default function CoursesManagePage() {
 
   return (
     <>
-      {(!loading && user?.role != 'admin') && <NoAccessNotice />}
-      {!loading && user?.role == 'admin' && <>
+      {(!loading && user?.role != UserRole.admin) && <NoAccessNotice />}
+      {!loading && user?.role == UserRole.admin && <>
         <h1 className="mb-[1rem] flex gap-4 items-center">All Courses
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild><Button variant="secondary" className='bg-card border shadow'>New<PlusIcon className="ml-1" /></Button></DialogTrigger>

@@ -6,7 +6,7 @@ import ResourceItem from '@/components/item-cards/ResourceItem'
 import UnitItem from '@/components/item-cards/UnitItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Section, Resource, Unit } from '~/prisma/generated/client'
+import { Section, Resource, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -56,7 +56,7 @@ export default function ViewSectionPage({ params: { section_id } }: ViewSectionP
                 {section?.unit ? (
                   <UnitItem
                     unit={section.unit}
-                    editable={user?.role == 'admin' || user?.role == 'teacher'}
+                    editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                     onClick={() => { router.push(`/view/units/${section.unitId}`) }} />
                 )
                   : 'Not assigned to a unit'}

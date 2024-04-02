@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers'
 import { getCurrentUserSession } from './authActions'
 import prisma from '@/lib/db'
-import { Unit } from '~/prisma/generated/client'
+import { Unit, UserRole } from '~/prisma/generated/client'
 
 export async function getUnits(moduleId: string = '') {
   const authCookie = cookies().get('auth')
@@ -36,7 +36,7 @@ export async function updateUnit({ id, title, description }: Unit) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await getCurrentUserSession()
-    if (!session || (session.user.role != 'admin' && session.user.role != 'teacher')) return null
+    if (!session || (session.user.role != UserRole.admin && session.user.role != UserRole.teacher)) return null
   }
   return prisma.unit.update({ where: { id }, data: { title, description } }) ?? undefined
 
@@ -46,7 +46,7 @@ export async function deleteUnit(id: string) {
   const authCookie = cookies().get('auth')
   if (authCookie) {
     const session = await getCurrentUserSession()
-    if (!session || session.user.role != 'admin') return null
+    if (!session || session.user.role != UserRole.admin) return null
   }
   return prisma.unit.delete({ where: { id } })
 }
@@ -55,7 +55,7 @@ export async function createUnit({ title, description = '', moduleId }: Unit) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != 'admin') return undefined
+  if (!session || session.user.role != UserRole.admin) return undefined
 
   return await prisma.unit.create({ data: { title, description, moduleId } }) ?? undefined
 }

@@ -7,7 +7,7 @@ import CourseItem from '@/components/item-cards/CourseItem'
 import UnitItem from '@/components/item-cards/UnitItem'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { Assignment, Course, Module, Unit } from '~/prisma/generated/client'
+import { Assignment, Course, Module, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -52,7 +52,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
               {module?.course ? (
                 <CourseItem
                   className='max-w-fit min-w-sm'
-                  editable={user?.role == 'admin'}
+                  editable={user?.role == UserRole.admin}
                   course={module.course}
                   onClick={() => { module?.course && router.push(`/view/courses/${module.course.id}`) }} />
               )
@@ -71,7 +71,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
                       key={assignment.id}
                       assignment={assignment}
                       className='max-w-fit min-w-sm'
-                      editable={user?.role == 'admin' || user?.role == 'teacher'} />
+                      editable={user?.role == UserRole.admin || user?.role == UserRole.teacher} />
                   ))}
                 </div>
               ) : 'No assignments'}
@@ -88,7 +88,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
                     <UnitItem
                       key={unit.id}
                       unit={unit}
-                      editable={user?.role == 'admin' || user?.role == 'teacher'}
+                      editable={user?.role == UserRole.admin || user?.role == UserRole.teacher}
                       className='max-w-fit min-w-sm'
                       onClick={() => { router.push(`/view/units/${unit.id}`) }} />
                   ))}

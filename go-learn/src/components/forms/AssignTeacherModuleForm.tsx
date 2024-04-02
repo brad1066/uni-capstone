@@ -1,7 +1,7 @@
 
 'use client'
 
-import { Teacher, User } from '~/prisma/generated/client'
+import { Teacher, User, UserRole } from '~/prisma/generated/client'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
@@ -34,7 +34,7 @@ export function AssignTeacherModuleForm({ exclude: teacherExclusions, onSave }: 
     (async () => {
       const teachers = await getTeachers()
       setTeachers(teachers)
-      form.resetField('teacher')
+      form.resetField(UserRole.teacher)
     })()
   }, [])
 
@@ -43,7 +43,7 @@ export function AssignTeacherModuleForm({ exclude: teacherExclusions, onSave }: 
       <form onSubmit={(e) => { e.preventDefault(); teacher && onSave?.(teacher) }}>
         <FormField
           control={form.control}
-          name='teacher'
+          name={UserRole.teacher}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Teacher</FormLabel>
