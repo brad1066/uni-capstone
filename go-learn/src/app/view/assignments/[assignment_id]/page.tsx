@@ -38,7 +38,10 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
 
   const refreshAssignmentData = async () => {
     if (user && assignment_id) {
-      getAssignment(assignment_id, ['module', 'resources', 'user.submissions'])
+      const extraFields: string[] = ['module', 'resources']
+      if (user.role == UserRole.student) { extraFields.push('user.submissions') }
+      if (user.role == UserRole.teacher || user.role == UserRole.admin) { extraFields.push('submissions') }
+      getAssignment(assignment_id, extraFields)
         .then((assignment) => {
           if (assignment) {
             setAssignment(assignment)
@@ -118,13 +121,12 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
             }
           </CardContent>
         </Card>
-
-        {/* My Submissions Card - Students only */}
-        {
-          user?.role == UserRole.student && <>
-            <Card className="w-full">
-              <CardHeader className='flex flex-row justify-between items-center'>
-                <CardTitle>My Submissions</CardTitle>
+        
+        <Card className="w-full">
+          <CardHeader className='flex flex-row justify-between items-center'>
+            <CardTitle>Submissions</CardTitle>
+            {
+              user?.role == UserRole.student && (<>
                 <Dialog open={addingSubmission} onOpenChange={setAddingSubmission}>
                   <DialogTrigger asChild><Button>Add Submission</Button></DialogTrigger>
                   <DialogContent>
@@ -151,68 +153,39 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                     }} />
                   </DialogContent>
                 </Dialog>
-              </CardHeader>
-              <CardContent>
-                {
-                  assignment?.submissions?.length
-                    ? (<ul className='flex gap-2 flex-row flex-wrap'>
-                      {assignment.submissions?.map?.(submission => (
-                        <SubmissionItem
-                          key={submission.id}
-                          submission={submission}
-                          className='max-w-fit min-w-sm'
-                          onDelete={async () => {
-                            deleteSubmission(submission.id)
-                              .then((resp) => {
-                                if (!resp?.deletedUpload) { return }
-                                supabase.storage
-                                  .from('golearn-resources')
-                                  .remove([resp.deletedUpload.path])
-                              })
-                              .then(refreshAssignmentData)
-                          }} />
-                      ))}
-                    </ul>)
-                    : <p>No Submissions</p>
-                }
-              </CardContent>
-            </Card>
-          </>
-        }
-
-        {/* Submissions Card - Teachers and admin only */}
-        {
-          (user?.role == UserRole.teacher || user?.role == UserRole.admin) && <>
-            <Card className="w-full">
-              <CardHeader><CardTitle>Submissions</CardTitle></CardHeader>
-              <CardContent>
-                {
-                  assignment?.submissions?.length
-                    ? (<ul className='flex gap-2 flex-row flex-wrap'>
-                      {assignment.submissions?.map?.(submission => (
-                        <SubmissionItem
-                          key={submission.id}
-                          submission={submission}
-                          className='max-w-fit min-w-sm'
-                          onDelete={async () => {
-                            deleteSubmission(submission.id)
-                              .then((resp) => {
-                                if (!resp?.deletedUpload) { return }
-                                supabase.storage
-                                  .from('golearn-resources')
-                                  .remove([resp.deletedUpload.path])
-                              })
-                              .then(refreshAssignmentData)
-                          }} />
-                      ))}
-                    </ul>)
-                    : <p>No Submissions</p>
-                }
-              </CardContent>
-            </Card>
-          </>
-        }
-        
+              </>)
+            }
+          </CardHeader>
+          <CardContent>
+            {
+              assignment?.submissions?.length
+                ? (<ul className='flex gap-2 flex-row flex-wrap'>
+                  {assignment.submissions?.map?.(submission => (<>
+                    {user?.role == UserRole.student ? <SubmissionItem
+                      key={submission.id}
+                      submission={submission}
+                      className='max-w-fit min-w-sm'
+                      onDelete={async () => {
+                        deleteSubmission(submission.id)
+                          .then((resp) => {
+                            if (!resp?.deletedUpload) { return }
+                            supabase.storage
+                              .from('golearn-resources')
+                              .remove([resp.deletedUpload.path])
+                          })
+                          .then(refreshAssignmentData)
+                      }} />
+                      : <SubmissionItem
+                        key={submission.id}
+                        submission={submission}
+                        className='max-w-fit min-w-sm' />
+                    } 
+                  </>))}
+                </ul>)
+                : <p>No Submissions</p>
+            }
+          </CardContent>
+        </Card>
       </div>
     </>}
   </>
