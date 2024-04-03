@@ -16,8 +16,12 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
   return (<>
     <li className={cn('w-full flex justify-between gap-[1rem] items-center border-2 rounded-lg p-[0.5rem]' + (onClick ? ' cursor-pointer' : ''), className)}
       onClick={onClick}
-    >
-      {assignment.title}
+    ><div className='flex flex-col gap-2'>
+        <span>{assignment.title}</span>
+        {assignment?.dueDate && assignment.dueDate.getDay() < new Date().getDay() && (<span className='text-red-400'>Overdue</span>)}
+        {assignment?.dueDate && assignment.dueDate.getDay() == new Date().getDay() && (<span className='text-amber-400'>Due today</span>)}
+        {assignment?.dueDate && assignment.dueDate.getDay() > new Date().getDay() && (<span className='text-green-400'>Due {assignment.dueDate.toLocaleDateString()}</span>)}
+      </div>
       <div className="actions flex gap-1">
         <Link href={`/view/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}
           className={buttonVariants({variant: 'outline', size: 'icon'})}>

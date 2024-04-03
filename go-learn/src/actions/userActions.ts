@@ -165,13 +165,13 @@ export async function changePassword(username: string, password: string) {
   })
 }
 
-export async function deleteUser(user: User) {
+export async function deleteUser(username: string) {
   const session = await getCurrentUserSession()
   if (!(session?.user?.role == UserRole.admin)) { return undefined }
 
   return await prisma.$transaction([
-    prisma.userSession.deleteMany({ where: { username: user.username } }),
-    prisma.user.delete({ where: { username: user.username } })
+    prisma.userSession.deleteMany({ where: { username} }),
+    prisma.user.delete({ where: { username } })
   ])
 }
 
@@ -197,3 +197,26 @@ export async function updatePasswordWithCode(authKey: string, authVal: string, p
 
   return { success: true, message: 'Password updated successfully' }
 }
+
+// export async function createAdminUser() {
+//   const session = await getCurrentUserSession()
+//   // if (!(session?.user?.role == UserRole.admin)) { return undefined }
+
+//   return await prisma.user.create({
+//     data: {
+//       username: 'bradmin',
+//       title: 'Mr',
+//       forename: 'Bradley',
+//       surname: 'Hastings',
+//       role: UserRole.admin,
+//       password: await bcrypt.hash('changeme', 10),
+//       contactDetails: {
+//         create: {
+//           email: 'bradleybeasley2000@gmail.com',
+//           mobile: '07712345678',
+//           label: 'primary'
+//         }
+//       }
+//     }
+//   })
+// }

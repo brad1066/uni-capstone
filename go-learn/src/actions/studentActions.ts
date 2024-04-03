@@ -27,11 +27,21 @@ export async function getStudent(username: string, extraFields: string[] = [], r
 } | undefined> {
   const authCookie = cookies().get('auth')
   if (authCookie) {
+    const today: Date = new Date()
+    today.setHours(0, 0, 0, 0)
     const [session, student] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
       prisma.student.findUnique({
-        where: { username }, include: {
-          modules: extraFields.includes('modules'),
+        where: { username },
+        include: {
+          modules: extraFields.includes('modules') || extraFields.includes('assignmentsDue') ? {
+            include: {
+              assignments: extraFields.includes('assignmentsDue') ? {
+                where: { dueDate: { gte: today } },
+                orderBy: { dueDate: 'asc' },
+              }: false
+            }
+          } : false,
           homeAddress: extraFields.includes('homeAddress'),
           termAddress: extraFields.includes('termAddress'),
           enrolledCourse: extraFields.includes('enrolledCourse'),
@@ -45,6 +55,7 @@ export async function getStudent(username: string, extraFields: string[] = [], r
   }
   return undefined
 }
+
 
 export async function removeStudentModule(studentId: string, moduleId: string) {
   const authCookie = cookies().get('auth')

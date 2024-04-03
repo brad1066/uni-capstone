@@ -14,6 +14,7 @@ export async function getCurrentUserSession() {
 
 export async function requestUserPasswordChange(username:string) {
   const user = await prisma.user.findUnique({where: {username}, include: {contactDetails: true}})
+  console.log(user)
   if (!user) { return false }
   const verification = await prisma.userVerification.create({
     data: {

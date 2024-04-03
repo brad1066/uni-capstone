@@ -27,9 +27,16 @@ export async function deleteSubmission(id: string) {
   return {deleted, deletedUpload}
 }
 
-export async function getSubmission(assignmentId: string, submissionId: string) {
+export async function getSubmission(submissionId: string) {
   return await prisma.submission.findUnique({
     where: { id: submissionId },
+    include: { upload: true }
+  })
+}
+
+export async function getSubmissions(assignmentId?: string) {
+  return await prisma.submission.findMany({
+    where: { assignmentId },
     include: { upload: true }
   })
 }

@@ -164,6 +164,7 @@ model Submission {
   author         User?      @relation(fields: [authorUsername], references: [username], onDelete: SetNull)
   assignment     Assignment @relation(fields: [assignmentId], references: [id])
   upload         Upload     @relation(fields: [uploadId], references: [id])
+  uploadedAt     DateTime   @default(now())
   // Auto Gen
   authorUsername String?
   assignmentId   String
