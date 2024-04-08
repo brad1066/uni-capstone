@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { UserRole } from '~/prisma/generated/client'
 import TeacherDashboard from './(dashboard)/TeacherDashboard'
 import StudentDashboard from './(dashboard)/StudentDashboard'
+import AdminDashboard from './(dashboard)/AdminDashboard'
 
 export default function Dashboard() {
   const { user, validateLoggedIn } = useAuth()
@@ -21,8 +22,8 @@ export default function Dashboard() {
   }, [])
 
   return <>
-
-    {!loading && user?.role === UserRole.admin && <h1>Admin Dashboard</h1>}
+    {loading && <div>Loading your dashboard</div>}
+    {!loading && user?.role === UserRole.admin && <AdminDashboard user={ user } />}
     {!loading && user?.role === UserRole.teacher && <TeacherDashboard user={user} />}
     {!loading && user?.role === UserRole.student && <StudentDashboard user={user} />}
   </>
