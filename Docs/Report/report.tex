@@ -1,0 +1,202 @@
+\documentclass[12pt, a4paper,twoside]{report}
+
+%% Every LaTeX document begins with a preamble, which loads packages and
+%% defines various settings to make the document look right. Mostly,
+%% you can ignore everything in this template before \begin{document} on
+%% line 74
+
+\usepackage{mathtools,amsthm} % Enable useful mathematical symbols/environments
+\usepackage{graphicx} % Enable graphics
+\usepackage{fancyhdr,titlesec,microtype} % enable various formatting commands
+\usepackage[margin=2.5cm]{geometry} % Set margin size
+\usepackage{palatino} % Set the font
+\usepackage[latin1]{inputenc} % Allow you to input accents, umlauts and other characters
+\usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
+
+\usepackage{xcolor} % Enable coloured elements
+\definecolor{mypurple}{HTML}{622567} %%% Purple
+\definecolor{myred}{HTML}{D55C19} %%%EssexOrange
+\definecolor{myblue}{HTML}{007A87} %%%Seagrass
+
+% For technical reasons, hyperref should be loaded after all other packages
+\usepackage[colorlinks,linkcolor=myblue,citecolor=mypurple]{hyperref}
+
+\renewcommand{\baselinestretch}{1.5} % 1.5 line spacing
+
+% Define \begin{theorem}, \end{theorem}, etc.
+\theoremstyle{plain} % The following will be italicised
+\newtheorem{theorem}{Theorem}[chapter]
+
+\theoremstyle{definition} % The following environments will not use italics
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\numberwithin{equation}{chapter}
+
+% Fancy headings
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\fancyheadoffset[LE,RO]{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[LE]{\makebox[0pt][l]{\thepage}\hfill\leftmark}
+\fancyhead[RO]{\rightmark\hfill\makebox[0pt][r]{\thepage}}
+\fancypagestyle{plain}{%
+    \fancyhead{} % get rid of headers
+    \renewcommand{\headrulewidth}{0pt} % and the line
+}
+
+% Fancy chapter numbers
+\titleformat{\chapter}[display]
+    {\normalfont\bfseries\color{myred}}
+    {\filleft\hspace*{-60pt}%
+        \rotatebox[origin=c]{90}{%
+            \normalfont\color{black}\Large%
+            \textls[180]{\textsc{\chaptertitlename}}%
+        }
+        \hspace{10pt}%
+        {\setlength\fboxsep{0pt}%
+            \colorbox{myred}{\parbox[c][3cm][c]{2.5cm}{%
+                \centering\color{white}\fontsize{80}{90}\selectfont\thechapter}%
+            }
+        }
+    }
+    {10pt}
+    {\titlerule[2.5pt]\vskip3pt\titlerule\vskip4pt\LARGE\sffamily}
+
+\begin{document} % Start your document
+
+%%%%%%%%%%%% BEGIN TITLE PAGE %%%%%%%%%%%%
+
+\thispagestyle{empty} % For the title page, no header / footer
+
+\noindent
+    \begin{minipage}{0.1\textwidth}
+    \includegraphics[height=4.5em]{essex.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.5\textwidth}
+    \begin{center}
+        \renewcommand\familydefault{\sfdefault}
+        \fontfamily{phv}\selectfont
+        {\large School of Computer Science and Electrical Engineering}
+    \end{center}
+    \end{minipage}
+
+\begin{center}
+    \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
+    
+    \vspace{2em}
+    \noindent {\LARGE \sc Capstone Project Dissertation}
+    
+    \vspace{3em}
+    \noindent {\Huge{\color{myblue} GoLearn - Learning Resource Management System}}
+    
+    \vspace{3em}
+    \noindent {\Large \bf Bradley Beasley}
+    \vfill
+    \noindent {\Large {Supervisor:} {\color{mypurple} \bf Dr Alexandoros Voudoris}}
+    
+    \vspace{0.5em}
+    \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
+    
+    \vspace{2em}
+    {\Large \today }
+    
+    {\Large Colchester}
+\end{center}
+
+\clearpage
+
+%%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
+
+\tableofcontents
+
+%%%%%%%%%%%% Introduction %%%%%%%%%%%%
+
+\chapter{Introduction}\label{ch:introduction}
+
+%%%%%%%%%%%% Background %%%%%%%%%%%%
+
+\chapter{Background}\label{ch:background}
+
+\section{Similar Services}\label{sec:similarservices}
+
+There are various LRMS's available in the market, with some of the more popular
+one being:
+
+\begin{description}
+    \item[Skillshare] {}
+    \item[Udemy] {}
+    \item[LearnDash] {}
+    \item[Moodle] {}
+\end{description}
+
+\section{Tech Stacks}\label{sec:techstacks}
+
+A `Tech Stack' is the term used to describe the combination of programming
+languages, frameworks, libraries, and tools that are used to build a software
+application. The choice of a tech stack is crucial as it can affect the
+performance, scalability, and maintainability of the application. The following
+are some of the popular tech stacks used in web development:
+
+\begin{description}
+    \item[LAMP/LEMP Stacks] {}
+    \item[MEAN/MERN/MEVN Stacks] {}
+\end{description}
+
+\section{Databases and ORMs}\label{sec:databasesorms}
+
+what is a database.
+what is an ORM
+popular databases and ORMs
+
+%%%%%%%%%%%% Technical Specification %%%%%%%%%%%%
+
+\chapter{Technical Specification}\label{ch:techspec}
+
+\section{Framework}\label{sec:framework}
+
+Which stack was chosen and why
+which framework was chosen within that stack and why
+
+\section{Database and ORM}\label{sec:databaseorm}
+
+Which database was chosen and why
+which ORM was chosen and why
+
+%%%%%%%%%%%% Implementation %%%%%%%%%%%%
+
+\chapter{Implementation}\label{ch:implementation}
+
+\section{Authentication}\label{sec:authentication}
+
+\section{User Management}\label{sec:usermanagement}
+
+\section{CRUD Operations}\label{sec:crudoperations}
+
+\section{Data Loading}\label{sec:dataloading}
+
+%%%%%%%%%%%% Testing %%%%%%%%%%%%
+
+\chapter{Testing}\label{ch:testing}
+
+\section{Unit Testing}\label{sec:unittesting}
+
+\section{Acceptance Testing}\label{sec:acceptancetesting}
+
+%%%%%%%%%%%% Conclusion %%%%%%%%%%%%
+
+\chapter{Conclusions}\label{ch:conclusion}
+
+\bibliographystyle{plain}
+\bibliography{report}
+\footnotetext{
+    \textbf{Information}
+    \emph{This document was written in LaTex and compiled with PDFTex and
+        BibTex}
+}
+
+\end{document}
+
