@@ -8,7 +8,7 @@
 \usepackage{mathtools,amsthm} % Enable useful mathematical symbols/environments
 \usepackage{graphicx} % Enable graphics
 \usepackage{fancyhdr,titlesec,microtype} % enable various formatting commands
-\usepackage[margin=2.5cm]{geometry} % Set margin size
+\usepackage[margin=2cm]{geometry} % Set margin size
 \usepackage{palatino} % Set the font
 \usepackage[latin1]{inputenc} % Allow you to input accents, umlauts and other characters
 \usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
@@ -50,15 +50,15 @@
 % Fancy chapter numbers
 \titleformat{\chapter}[display]
     {\normalfont\bfseries\color{myred}}
-    {\filleft\hspace*{-60pt}%
-        \rotatebox[origin=c]{90}{%
-            \normalfont\color{black}\Large%
-            \textls[180]{\textsc{\chaptertitlename}}%
+    {\filleft\hspace*{-60pt}
+        \rotatebox[origin=c]{90}{
+            \normalfont\color{black}\large
+            \textls[180]{\textsc{\chaptertitlename}}
         }
-        \hspace{10pt}%
-        {\setlength\fboxsep{0pt}%
-            \colorbox{myred}{\parbox[c][3cm][c]{2.5cm}{%
-                \centering\color{white}\fontsize{80}{90}\selectfont\thechapter}%
+        \hspace{10pt}
+        {\setlength\fboxsep{0pt}
+            \colorbox{myred}{\parbox[c][2cm][c]{1.5cm}{
+                    \centering\color{white}\fontsize{40}{45}\selectfont\thechapter}
             }
         }
     }
@@ -72,42 +72,59 @@
 \thispagestyle{empty} % For the title page, no header / footer
 
 \noindent
-    \begin{minipage}{0.1\textwidth}
+\begin{minipage}{0.1\textwidth}
     \includegraphics[height=4.5em]{essex.png}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.5\textwidth}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
     \begin{center}
         \renewcommand\familydefault{\sfdefault}
         \fontfamily{phv}\selectfont
         {\large School of Computer Science and Electrical Engineering}
     \end{center}
-    \end{minipage}
+\end{minipage}
 
 \begin{center}
     \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
-    
+
     \vspace{2em}
     \noindent {\LARGE \sc Capstone Project Dissertation}
-    
+
     \vspace{3em}
-    \noindent {\Huge{\color{myblue} GoLearn - Learning Resource Management System}}
-    
+    \noindent {\Huge{\color{myblue} GoLearn - Learning Resource Management
+            System}}
+
     \vspace{3em}
     \noindent {\Large \bf Bradley Beasley}
+
     \vfill
-    \noindent {\Large {Supervisor:} {\color{mypurple} \bf Dr Alexandoros Voudoris}}
-    
+    \noindent {\Large {Supervisor:} {\color{mypurple} \bf Dr Alexandoros
+            Voudoris}}
+
     \vspace{0.5em}
     \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
-    
+
     \vspace{2em}
     {\Large \today }
-    
+
     {\Large Colchester}
 \end{center}
 
 \clearpage
+
+\abstract{
+    There are plenty of services and programs out there for allowing Teachers
+    to upload resources and for their learners to access them. Most of these
+    are not purpose designed for places of learning, such as school, colleges
+    and universities. Those that exist for this specific use-case tend to be
+    over-engineered and can be overly complicated (Moodle is a good example
+    of this). The purpose of GoLearn is to provide a simple LRM experience
+    for teachers and students to interact with the same resources without a
+    large amount of overhead in setting up the system: it should work out of
+    the box.\\This report contains a look into methods of implementation for
+    web applications in general, plus the choices in technology and design
+    that were made for GoLearn.
+}
 
 %%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
 
@@ -127,8 +144,55 @@ There are various LRMS's available in the market, with some of the more popular
 one being:
 
 \begin{description}
-    \item[Skillshare] {}
-    \item[Udemy] {}
+    \item[Udemy] {
+        Udemy is a free to access learning site that puts a paywall over all of
+        the courses. Creators can sign up to the site and create a course very
+        quickly. Learners can sign up to courses (paying whatever charge is
+        applied) and have unlimited access to them. They can access these from
+        their own `Courses' dashboard.\\
+        Before putting together their first course, the creator must go through
+        a short survey, which is likely to be used for internal statistic within
+        the Udemy Business than for anything functional. It also serves top allow
+        them to suggest some of their own resources to get the creator going based
+        on their level of experiences in teaching, video creation and gaining an
+        audience. Once this survey has been completed, the creator gains access
+        to an instructor dashboard. Here they can see what courses they have,
+        their status etc. It is also here that they start the creation of a new
+        course (via an action button), and receive learning resource suggestions
+        from Udemy.\\
+        The process of making a new Course is very simple. The user is led through
+        a multi-step form that focuses on different aspects of the general makeup
+        of the course, and provides a good UX to do so. Once that form has been
+        filled in, there is a full CMS provided for the creator to put together
+        the working components of their course, such as Learning Outcomes,
+        Requirements etc. It also provides a space for each component in the course
+        to be added. Once the course has been fleshed out with content, it is then
+        submitted for an internal review by Udemy.\\
+        The way that the application UI and UX is designed is something that is
+        going to inspire my own designs and application flow quite significantly.
+        As the application that I am going to be making is not a SAAS product, and
+        is going to be a working example of what can be provided to a teaching
+        institution (such as the University of Essex), the separate parts of the
+        app will only be accessible to those with related roles
+        (Teacher/Student/Admin).\\
+        My research for this service has been done solely through interacting with
+        the site myself. This was possible as all aspects of the creation service
+        are free, and I own a number of courses myself.
+    }
+    \item[Skillshare] {
+        SkillShare offers a different business model to generate income from
+        courses. Where Udemy uses a Course as a Product model, SkillShare
+        provides a Subscription service to access all content that they provide.
+        Teachers are then paid out based on their course metrics
+        \cite{skillshare-teacher-earnings}. To summarise, they are paid out from
+        a set teaching fund based on their engagement, total time spent on their
+        content (with a minimum of 75 minutes across courses a month).\\
+        The student experience of SkillShare is very similar to that of Udemy,
+        providing a simple and clean UI/UX for them to interact with the service
+        and classes. The Teacher experience is somewhat different in terms of
+        signing up, but the actual course creation is very similar.
+        \cite{skillshare-ux-1}\cite{skillshare-ux-2}
+    }
     \item[LearnDash] {}
     \item[Moodle] {}
 \end{description}
@@ -178,19 +242,25 @@ which ORM was chosen and why
 
 \section{Data Loading}\label{sec:dataloading}
 
+\section{Known Issues}\label{sec:knownissues}
+
 %%%%%%%%%%%% Testing %%%%%%%%%%%%
 
 \chapter{Testing}\label{ch:testing}
 
 \section{Unit Testing}\label{sec:unittesting}
 
-\section{Acceptance Testing}\label{sec:acceptancetesting}
+\section{User Testing}\label{sec:usertesting}
+
+%%%%%%%%%%%% Project Planning %%%%%%%%%%%%
+
+\chapter {Project Planning}\label{ch:projectplanning}
 
 %%%%%%%%%%%% Conclusion %%%%%%%%%%%%
 
 \chapter{Conclusions}\label{ch:conclusion}
 
-\bibliographystyle{plain}
+\bibliographystyle{ieeetr}
 \bibliography{report}
 \footnotetext{
     \textbf{Information}
@@ -199,4 +269,3 @@ which ORM was chosen and why
 }
 
 \end{document}
-
