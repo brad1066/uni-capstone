@@ -191,8 +191,36 @@ performance, scalability, and maintainability of the application. The following
 are some of the popular tech stacks used in web development:
 
 \begin{description}
-    \item[LAMP/LEMP Stacks] {}
-    \item[MEAN/MERN/MEVN Stacks] {}
+    \item[LAMP/LEMP Stacks] {
+        This stack consists of 4 major components: Linux, Apache/Nginx, MySQL
+        and PHP\@. Linux is the OS that is used in the stack, with Apache or
+        (E)\@nginx as the web server, MySQL as the database and PHP as the
+        server-side language. This stack is very popular and is used by many
+        web developers. It is used by various Frameworks (such as Laravel), as
+        well as in frameworkless applications.
+
+        PHP is the programming language of choice for this kind of stack for
+        websites and applications that need to render the pages dynamically,
+        but don't need a lot of reactivity to user input on the page. For
+        for example, a blog or a news site would be a good use case for this
+        stack, as they largely need to retrieve data from a db when a page is
+        loaded, and can use caching strategies easily to only make a DB request
+        for cached pages after a certain period after the cached content was stored.
+
+        On the other hand, applications that have a lot of user interaction to perform
+        CRUD operations would be harder to write within this stack, as JS would have
+        to be loaded and ran to submit the changed data. Other stacks (as mentioned below)
+        instead rely less on page loads to perform actions, and instead are designed
+        with responsive and reactive implementations in mind.
+    }
+    \item[MEAN/MERN/MEVN Stacks] {
+        The `M' refers to the database implementation used (such as mySql, MongoDB...),
+        the `E' refers to ExpressJS, which is a NodeJS framework used for all forms of
+        JS applications, and is the layer between the templating framework and NodeJS to
+        serve an application. The `V', `A' and `R' refer to the templating framework used
+        to create the layouts used, and reference `VueJS', `AngularJS' and `ReactJS'
+        respectively. The `N' refers to the 
+    }
 \end{description}
 
 \section{Databases and ORMs}\label{sec:databasesorms}
