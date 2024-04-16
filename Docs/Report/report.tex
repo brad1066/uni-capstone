@@ -131,8 +131,6 @@
 
 \tableofcontents
 
-%%%%%%%%%%%% Introduction %%%%%%%%%%%%
-
 \chapter{Introduction}\label{ch:introduction}
 
 %%%%%%%%%%%% Background %%%%%%%%%%%%
@@ -317,6 +315,60 @@ SQLite, and MSSQL, and has a strong focus on performance and scalability.\cite{o
 
 %%%%%%%%%%%% Technical Specification %%%%%%%%%%%%
 
+\section{Authentication}\label{sec:backgroundauthentication}
+
+Authentication can be defined as: `Verifying the identity of a user, process or
+device, often as a prerequisite to allowing access to resources in an information
+system.'\cite{authentication}. Simply put, it refers to any processes used to
+ensure that only those with the right to access a resource or perform functions
+can do so. This is a very important part of any application, especially those that
+can be accessed from a remote location (such as via the internet). This is because
+protecting the data that is managed by the application is a legal requirement (see
+Chapter~\ref{ch:legalandethical}).
+
+There are several methods of authentication that can be implemented. A few are listed
+and described below:
+
+\begin{description}
+    \item[Basic Authentication\cite{basic-authentication}] {
+        This is the simplest form of authentication, and is often used in
+        conjunction with a username and password. The user is prompted to enter
+        their username and password, which is then sent to the server. The server
+        then checks the username and password against a list of valid credentials,
+        and if they match, the user is granted access to the resource. This is a
+        very simple form of authentication, but it is not very secure, as the
+        username and password are sent in plain text over the network. This means
+        that anyone who is able to intercept the request can read the username and
+        password and use them to access the resource. For this reason, it is not
+        recommended to use basic authentication for anything other than testing
+        purposes.
+        }
+    \item[Token-Based Authentication\cite{token-based-authentication}] {
+        This is a more secure form of authentication that is often used in
+        conjunction with a username and password. The user is prompted to enter
+        their username and password, which is then sent to the server. The server
+        then checks the username and password against a list of valid credentials,
+        and if they match, the server generates a token and sends it back to the
+        client. The client then includes the token in all subsequent requests to
+        the server, and the server checks the token against a list of valid tokens
+        to ensure that the user is authenticated. This is a more secure form of
+        authentication, as the token is not sent in plain text over the network.
+        This means that even if someone is able to intercept the request, they
+        will not be able to read the token and use it to access the resource.
+        }
+    \item[OAuth\cite{oauth}] {
+        is an open standard for access delegation, commonly used as a way
+        for Internet users to grant websites or applications access to their
+        information on other websites but without giving them the passwords.
+        This is done by authorizing the application to access the data on the
+        user's behalf, and then the application is given a token that can be
+        used to access the data. This is a very secure form of authentication,
+        as the user's password is never sent over the network. This means that
+        even if someone is able to intercept the request, they will not be able
+        to read the password and use it to access the resource.
+        }
+\end{description}
+
 \chapter{Technical Specification}\label{ch:techspec}
 
 \section{Framework}\label{sec:framework}
@@ -392,9 +444,103 @@ continue to use Prisma with the database without any issues.
 
 \chapter{Implementation}\label{ch:implementation}
 
+\section{Data model}\label{sec:datamodel}
+
+There was a lot of thought put into the data model for the GoLearn project.
+The data model was designed to be as simple as possible, while still being
+able to store all of the information that was needed for the application to
+function correctly. The following models were implemented, with various
+relations between them:
+
+\begin{description}
+
+    \item[User] {
+        The User model was used to store data about a User, such as username,
+        password, role, etc. The role was used to determine what permissions
+        the user had, such as being able to edit content or not.
+    }
+    \item[Student] {
+        The Student model was used to store data about Students, such as their
+        home and term addresses, enrolled course and modules. These fields were
+        used to determine which modules and course pages they could access. If
+        a student was not enrolled in a course, they would not be able to access
+        the course page, the same being for the modules.
+    }
+    \item[Teacher] {
+        The Teacher model was used to store data about Teachers, such as their
+        address and the modules they were teaching. These fields were used to
+        determine which modules pages they could access. If a teacher was not
+        teaching a module, then they can not add content to those modules, nor
+        make edits to them.
+    }
+    \item[Course] {
+        A course has a name, description and a list of modules that are part of
+        the course. The course is the top-level resource in the GoLearn project,
+        with all other resources being children of the course, or children of
+        children, etc. The students that are enrolled in the course are also
+        associated to a course.
+    }
+    \item[Module] {
+        A module has a name, description, assignments, units, students and
+        teachers. This is an important model, as it acts as a container for
+        students and teachers to interact with the content. Teachers can create
+        and modify the content in a module and it's children, and students can
+        view the content if they are enrolled in the module.
+    }
+    \item[Assignment] {
+        Assignments are a type of resource that can be created by teachers within
+        a module, which students can then create submissions for. Assignments
+        have a name, description, due date, and a list of submissions that have
+        been made for the assignment.
+    }
+    \item[Unit] {
+        A unit is a resource that teachers can create within a module. This is a
+        method for organising the content within a module into smaller, more
+        manageable chunks. Units have a name, description, and a list of resources
+        that are part of the unit. There can also be sections within a unit, which
+        are used to further organise the content within the unit.
+    }
+    \item[Section] {
+        A section is a resource that acts as a container for Resources within a
+        Unit. Sections have a name, description, and a list of resources that are
+        part of the section. The reason for this inclusion into the model was to
+        allow teachers to better organise content within a unit such that they can
+        group together resources that are related to each other without having to
+        use naming convention to organise it for them.
+    }
+    \item[Resource] {
+        A resource is a leaf resource that can be created by teachers within a
+        section and/or. This is the lowest level of resource that can be created,
+        and is used to store the content that is displayed to the students. Resources
+        have a name, description, and a content field that is used to store the
+        content that is displayed to the students. As well as this, they can have any
+        number of files attached to them, which can be used to provide additional
+        resources to the students that is more complex than can be expressed by
+        markdown.
+    }
+\end{description}
+
 \section{Authentication}\label{sec:authentication}
 
-\section{User Management}\label{sec:usermanagement}
+The method of authentication that was chosen for the GoLearn project was token-based
+authentication. This was chosen as it is a relatively simple form of authentication
+that is secure and easy to implement. Within the database, a `UserSession' table was
+created to store the tokens that are generated for each user. When a user logs in,
+a token is generated and stored in the `UserSession' table, and the token is sent
+back to the client. Whenever a user makes a request from the server, it checks if
+a token has been included in the request, and checks that token against the list of
+valid tokens in the `UserSession' table. If the token exists and is not too old to
+be used, the user's request is granted, and the user is able to access the resource.
+
+This was effective, but has a few drawbacks. The main drawback is that the token
+is stored in the database, which means that the database has to be queried every
+time a user makes a request. This can be slow and can cause performance issues if
+the database is not optimised. A better implementation of this might have been to
+use a library that was written to interact on the server fully and store the token
+in memory, rather than in the database. This would have been faster as querying
+memory is significantly faster than querying a remote database, as well as allowing
+the database to not get cluttered with old tokens that have either expired or are
+no longer in use.
 
 \section{CRUD Operations}\label{sec:crudoperations}
 
@@ -402,23 +548,15 @@ continue to use Prisma with the database without any issues.
 
 \section{Known Issues}\label{sec:knownissues}
 
-%%%%%%%%%%%% Testing %%%%%%%%%%%%
-
 \chapter{Testing}\label{ch:testing}
 
 \section{Unit Testing}\label{sec:unittesting}
 
 \section{User Testing}\label{sec:usertesting}
 
-%%%%%%%%%%%% Legal and Ethical
-
 \chapter{Legal and Ethical}\label{ch:legalandethical}
 
-%%%%%%%%%%%% Project Planning %%%%%%%%%%%%
-
 \chapter{Project Planning}\label{ch:projectplanning}
-
-%%%%%%%%%%%% Conclusion %%%%%%%%%%%%
 
 \chapter{Conclusions}\label{ch:conclusion}
 
