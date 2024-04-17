@@ -1,27 +1,21 @@
 \documentclass[11pt, a4paper,twoside]{report}
 
-%% Every LaTeX document begins with a preamble, which loads packages and
-%% defines various settings to make the document look right. Mostly,
-%% you can ignore everything in this template before \begin{document} on
-%% line 74
-
-\usepackage{mathtools,amsthm} % Enable useful mathematical symbols/environments
-\usepackage{graphicx} % Enable graphics
-\usepackage{fancyhdr,titlesec,microtype} % enable various formatting commands
-\usepackage[margin=2cm]{geometry} % Set margin size
+\usepackage{mathtools,amsthm}
+\usepackage{graphicx}
+\usepackage{fancyhdr,titlesec,microtype}
+\usepackage[margin=2cm]{geometry}
 \usepackage{palatino} % Set the font
-\usepackage{multicol} % Enable multiple columns
+\usepackage{multicol}
 \usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
 
-\usepackage{xcolor} % Enable coloured elements
-\definecolor{mypurple}{HTML}{622567} %%% Purple
-\definecolor{myred}{HTML}{D55C19} %%%EssexOrange
-\definecolor{myblue}{HTML}{007A87} %%%Seagrass
+\usepackage{xcolor}
+\definecolor{mypurple}{HTML}{622567}
+\definecolor{myred}{HTML}{D55C19}
+\definecolor{myblue}{HTML}{007A87}
 
-% For technical reasons, hyperref should be loaded after all other packages
 \usepackage[colorlinks,linkcolor=myblue,citecolor=mypurple]{hyperref}
 
-\renewcommand{\baselinestretch}{1.25} % 1.5 line spacing
+\renewcommand{\baselinestretch}{1.25}
 
 % Define \begin{theorem}, \end{theorem}, etc.
 \theoremstyle{plain} % The following will be italicised
@@ -42,9 +36,9 @@
 \fancyhf{}
 \fancyhead[LE]{\makebox[0pt][l]{\thepage}\hfill\leftmark}
 \fancyhead[RO]{\rightmark\hfill\makebox[0pt][r]{\thepage}}
-\fancypagestyle{plain}{%
-    \fancyhead{} % get rid of headers
-    \renewcommand{\headrulewidth}{0pt} % and the line
+\fancypagestyle{plain}{
+    \fancyhead{}
+    \renewcommand{\headrulewidth}{0pt}
 }
 
 % Fancy chapter numbers
@@ -124,7 +118,8 @@
     large amount of overhead in setting up the system: it should work out of
     the box.\\
     This report contains a look into methods of implementation for web
-    applications in general, plus the choices in technology and design that were
+    applications in general, plus the choices in technology and design that
+    were
     made for GoLearn.
 }
 
@@ -164,6 +159,8 @@
 \end{multicols}
 
 \chapter{Introduction}\label{ch:introduction}
+
+% TODO
 
 %%%%%%%%%%%% Background %%%%%%%%%%%%
 
@@ -303,7 +300,7 @@ one of two categories: relational or non-relational.
 
 \begin{description}
 
-    \item[Relational Databases] {
+    \item[Relational Databases\cite{relational-databases}] {
         store data in tables, with each table containing rows and columns. The
         columns represent the attributes of the data, while the rows represent
         individual records. Relational databases use SQL to query and
@@ -318,20 +315,38 @@ one of two categories: relational or non-relational.
         to be defined between the two tables. This is called a foreign key, and
         can be used to enforce that a student can only be enrolled in a course
         that exists in the `courses' table.
+
+        This is a suitable database design for many kinds of applications, such
+        as those that require complex relationships between the data, or that
+        require consistency on the data. A drawback that this can lead to is
+        that the data can be inflexible, as the schema has to be defined before
+        the data can be stored, which can make it problematic to change the
+        data model once the data has been stored.
         }
 
-    \item[Non-Relational Databases] {
+    \item[Non-Relational Databases\cite{nosql-databases}] {
         store data in a more flexible format, such as key-value pairs,
         documents, or graphs. Non-relational databases are often used when the
         data is unstructured or when the data model is likely to change
         frequently. Some popular non-relational databases include MongoDB,
-        Cassandra, and Redis.
+        Cassandra, and Redis. This kind of database is often referred to as a
+        NoSQL database.
 
-        This category of database is called non-relational because it does not
-        enforce relationships between tables. This can make it easier to work
-        with the data, as the data can be stored in a more flexible format.
+        This category of database stores data in an unstructured format, which
+        allows for it to be more flexible and horizontally scalable. This
+        is useful, as it means that the data can be stored in such a way that
+        the load can be distributed across multiple servers, which can help to
+        improve performance and scalability. A drawback that this can lead to
+        is that the data can be inconsistent, as there may be duplicated data
+        across multiple servers, which can lead to issues with data integrity.
 
-        % TODO: Add more information about non-relational databases
+        This is a suitable database design for many kinds of applications, such
+        as those that require high performance and scalability, or that require
+        the ability to store large amounts of data. As well as this,
+        applications that require a lot of flexibility in the data model can
+        benefit from using a NoSQL database, as it allows for the change in the
+        data model over time, without having to make adjustments to the existing
+        data.
         }
 
 \end{description}
@@ -639,9 +654,9 @@ list of strings that could be used to fetch relationship data from the
 database. This was to allow for the functions to be more diverse.
 
 Each method can also accept a list of the roles that are able to access the
-data. This was a security feature that I included to ensure that only the
+data. This was a security feature that was included to ensure that only the
 correct kind of user can access the data that is being requested. This
-inclusion ended up not being used however, as I was performing role checks on
+inclusion ended up not being used however, as role checks we performed on
 page load itself, so only users that could access a page would trigger the
 request for the data that would be required to render the page.
 
@@ -682,8 +697,8 @@ make calls back to the server to perform required CRUD operations.
 
 \chapter{Testing}\label{ch:testing}
 
-Unit testing and UAT were both implemented for this project. The reason for
-this was to ensure that the CRUD methods were returning the expected values
+Unit testing and UAT were both intended to be used for this project. The reason
+for this was to ensure that the CRUD methods were returning the expected values
 under different conditions, and that the application was working as expected
 from a user's perspective.
 
@@ -691,15 +706,55 @@ from a user's perspective.
 
 To implement unit testing, the Jest testing framework was used. Jest is a very
 powerful testing framework that is designed to be used with JS/TS applications.
-It is very easy
+The documentation was referenced to learn how to write
+tests\cite{learn-jest-1}, as well as a number of tutorials that were found
+online\cite{learn-jest-2}\cite{learn-jest-3}. The tests were written to test
+the Server Actions. The reason that these alone were tested was because they
+were the only functions that were written that could be tested. The other code
+that was written was either React components, which have a myriad of problems
+associated with Unit Testing.
+
+As these server actions were functional wrappers for Prisma queries, the tests
+needed to also mock out the responses expected from Prisma. This was done by
+using the `jest.mock' function to mock out the Prisma functions that were being
+used in the server actions. This proved difficult to do, largely because there
+were no video tutorials for doing this, and the documentation was not very
+clear on how to do it. This page in the documentation was used to implement the
+mocking of the Prisma functions:
+\url{https://www.prisma.io/docs/orm/prisma-client/testing/unit-testing}. This
+involved setting up a singleton mocking object that could be used to return
+values that were expected from the Prisma functions.
 
 \section{UAT}\label{sec:usertesting}
 
+User Acceptance Testing was intended to be performed by the author, as well as
+by a number of friends and family members. The author would be responsible for
+testing the application in a number of different scenarios, such as logging in
+as a student and a teacher, creating and editing content, and enrolling in
+courses and modules. The friends and family members would also make the same
+checks, and be watching out for anything that seemed out of place, as well as
+providing feedback on the design and usability of the application.
+
+This was not performed, as the application was not in a state where it could be
+tested by anyone other than the author. The application was deployed to a
+Vercel server, but the application itself was not working as intended (as
+discussed in section~\ref{sec:knownissues}). This meant that the application
+was not readily testable for end users. Despite this, during the development of
+the application, the author was able to get some face-to-face feedback from
+friends and family members, which was used to make changes to the design and
+usability of the application.
+
 \chapter{Legal and Ethical}\label{ch:legalandethical}
+
+% TODO
 
 \chapter{Project Planning}\label{ch:projectplanning}
 
+% TODO
+
 \chapter{Conclusions}\label{ch:conclusion}
+
+% TODO
 
 \bibliographystyle{ieeetr}
 \bibliography{report}
