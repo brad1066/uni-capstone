@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper,twoside]{report}
+\documentclass[11pt, a4paper,twoside]{report}
 
 %% Every LaTeX document begins with a preamble, which loads packages and
 %% defines various settings to make the document look right. Mostly,
@@ -11,7 +11,6 @@
 \usepackage[margin=2cm]{geometry} % Set margin size
 \usepackage{palatino} % Set the font
 \usepackage{multicol} % Enable multiple columns
-\usepackage[latin1]{inputenc} % Allow you to input accents, umlauts and other characters
 \usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
 
 \usepackage{xcolor} % Enable coloured elements
@@ -50,21 +49,21 @@
 
 % Fancy chapter numbers
 \titleformat{\chapter}[display]
-    {\normalfont\bfseries\color{myred}}
-    {\filleft\hspace*{-80pt}
-        \rotatebox[origin=c]{90}{
-            \normalfont\color{black}\large
-            \textls[180]{\textsc{\chaptertitlename}}
-        }
-        \hspace{8pt}
-        {\setlength\fboxsep{0pt}
-            \colorbox{myred}{\parbox[c][2cm][c]{1.5cm}{
-                    \centering\color{white}\fontsize{40}{45}\selectfont\thechapter}
-            }
+{\normalfont\bfseries\color{myred}}
+{\filleft\hspace*{-80pt}
+    \rotatebox[origin=c]{90}{
+        \normalfont\color{black}\large
+        \textls[180]{\textsc{\chaptertitlename}}
+    }
+    \hspace{8pt}
+    {\setlength\fboxsep{0pt}
+        \colorbox{myred}{\parbox[c][2cm][c]{1.5cm}{
+                \centering\color{white}\fontsize{40}{45}\selectfont\thechapter}
         }
     }
-    {10pt}
-    {\titlerule[2.5pt]\vskip3pt\titlerule\vskip4pt\LARGE\sffamily}
+}
+{10pt}
+{\titlerule[2.5pt]\vskip3pt\titlerule\vskip4pt\LARGE\sffamily}
 
 \begin{document} % Start your document
 
@@ -123,9 +122,10 @@
     of this). The purpose of GoLearn is to provide a simple LRM experience
     for teachers and students to interact with the same resources without a
     large amount of overhead in setting up the system: it should work out of
-    the box.\\This report contains a look into methods of implementation for
-    web applications in general, plus the choices in technology and design
-    that were made for GoLearn.
+    the box.\\
+    This report contains a look into methods of implementation for web
+    applications in general, plus the choices in technology and design that were
+    made for GoLearn.
 }
 
 %%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
@@ -154,7 +154,10 @@
         \item[QA]   Quality Assurance
         \item[SEO]  Search Engine Optimisation
         \item[SPA]  Single Page Application
+        \item[SQL]  Structured Query Language
+        \item[SSR]  Server Side Rendering
         \item[TS]   TypeScript
+        \item[UAT]  User Acceptance Testing
         \item[WP]   WordPress
         \item[XHR]  XMLHttpRequest
     \end{description}
@@ -232,55 +235,61 @@ are some of the popular tech stacks used in web development:
         for example, a blog or a news site would be a good use case for this
         stack, as they largely need to retrieve data from a db when a page is
         loaded, and can use caching strategies easily to only make a DB request
-        for cached pages after a certain period after the cached content was stored.
+        for cached pages after a certain period after the cached content was
+        stored.
 
-        On the other hand, applications that have a lot of user interaction to perform
-        CRUD operations would be harder to write within this stack, as JS would have
-        to be loaded and ran to submit the changed data. Other stacks (as mentioned below)
-        instead rely less on page loads to perform actions, and instead are designed
-        with responsive and reactive implementations in mind.
+        On the other hand, applications that have a lot of user interaction to
+        perform CRUD operations would be harder to write within this stack, as
+        JS would have to be loaded and ran to submit the changed data. Other
+        stacks (as mentioned below) instead rely less on page loads to perform
+        actions, and instead are designed with responsive and reactive
+        implementations in mind.
         }
     \item[MEAN/MERN/MEVN Stacks] {
-        The `M' refers to the database implementation used (such as mySql, MongoDB)\ldots,
-        the `E' refers to ExpressJS, which is a NodeJS framework used for all forms of
-        JS applications, and is the layer between the templating framework and NodeJS to
-        serve an application. The `V', `A' and `R' refer to the templating framework used
-        to create the layouts used, and reference `VueJS', `AngularJS' and `ReactJS'
-        respectively. The `N' refers to `NodeJS', which is a server-side JS runtime
-        environment that is used to run JS code on the server.
+        The `M' refers to the database implementation used (such as mySql,
+        MongoDB)\ldots, the `E' refers to ExpressJS, which is a NodeJS
+        framework used for all forms of JS applications, and is the layer
+        between the templating framework and NodeJS to serve an application.
+        The `V', `A' and `R' refer to the templating framework used to create
+        the layouts used, and reference `VueJS', `AngularJS' and `ReactJS'
+        respectively. The `N' refers to `NodeJS', which is a server-side JS
+        runtime environment that is used to run JS code on the server.
 
-        This stack is very popular for creating SPAs (Single Page Applications) and
-        PWAs (Progressive Web Applications). These are applications that are designed
-        to be very reactive to user input, and can update the page without needing to
-        reload the page. This is done by using JS to update the page, rather than
-        relying on the server to render the page and send it to the client. This is
-        achieved by requesting information from the server about what to load and how
-        to load it, and then using JS to render the page based on the information
-        received. This is a very powerful stack, but can be difficult to learn and
-        use effectively.
+        This stack is very popular for creating SPAs and PWAs. These are
+        applications that are designed to be very reactive to user input, and
+        can update the page without needing to reload the page. This is done by
+        using JS to update the page, rather than relying on the server to
+        render the page and send it to the client. This is achieved by
+        requesting information from the server about what to load and how to
+        load it, and then using JS to render the page based on the information
+        received. This is a very powerful stack, but can be difficult to learn
+        and use effectively.
         }
     \item[Full Stack Frameworks] {
-        A full stack framework is a framework that is designed to be used for both
-        the front-end and back-end of an application. This means that the framework
-        can be used to create the server-side code, as well as the client-side code.
-        This is very useful as it means that development teams can rely on a single
-        codebase for the entire application, rather than having to use multiple
-        codebases. This can make development faster and easier. As well as this, it
-        allows type safety and code completion to be used across the entire application
-        easier than in separate front- and back-end applications.
+        A full stack framework is a framework that is designed to be used for
+        both the front-end and back-end of an application. This means that the
+        framework can be used to create the server-side code, as well as the
+        client-side code. This is very useful as it means that development
+        teams can rely on a single codebase for the entire application, rather
+        than having to use multiple codebases. This can make development faster
+        and easier. As well as this, it allows type safety and code completion
+        to be used across the entire application easier than in separate front-
+        and back-end applications.
 
         Some examples of full stack frameworks are NextJS and NuxtJS\@. These
-        frameworks are designed to be used for both the front-end and back-end of
-        an application. They are very powerful and can be used to create very complex
-        applications. They each use a different templating framework (NextJS uses
-        ReactJS, and NuxtJS uses VueJS). The benefit of these frameworks is that they
-        allow for server-side rendering as well as client-side rendering, which can
-        be very useful for SEO and performance reasons.
+        frameworks are designed to be used for both the front-end and back-end
+        of an application. They are very powerful and can be used to create
+        very complex applications. They each use a different templating
+        framework (NextJS uses ReactJS, and NuxtJS uses VueJS). The benefit of
+        these frameworks is that they allow for server-side rendering as well
+        as client-side rendering, which can be very useful for SEO and
+        performance reasons.
 
-        One drawback of these frameworks is that there can be a steep learning curve
-        to get started with them. As well as this, the codebase can get very complex
-        and the boundaries between client and server code can get blurred, which can
-        make it difficult to debug and maintain the codebase if it is not well organised.
+        One drawback of these frameworks is that there can be a steep learning
+        curve to get started with them. As well as this, the codebase can get
+        very complex and the boundaries between client and server code can get
+        blurred, which can make it difficult to debug and maintain the codebase
+        if it is not well organised.
         }
 \end{description}
 
@@ -295,11 +304,11 @@ one of two categories: relational or non-relational.
 \begin{description}
 
     \item[Relational Databases] {
-        store data in tables, with each table containing
-        rows and columns. The columns represent the attributes of the data,
-        while the rows represent individual records. Relational databases use
-        SQL (Structured Query Language) to query and manipulate the data. Some
-        popular relational databases include MySQL, PostgreSQL, and SQLite.
+        store data in tables, with each table containing rows and columns. The
+        columns represent the attributes of the data, while the rows represent
+        individual records. Relational databases use SQL to query and
+        manipulate the data. Some popular relational databases include MySQL,
+        PostgreSQL and SQLite.
 
         This category of database is called relational because it allows for
         relationships to be defined between the columns in different tables.
@@ -312,11 +321,11 @@ one of two categories: relational or non-relational.
         }
 
     \item[Non-Relational Databases] {
-        store data in a more flexible format, such as
-        key-value pairs, documents, or graphs. Non-relational databases are
-        often used when the data is unstructured or when the data model is
-        likely to change frequently. Some popular non-relational databases
-        include MongoDB, Cassandra, and Redis.
+        store data in a more flexible format, such as key-value pairs,
+        documents, or graphs. Non-relational databases are often used when the
+        data is unstructured or when the data model is likely to change
+        frequently. Some popular non-relational databases include MongoDB,
+        Cassandra, and Redis.
 
         This category of database is called non-relational because it does not
         enforce relationships between tables. This can make it easier to work
@@ -336,54 +345,83 @@ to construct many (if any) queries or statements to do so.
 
 Some examples of ORMs include Prisma, TypeORM, and Sequelize. These ORMs are
 designed to be used with different databases, and have different features and
-capabilities. For example, Prisma is designed to be used with PostgreSQL, MySQL,
-and SQLite, and has a strong focus on type safety and code generation. TypeORM
-is designed to be used with TypeScript, and has a strong focus on type safety
-and code generation. Sequelize is designed to be used with MySQL, PostgreSQL,
-SQLite, and MSSQL, and has a strong focus on performance and scalability.\cite{orms}
+capabilities. For example, Prisma is designed to be used with PostgreSQL,
+MySQL, and SQLite, and has a strong focus on type safety and code generation.
+TypeORM is designed to be used with TypeScript, and has a strong focus on type
+safety and code generation. Sequelize is designed to be used with MySQL,
+PostgreSQL, SQLite, and MSSQL, and has a strong focus on performance and
+scalability.\cite{orms}
+
+\section{Testing methods}\label{sec:testingmethods}
+
+\begin{description}
+    \item[Unit testing\cite{unit-testing}] {
+        is a type of testing that is used to test individual units or
+        components of an application. It is used to ensure that the individual
+        units of an application are working as expected, and that the various
+        functions behave as expected in isolation from each other. Unit testing
+        is a very important part of the development process, as it can help to
+        catch bugs and issues early in the development process, before they
+        become more difficult and expensive to fix. Unit testing can also help
+        to ensure that the application is working as expected, and that there
+        are no bugs or issues that could cause the application to fail.
+        }
+    \item[User acceptance testing\cite{user-testing}] {
+        is a type of testing that is used to ensure that the application is
+        working as expected from the user's perspective. It is used to ensure
+        that the application is easy to use, and that the user interface is
+        intuitive and user-friendly. UAT is a very important part of the
+        development process, as it can help to ensure that the application is
+        meeting the needs of the users, and that the users are able to use the
+        application effectively. UAT can also help to identify any issues or
+        bugs that may have been missed during the development process, and can
+        help to ensure that the application is working as expected.
+        }
+\end{description}
 
 %%%%%%%%%%%% Technical Specification %%%%%%%%%%%%
 
 \section{Authentication}\label{sec:backgroundauthentication}
 
 Authentication can be defined as: `Verifying the identity of a user, process or
-device, often as a prerequisite to allowing access to resources in an information
-system.'\cite{authentication}. Simply put, it refers to any processes used to
-ensure that only those with the right to access a resource or perform functions
-can do so. This is a very important part of any application, especially those that
-can be accessed from a remote location (such as via the internet). This is because
-protecting the data that is managed by the application is a legal requirement (see
-Chapter~\ref{ch:legalandethical}).
+device, often as a prerequisite to allowing access to resources in an
+information system.'\cite{authentication}. Simply put, it refers to any
+processes used to ensure that only those with the right to access a resource or
+perform functions can do so. This is a very important part of any application,
+especially those that can be accessed from a remote location (such as via the
+internet). This is because protecting the data that is managed by the
+application is a legal requirement (see Chapter~\ref{ch:legalandethical}).
 
-There are several methods of authentication that can be implemented. A few are listed
-and described below:
+There are several methods of authentication that can be implemented. A few are
+listed and described below:
 
 \begin{description}
     \item[Basic Authentication\cite{basic-authentication}] {
         This is the simplest form of authentication, and is often used in
         conjunction with a username and password. The user is prompted to enter
-        their username and password, which is then sent to the server. The server
-        then checks the username and password against a list of valid credentials,
-        and if they match, the user is granted access to the resource. This is a
-        very simple form of authentication, but it is not very secure, as the
-        username and password are sent in plain text over the network. This means
-        that anyone who is able to intercept the request can read the username and
-        password and use them to access the resource. For this reason, it is not
-        recommended to use basic authentication for anything other than testing
-        purposes.
+        their username and password, which is then sent to the server. The
+        server then checks the username and password against a list of valid
+        credentials, and if they match, the user is granted access to the
+        resource. This is a very simple form of authentication, but it is not
+        very secure, as the username and password are sent in plain text over
+        the network. This means that anyone who is able to intercept the
+        request can read the username and password and use them to access the
+        resource. For this reason, it is not recommended to use basic
+        authentication for anything other than testing purposes.
         }
     \item[Token-Based Authentication\cite{token-based-authentication}] {
         This is a more secure form of authentication that is often used in
         conjunction with a username and password. The user is prompted to enter
-        their username and password, which is then sent to the server. The server
-        then checks the username and password against a list of valid credentials,
-        and if they match, the server generates a token and sends it back to the
-        client. The client then includes the token in all subsequent requests to
-        the server, and the server checks the token against a list of valid tokens
-        to ensure that the user is authenticated. This is a more secure form of
-        authentication, as the token is not sent in plain text over the network.
-        This means that even if someone is able to intercept the request, they
-        will not be able to read the token and use it to access the resource.
+        their username and password, which is then sent to the server. The
+        server then checks the username and password against a list of valid
+        credentials, and if they match, the server generates a token and sends
+        it back to the client. The client then includes the token in all
+        subsequent requests to the server, and the server checks the token
+        against a list of valid tokens to ensure that the user is
+        authenticated. This is a more secure form of authentication, as the
+        token is not sent in plain text over the network. This means that even
+        if someone is able to intercept the request, they will not be able to
+        read the token and use it to access the resource.
         }
     \item[OAuth\cite{oauth}] {
         is an open standard for access delegation, commonly used as a way
@@ -414,18 +452,19 @@ was chosen for the GoLearn project. This was chosen for the following reasons:
 
         As well as this, it was a framework that the author had used before,
         meaning that he could get started with the project quickly and easily
-        and wouldn't have to spend a lot of time learning to use a new framework
-        or architect his own solution from scratch. This proved to save a lot
-        of time in the development process, as the author was able to get started
-        on the project and make progress quickly.
+        and wouldn't have to spend a lot of time learning to use a new
+        framework or architect his own solution from scratch. This proved to
+        save a lot of time in the development process, as the author was able
+        to get started on the project and make progress quickly.
         }
     \item[Server Actions\cite{next-server-action}] {
-        As of NextJS 14, the framework included a feature called `Server Actions'.
-        This allowed functions to be shared between server- and client-side code.
-        Whenever a server action was called, a request is sent to the server as a
-        Fetch/XHR request from the client, the server would handle the request and
-        return the result to the client. This would prove to be a very useful feature,
-        as it allows for CRUD operations to be ran
+        As of NextJS 14, the framework included a feature called `Server
+        Actions'. This allowed functions to be shared between server- and
+        client-side code. Whenever a server action was called, a request is
+        sent to the server as a Fetch/XHR request from the client, the server
+        would handle the request and return the result to the client. This
+        would prove to be a very useful feature, as it allows for CRUD
+        operations to be ran.
         }
 \end{description}
 
@@ -460,14 +499,22 @@ maintaining the database. Originally the author had considered using a service
 called `Supabase', which is a service that provides a PostgreSQL database, and
 is a service that Prisma has a lot of support for.
 
+Prisma is used by defining a schema in a file called `schema.prisma', which
+defines the data models that are used in the application, as well as the
+relationships between the models. Prisma then uses this schema to generate the
+database schema and the client-side code that is used to interact with the
+database. Whenever changes are made to the schema, Prisma can be used to update
+the database schema and the client-side code, which makes it very easy to
+maintain the database and the codebase.
+
 Later in the project when the application hosting was being considered, it was
-decided that the author would the application on Vercel, which is a service that
-provides hosting for NextJS applications. Vercel has a feature called `Vercel for
-Databases', which allows you to create a PostgreSQL database that is hosted on
-Vercel. It was a relatively simple process to migrate the database from Supabase
-to Vercel, and the author was able to do this without too much difficulty. The
-Vercel database is also a PostgreSQL database, which meant that the author could
-continue to use Prisma with the database without any issues.
+decided that the author would the application on Vercel, which is a service
+that provides hosting for NextJS applications. Vercel has a feature called
+`Vercel for Databases', which allows you to create a PostgreSQL database that
+is hosted on Vercel. It was a relatively simple process to migrate the database
+from Supabase to Vercel, and the author was able to do this without too much
+difficulty. The Vercel database is also a PostgreSQL database, which meant that
+the author could continue to use Prisma with the database without any issues.
 
 %%%%%%%%%%%% Implementation %%%%%%%%%%%%
 
@@ -492,8 +539,8 @@ relations between them:
         The Student model was used to store data about Students, such as their
         home and term addresses, enrolled course and modules. These fields were
         used to determine which modules and course pages they could access. If
-        a student was not enrolled in a course, they would not be able to access
-        the course page, the same being for the modules.
+        a student was not enrolled in a course, they would not be able to
+        access the course page, the same being for the modules.
         }
     \item[Teacher] {
         The Teacher model was used to store data about Teachers, such as their
@@ -504,10 +551,10 @@ relations between them:
         }
     \item[Course] {
         A course has a name, description and a list of modules that are part of
-        the course. The course is the top-level resource in the GoLearn project,
-        with all other resources being children of the course, or children of
-        children, etc. The students that are enrolled in the course are also
-        associated to a course.
+        the course. The course is the top-level resource in the GoLearn
+        project, with all other resources being children of the course, or
+        children of children, etc. The students that are enrolled in the course
+        are also associated to a course.
         }
     \item[Module] {
         A module has a name, description, assignments, units, students and
@@ -517,114 +564,136 @@ relations between them:
         view the content if they are enrolled in the module.
         }
     \item[Assignment] {
-        Assignments are a type of resource that can be created by teachers within
-        a module, which students can then create submissions for. Assignments
-        have a name, description, due date, and a list of submissions that have
-        been made for the assignment.
+        Assignments are a type of resource that can be created by teachers
+        within a module, which students can then create submissions for.
+        Assignments have a name, description, due date, and a list of
+        submissions that have been made for the assignment.
         }
     \item[Unit] {
-        A unit is a resource that teachers can create within a module. This is a
-        method for organising the content within a module into smaller, more
-        manageable chunks. Units have a name, description, and a list of resources
-        that are part of the unit. There can also be sections within a unit, which
-        are used to further organise the content within the unit.
+        A unit is a resource that teachers can create within a module. This is
+        a method for organising the content within a module into smaller, more
+        manageable chunks. Units have a name, description, and a list of
+        resources that are part of the unit. There can also be sections within
+        a unit, which are used to further organise the content within the unit.
         }
     \item[Section] {
         A section is a resource that acts as a container for Resources within a
-        Unit. Sections have a name, description, and a list of resources that are
-        part of the section. The reason for this inclusion into the model was to
-        allow teachers to better organise content within a unit such that they can
-        group together resources that are related to each other without having to
-        use naming convention to organise it for them.
+        Unit. Sections have a name, description, and a list of resources that
+        are part of the section. The reason for this inclusion into the model
+        was to allow teachers to better organise content within a unit such
+        that they can group together resources that are related to each other
+        without having to use naming convention to organise it for them.
         }
     \item[Resource] {
         A resource is a leaf resource that can be created by teachers within a
-        section and/or. This is the lowest level of resource that can be created,
-        and is used to store the content that is displayed to the students. Resources
-        have a name, description, and a content field that is used to store the
-        content that is displayed to the students. As well as this, they can have any
-        number of files attached to them, which can be used to provide additional
-        resources to the students that is more complex than can be expressed by
-        markdown.
+        section and/or. This is the lowest level of resource that can be
+        created, and is used to store the content that is displayed to the
+        students. Resources have a name, description, and a content field that
+        is used to store the content that is displayed to the students. As well
+        as this, they can have any number of files attached to them, which can
+        be used to provide additional resources to the students that is more
+        complex than can be expressed by markdown.
         }
 \end{description}
 
 \section{Authentication}\label{sec:authentication}
 
-The method of authentication that was chosen for the GoLearn project was token-based
-authentication. This was chosen as it is a relatively simple form of authentication
-that is secure and easy to implement. Within the database, a `UserSession' table was
-created to store the tokens that are generated for each user. When a user logs in,
-a token is generated and stored in the `UserSession' table, and the token is sent
-back to the client. Whenever a user makes a request from the server, it checks if
-a token has been included in the request, and checks that token against the list of
-valid tokens in the `UserSession' table. If the token exists and is not too old to
-be used, the user's request is granted, and the user is able to access the resource.
+The method of authentication that was chosen for the GoLearn project was
+token-based authentication. This was chosen as it is a relatively simple form
+of authentication that is secure and easy to implement. Within the database, a
+`UserSession' table was created to store the tokens that are generated for each
+user. When a user logs in, a token is generated and stored in the `UserSession'
+table, and the token is sent back to the client. Whenever a user makes a
+request from the server, it checks if a token has been included in the request,
+and checks that token against the list of valid tokens in the `UserSession'
+table. If the token exists and is not too old to be used, the user's request is
+granted, and the user is able to access the resource.
 
-This was effective, but has a few drawbacks. The main drawback is that the token
-is stored in the database, which means that the database has to be queried every
-time a user makes a request. This can be slow and can cause performance issues if
-the database is not optimised. A better implementation of this might have been to
-use a library that was written to interact on the server fully and store the token
-in memory, rather than in the database. This would have been faster as querying
-memory is significantly faster than querying a remote database, as well as allowing
-the database to not get cluttered with old tokens that have either expired or are
-no longer in use.
+This was effective, but has a few drawbacks. The main drawback is that the
+token is stored in the database, which means that the database has to be
+queried every time a user makes a request. This can be slow and can cause
+performance issues if the database is not optimised. A better implementation of
+this might have been to use a library that was written to interact on the
+server fully and store the token in memory, rather than in the database. This
+would have been faster as querying memory is significantly faster than querying
+a remote database, as well as allowing the database to not get cluttered with
+old tokens that have either expired or are no longer in use.
 
 \section{CRUD Operations}\label{sec:crudoperations}
 
-All of the CRUD operations that had to be performed on the data would usually be in
-response to some event on the front-end of the application on some user interaction.
-To perform these, it was decided to use Server Actions. These are functions that are
-defined and designed to be ran on the server, but can be called from anywhere within
-Next application. The benefit to this is that it meant tat making direct requests to
-an endpoint on the server via AJAX or the JS Fetch API is required, and the return
-types of the functions is known at compile time.
+All of the CRUD operations that had to be performed on the data would usually
+be in response to some event on the front-end of the application on some user
+interaction. To perform these, it was decided to use Server Actions. These are
+functions that are defined and designed to be ran on the server, but can be
+called from anywhere within Next application. The benefit to this is that it
+meant tat making direct requests to an endpoint on the server via AJAX or the
+JS Fetch API is required, and the return types of the functions is known at
+compile time.
 
-For each of the data models (Course, Module, etc) has their own file in the `/actions'
-directory, which contains the functions that are used to perform the CRUD operations.
-The reason for this codebase design was to keep the server actions bundled together,
-and have each method in a file related to the data that it was retrieving. For the
-Read operations, the functions could accept a list of strings that could be used to
-fetch relationship data from the database. This was to allow for the functions to be
-more diverse.
+For each of the data models (Course, Module, etc) has their own file in the
+`/actions' directory, which contains the functions that are used to perform the
+CRUD operations. The reason for this codebase design was to keep the server
+actions bundled together, and have each method in a file related to the data
+that it was retrieving. For the Read operations, the functions could accept a
+list of strings that could be used to fetch relationship data from the
+database. This was to allow for the functions to be more diverse.
 
-Each method can also accept a list of the roles that are able to access the data. This
-was a security feature that I included to ensure that only the correct kind of user
-can access the data that is being requested. This inclusion ended up not being used
-however, as I was performing role checks on page load itself, so only users that could
-access a page would trigger the request for the data that would be required to render
-the page.
+Each method can also accept a list of the roles that are able to access the
+data. This was a security feature that I included to ensure that only the
+correct kind of user can access the data that is being requested. This
+inclusion ended up not being used however, as I was performing role checks on
+page load itself, so only users that could access a page would trigger the
+request for the data that would be required to render the page.
 
 \section{Data Loading}\label{sec:dataloading}
 
-Each of the pages requires data to be retrieved from the database. The method that was
-used in this project was loading the data on the client side. When a page is mounted to
-the client (i.e.\ when the page is loaded), and once the user has been authenticated, the
-client would make a request to the server to get the data that is required to render the
-page. This meant that there would be some disconnect between the browser receiving the web
-page and the page fully rendering. During development, this was not an issue and was
-overlooked. In the latter stages of the project, it was realised that this was a problem
-and that the page should be rendered on the server and sent to the client, rather than
-the other way round.
+Each of the pages requires data to be retrieved from the database. The method
+that was used in this project was loading the data on the client side. When a
+page is mounted to the client (i.e.\ when the page is loaded), and once the
+user has been authenticated, the client would make a request to the server to
+get the data that is required to render the page. This meant that there would
+be some disconnect between the browser receiving the web page and the page
+fully rendering. During development, this was not an issue and was overlooked.
+In the latter stages of the project, it was realised that this was a problem
+and that the page should be rendered on the server and sent to the client,
+rather than the other way round.
 
-This is a problem that has not been fixed yet, but is something that would be addressed
-if there was more time to work on the project. Attempts were made, but many of the
-implementation methods used for User Authentication and Server Actions were not compatible
-with the methods used to perform the server-side rendering. This would require a large
-amount of refactoring to fix, and would be a large task to undertake.
+This is a problem that has not been fixed yet, but is something that would be
+addressed if there was more time to work on the project. Attempts were made,
+but many of the implementation methods used for User Authentication and Server
+Actions were not compatible with the methods used to perform the server-side
+rendering. This would require a large amount of refactoring to fix, and would
+be a large task to undertake.
 
 \section{Known Issues}\label{sec:knownissues}
 
-As mentioned before in section \ref{sec:dataloading}, there is an issue with the way that
-the pages are rendered. This is related to the the way that the user authentication and
-
+As mentioned before in section \ref{sec:dataloading}, there is an issue with
+the way that the pages are rendered. This is related to the the way that the
+user authentication and data retrieval is currently implemented. At the time of
+writing this report, the method of loading data onto a page is performed on the
+client once the page has been sent. When some pages are being loaded, the code
+to load the data (a `useEffect' hook) is not ran, which is causing the data to
+not be loaded, and for the `loading' state to be stuck on `true'. To fix this,
+the pages themselves would need to make use of SSR to validate the auth token
+and load the data on the server before the page is sent. Then, the data that
+various components require to run can be passed to specific components as props
+which can then hold onto that data as state that can then manage the values and
+make calls back to the server to perform required CRUD operations.
 
 \chapter{Testing}\label{ch:testing}
 
+Unit testing and UAT were both implemented for this project. The reason for
+this was to ensure that the CRUD methods were returning the expected values
+under different conditions, and that the application was working as expected
+from a user's perspective.
+
 \section{Unit Testing}\label{sec:unittesting}
 
-\section{User Testing}\label{sec:usertesting}
+To implement unit testing, the Jest testing framework was used. Jest is a very
+powerful testing framework that is designed to be used with JS/TS applications.
+It is very easy
+
+\section{UAT}\label{sec:usertesting}
 
 \chapter{Legal and Ethical}\label{ch:legalandethical}
 
