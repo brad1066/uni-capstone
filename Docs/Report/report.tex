@@ -10,6 +10,7 @@
 \usepackage{fancyhdr,titlesec,microtype} % enable various formatting commands
 \usepackage[margin=2cm]{geometry} % Set margin size
 \usepackage{palatino} % Set the font
+\usepackage{multicol} % Enable multiple columns
 \usepackage[latin1]{inputenc} % Allow you to input accents, umlauts and other characters
 \usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
 
@@ -131,13 +132,33 @@
 
 \tableofcontents
 
-\chapter{Table of Symbols}
+\chapter{List of Symbols}
 
-\begin{description}
-    \item[LRMS] Learning Resource Management System
-    \item[NPM] Node Package Manager
-    \item[CRUD] Create Read Update Delete 
-\end{description}
+\begin{multicols}{2}
+    \begin{description}
+        \item[API]  Application Programming Interface
+        \item[CRUD] Create Read Update Delete
+        \item[DB]   Database
+        \item[JS]   JavaScript
+        \item[LAMP] Linux, Apache, MySQL, PHP
+        \item[LEMP] Linux, (E)\@Nginx, MySQL, PHP
+        \item[LRM]  Learning Resource Management
+        \item[MEAN] Mongo, Express, Angular, Node
+        \item[MEVN] Mongo, Express, Vue, Node
+        \item[MERN] Mongo, Express, React, Node
+        \item[NPM]  Node Package Manager
+        \item[ORM]  Object Relational Mapper
+        \item[OS]   Operating System
+        \item[PHP]  Hypertext Preprocessor
+        \item[PWA]  Progressive Web Application
+        \item[QA]   Quality Assurance
+        \item[SEO]  Search Engine Optimisation
+        \item[SPA]  Single Page Application
+        \item[TS]   TypeScript
+        \item[WP]   WordPress
+        \item[XHR]  XMLHttpRequest
+    \end{description}
+\end{multicols}
 
 \chapter{Introduction}\label{ch:introduction}
 
@@ -466,48 +487,48 @@ relations between them:
         The User model was used to store data about a User, such as username,
         password, role, etc. The role was used to determine what permissions
         the user had, such as being able to edit content or not.
-    }
+        }
     \item[Student] {
         The Student model was used to store data about Students, such as their
         home and term addresses, enrolled course and modules. These fields were
         used to determine which modules and course pages they could access. If
         a student was not enrolled in a course, they would not be able to access
         the course page, the same being for the modules.
-    }
+        }
     \item[Teacher] {
         The Teacher model was used to store data about Teachers, such as their
         address and the modules they were teaching. These fields were used to
         determine which modules pages they could access. If a teacher was not
         teaching a module, then they can not add content to those modules, nor
         make edits to them.
-    }
+        }
     \item[Course] {
         A course has a name, description and a list of modules that are part of
         the course. The course is the top-level resource in the GoLearn project,
         with all other resources being children of the course, or children of
         children, etc. The students that are enrolled in the course are also
         associated to a course.
-    }
+        }
     \item[Module] {
         A module has a name, description, assignments, units, students and
         teachers. This is an important model, as it acts as a container for
         students and teachers to interact with the content. Teachers can create
         and modify the content in a module and it's children, and students can
         view the content if they are enrolled in the module.
-    }
+        }
     \item[Assignment] {
         Assignments are a type of resource that can be created by teachers within
         a module, which students can then create submissions for. Assignments
         have a name, description, due date, and a list of submissions that have
         been made for the assignment.
-    }
+        }
     \item[Unit] {
         A unit is a resource that teachers can create within a module. This is a
         method for organising the content within a module into smaller, more
         manageable chunks. Units have a name, description, and a list of resources
         that are part of the unit. There can also be sections within a unit, which
         are used to further organise the content within the unit.
-    }
+        }
     \item[Section] {
         A section is a resource that acts as a container for Resources within a
         Unit. Sections have a name, description, and a list of resources that are
@@ -515,7 +536,7 @@ relations between them:
         allow teachers to better organise content within a unit such that they can
         group together resources that are related to each other without having to
         use naming convention to organise it for them.
-    }
+        }
     \item[Resource] {
         A resource is a leaf resource that can be created by teachers within a
         section and/or. This is the lowest level of resource that can be created,
@@ -525,7 +546,7 @@ relations between them:
         number of files attached to them, which can be used to provide additional
         resources to the students that is more complex than can be expressed by
         markdown.
-    }
+        }
 \end{description}
 
 \section{Authentication}\label{sec:authentication}
@@ -552,11 +573,52 @@ no longer in use.
 
 \section{CRUD Operations}\label{sec:crudoperations}
 
+All of the CRUD operations that had to be performed on the data would usually be in
+response to some event on the front-end of the application on some user interaction.
+To perform these, it was decided to use Server Actions. These are functions that are
+defined and designed to be ran on the server, but can be called from anywhere within
+Next application. The benefit to this is that it meant tat making direct requests to
+an endpoint on the server via AJAX or the JS Fetch API is required, and the return
+types of the functions is known at compile time.
 
+For each of the data models (Course, Module, etc) has their own file in the `/actions'
+directory, which contains the functions that are used to perform the CRUD operations.
+The reason for this codebase design was to keep the server actions bundled together,
+and have each method in a file related to the data that it was retrieving. For the
+Read operations, the functions could accept a list of strings that could be used to
+fetch relationship data from the database. This was to allow for the functions to be
+more diverse.
+
+Each method can also accept a list of the roles that are able to access the data. This
+was a security feature that I included to ensure that only the correct kind of user
+can access the data that is being requested. This inclusion ended up not being used
+however, as I was performing role checks on page load itself, so only users that could
+access a page would trigger the request for the data that would be required to render
+the page.
 
 \section{Data Loading}\label{sec:dataloading}
 
+Each of the pages requires data to be retrieved from the database. The method that was
+used in this project was loading the data on the client side. When a page is mounted to
+the client (i.e.\ when the page is loaded), and once the user has been authenticated, the
+client would make a request to the server to get the data that is required to render the
+page. This meant that there would be some disconnect between the browser receiving the web
+page and the page fully rendering. During development, this was not an issue and was
+overlooked. In the latter stages of the project, it was realised that this was a problem
+and that the page should be rendered on the server and sent to the client, rather than
+the other way round.
+
+This is a problem that has not been fixed yet, but is something that would be addressed
+if there was more time to work on the project. Attempts were made, but many of the
+implementation methods used for User Authentication and Server Actions were not compatible
+with the methods used to perform the server-side rendering. This would require a large
+amount of refactoring to fix, and would be a large task to undertake.
+
 \section{Known Issues}\label{sec:knownissues}
+
+As mentioned before in section \ref{sec:dataloading}, there is an issue with the way that
+the pages are rendered. This is related to the the way that the user authentication and
+
 
 \chapter{Testing}\label{ch:testing}
 
