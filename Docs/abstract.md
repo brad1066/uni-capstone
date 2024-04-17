@@ -1,0 +1,3 @@
+# Abstract
+
+There are plenty of services and programs out there for allowing Teachers to upload resources and for their learners to access them. Most of these are not purpose designed for places of learning, such as school, colleges and universities. Those that exist for this specific use-case tend to be over-engineered and can be overly complicated (Moodle is a good example of this). The purpose of GoLearn is to provide a simple LRM experience for teachers and students to interact with the same resources without a large amount of overhead in setting up the system: it should work out of the box.

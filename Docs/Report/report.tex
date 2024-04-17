@@ -1,0 +1,576 @@
+\documentclass[12pt, a4paper,twoside]{report}
+
+%% Every LaTeX document begins with a preamble, which loads packages and
+%% defines various settings to make the document look right. Mostly,
+%% you can ignore everything in this template before \begin{document} on
+%% line 74
+
+\usepackage{mathtools,amsthm} % Enable useful mathematical symbols/environments
+\usepackage{graphicx} % Enable graphics
+\usepackage{fancyhdr,titlesec,microtype} % enable various formatting commands
+\usepackage[margin=2cm]{geometry} % Set margin size
+\usepackage{palatino} % Set the font
+\usepackage[latin1]{inputenc} % Allow you to input accents, umlauts and other characters
+\usepackage[T1]{fontenc} % Lets LaTeX print a wider array of characters
+
+\usepackage{xcolor} % Enable coloured elements
+\definecolor{mypurple}{HTML}{622567} %%% Purple
+\definecolor{myred}{HTML}{D55C19} %%%EssexOrange
+\definecolor{myblue}{HTML}{007A87} %%%Seagrass
+
+% For technical reasons, hyperref should be loaded after all other packages
+\usepackage[colorlinks,linkcolor=myblue,citecolor=mypurple]{hyperref}
+
+\renewcommand{\baselinestretch}{1.25} % 1.5 line spacing
+
+% Define \begin{theorem}, \end{theorem}, etc.
+\theoremstyle{plain} % The following will be italicised
+\newtheorem{theorem}{Theorem}[chapter]
+
+\theoremstyle{definition} % The following environments will not use italics
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\numberwithin{equation}{chapter}
+
+% Fancy headings
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\fancyheadoffset[LE,RO]{0pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[LE]{\makebox[0pt][l]{\thepage}\hfill\leftmark}
+\fancyhead[RO]{\rightmark\hfill\makebox[0pt][r]{\thepage}}
+\fancypagestyle{plain}{%
+    \fancyhead{} % get rid of headers
+    \renewcommand{\headrulewidth}{0pt} % and the line
+}
+
+% Fancy chapter numbers
+\titleformat{\chapter}[display]
+    {\normalfont\bfseries\color{myred}}
+    {\filleft\hspace*{-80pt}
+        \rotatebox[origin=c]{90}{
+            \normalfont\color{black}\large
+            \textls[180]{\textsc{\chaptertitlename}}
+        }
+        \hspace{8pt}
+        {\setlength\fboxsep{0pt}
+            \colorbox{myred}{\parbox[c][2cm][c]{1.5cm}{
+                    \centering\color{white}\fontsize{40}{45}\selectfont\thechapter}
+            }
+        }
+    }
+    {10pt}
+    {\titlerule[2.5pt]\vskip3pt\titlerule\vskip4pt\LARGE\sffamily}
+
+\begin{document} % Start your document
+
+%%%%%%%%%%%% BEGIN TITLE PAGE %%%%%%%%%%%%
+
+\thispagestyle{empty} % For the title page, no header / footer
+
+\noindent
+\begin{minipage}{0.1\textwidth}
+    \includegraphics[height=4.5em]{essex.png}
+\end{minipage}
+
+\hfill
+\begin{minipage}{0.5\textwidth}
+    \begin{center}
+        \renewcommand\familydefault{\sfdefault}
+        \fontfamily{phv}\selectfont
+        {\large School of Computer Science and Electrical Engineering}
+    \end{center}
+\end{minipage}
+
+\begin{center}
+    \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
+
+    \vspace{2em}
+    \noindent {\LARGE \sc Capstone Project Dissertation}
+
+    \vspace{3em}
+    \noindent {\Huge{\color{myblue} GoLearn --- Learning Resource Management
+            System}}
+
+    \vspace{3em}
+    \noindent {\Large \bf Bradley Beasley}
+
+    \vfill
+    \noindent {\Large {Supervisor:} {\color{mypurple} \bf Dr Alexandoros
+            Voudoris}}
+
+    \vspace{0.5em}
+    \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
+
+    \vspace{2em}
+    {\Large \today }
+
+    {\Large Colchester}
+\end{center}
+
+\clearpage
+
+\abstract{
+    There are plenty of services and programs out there for allowing Teachers
+    to upload resources and for their learners to access them. Most of these
+    are not purpose designed for places of learning, such as school, colleges
+    and universities. Those that exist for this specific use-case tend to be
+    over-engineered and can be overly complicated (Moodle is a good example
+    of this). The purpose of GoLearn is to provide a simple LRM experience
+    for teachers and students to interact with the same resources without a
+    large amount of overhead in setting up the system: it should work out of
+    the box.\\This report contains a look into methods of implementation for
+    web applications in general, plus the choices in technology and design
+    that were made for GoLearn.
+}
+
+%%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
+
+\tableofcontents
+
+\chapter{Table of Symbols}
+
+\begin{description}
+    \item[LRMS] Learning Resource Management System
+    \item[NPM] Node Package Manager
+    \item[CRUD] Create Read Update Delete 
+\end{description}
+
+\chapter{Introduction}\label{ch:introduction}
+
+%%%%%%%%%%%% Background %%%%%%%%%%%%
+
+\chapter{Background}\label{ch:background}
+
+\section{Similar Services}\label{sec:similarservices}
+
+There are various LRMS's available in the market, with some of the more popular
+one being:
+
+\begin{description}
+    \item[Udemy] {
+        is a free to access learning site that puts a paywall over all of
+        the courses. Creators can sign up to the site and create a course very
+        quickly. Learners can sign up to courses (paying whatever charge is
+        applied) and have unlimited access to them. They can access these from
+        their own `Courses' dashboard.
+        }
+    \item[Skillshare] {
+        is a similar service to Udemy, but is subscription based rather than
+        pay per course. This means that learners can access all of the courses
+        on the site for a monthly fee. Creators can create courses and upload
+        them to the site, with the same access restrictions as Udemy.
+        }
+    \item[LearnDash\cite{learndash}] {
+        is a WordPress plugin that allows you to create and sell
+        courses on your WordPress site. It is a very popular plugin, with
+        over 50,000 active installs and a 4.5-star rating on the WordPress
+        plugin repository. It is a very powerful plugin, with a lot of
+        features, but it is also very complex and can be difficult to use.\\
+        Being a plugin for WP, it is very easy to customise how the plugin
+        looks by modifying the theme on the site to best suit the business /
+        individual's needs. The plugin allows teachers to create courses and
+        students to access them, with a lot of customisation options for the
+        courses.
+        }
+    \item[Moodle\cite{moodle}] {
+        is the closest comparison that is currently available to GoLearn. It
+        is a PHP based LMS that is very powerful and feature-rich. It allows
+        learning institutions to design their own courses/modules and add
+        specific `student' users to them. This is a very similar model to
+        what GoLearn is aiming to achieve. The main difference is that Moodle
+        is very complex and can be difficult to use. It is also very
+        resource-intensive, requiring a lot of server resources to run
+        effectively.
+        }
+\end{description}
+
+\section{Tech Stacks}\label{sec:techstacks}
+
+A `Tech Stack' is the term used to describe the combination of programming
+languages, frameworks, libraries, and tools that are used to build a software
+application. The choice of a tech stack is crucial as it can affect the
+performance, scalability, and maintainability of the application. The following
+are some of the popular tech stacks used in web development:
+
+\begin{description}
+    \item[LAMP/LEMP Stacks] {
+        This stack consists of 4 major components: Linux, Apache/Nginx, MySQL
+        and PHP\@. Linux is the OS that is used in the stack, with Apache or
+        (E)\@nginx as the web server, MySQL as the database and PHP as the
+        server-side language. This stack is very popular and is used by many
+        web developers. It is used by various Frameworks (such as Laravel), as
+        well as in vanilla PHP applications (no framework used).
+
+        PHP is the programming language of choice for this kind of stack for
+        websites and applications that need to render the pages dynamically,
+        but don't need a lot of reactivity to user input on the page. For
+        for example, a blog or a news site would be a good use case for this
+        stack, as they largely need to retrieve data from a db when a page is
+        loaded, and can use caching strategies easily to only make a DB request
+        for cached pages after a certain period after the cached content was stored.
+
+        On the other hand, applications that have a lot of user interaction to perform
+        CRUD operations would be harder to write within this stack, as JS would have
+        to be loaded and ran to submit the changed data. Other stacks (as mentioned below)
+        instead rely less on page loads to perform actions, and instead are designed
+        with responsive and reactive implementations in mind.
+        }
+    \item[MEAN/MERN/MEVN Stacks] {
+        The `M' refers to the database implementation used (such as mySql, MongoDB)\ldots,
+        the `E' refers to ExpressJS, which is a NodeJS framework used for all forms of
+        JS applications, and is the layer between the templating framework and NodeJS to
+        serve an application. The `V', `A' and `R' refer to the templating framework used
+        to create the layouts used, and reference `VueJS', `AngularJS' and `ReactJS'
+        respectively. The `N' refers to `NodeJS', which is a server-side JS runtime
+        environment that is used to run JS code on the server.
+
+        This stack is very popular for creating SPAs (Single Page Applications) and
+        PWAs (Progressive Web Applications). These are applications that are designed
+        to be very reactive to user input, and can update the page without needing to
+        reload the page. This is done by using JS to update the page, rather than
+        relying on the server to render the page and send it to the client. This is
+        achieved by requesting information from the server about what to load and how
+        to load it, and then using JS to render the page based on the information
+        received. This is a very powerful stack, but can be difficult to learn and
+        use effectively.
+        }
+    \item[Full Stack Frameworks] {
+        A full stack framework is a framework that is designed to be used for both
+        the front-end and back-end of an application. This means that the framework
+        can be used to create the server-side code, as well as the client-side code.
+        This is very useful as it means that development teams can rely on a single
+        codebase for the entire application, rather than having to use multiple
+        codebases. This can make development faster and easier. As well as this, it
+        allows type safety and code completion to be used across the entire application
+        easier than in separate front- and back-end applications.
+
+        Some examples of full stack frameworks are NextJS and NuxtJS\@. These
+        frameworks are designed to be used for both the front-end and back-end of
+        an application. They are very powerful and can be used to create very complex
+        applications. They each use a different templating framework (NextJS uses
+        ReactJS, and NuxtJS uses VueJS). The benefit of these frameworks is that they
+        allow for server-side rendering as well as client-side rendering, which can
+        be very useful for SEO and performance reasons.
+
+        One drawback of these frameworks is that there can be a steep learning curve
+        to get started with them. As well as this, the codebase can get very complex
+        and the boundaries between client and server code can get blurred, which can
+        make it difficult to debug and maintain the codebase if it is not well organised.
+        }
+\end{description}
+
+\section{Databases and ORMs}\label{sec:databasesorms}
+
+A database is a collection of data that is stored in some structured
+format. Databases are used to store data that can be accessed and
+manipulated by software applications. There are many different types of
+databases, each with its own strengths and weaknesses, but all fall into
+one of two categories: relational or non-relational.
+
+\begin{description}
+
+    \item[Relational Databases] {
+        store data in tables, with each table containing
+        rows and columns. The columns represent the attributes of the data,
+        while the rows represent individual records. Relational databases use
+        SQL (Structured Query Language) to query and manipulate the data. Some
+        popular relational databases include MySQL, PostgreSQL, and SQLite.
+
+        This category of database is called relational because it allows for
+        relationships to be defined between the columns in different tables.
+        For example, a database for a school might have a `students' table and
+        a `courses' table. The `students' table might have a column that
+        references the `courses' table, which would allow for a relationship
+        to be defined between the two tables. This is called a foreign key, and
+        can be used to enforce that a student can only be enrolled in a course
+        that exists in the `courses' table.
+        }
+
+    \item[Non-Relational Databases] {
+        store data in a more flexible format, such as
+        key-value pairs, documents, or graphs. Non-relational databases are
+        often used when the data is unstructured or when the data model is
+        likely to change frequently. Some popular non-relational databases
+        include MongoDB, Cassandra, and Redis.
+
+        This category of database is called non-relational because it does not
+        enforce relationships between tables. This can make it easier to work
+        with the data, as the data can be stored in a more flexible format.
+
+        % TODO: Add more information about non-relational databases
+        }
+
+\end{description}
+
+An ORM is a layer between the application and the database that allows the
+application to interact with the database using an object-oriented interface.
+These are used to simplify the process of interacting with the database, and
+to make it easier to work with the data in the database. They supply an API for
+developers to be able to perform CRUD operations on the database without having
+to construct many (if any) queries or statements to do so.
+
+Some examples of ORMs include Prisma, TypeORM, and Sequelize. These ORMs are
+designed to be used with different databases, and have different features and
+capabilities. For example, Prisma is designed to be used with PostgreSQL, MySQL,
+and SQLite, and has a strong focus on type safety and code generation. TypeORM
+is designed to be used with TypeScript, and has a strong focus on type safety
+and code generation. Sequelize is designed to be used with MySQL, PostgreSQL,
+SQLite, and MSSQL, and has a strong focus on performance and scalability.\cite{orms}
+
+%%%%%%%%%%%% Technical Specification %%%%%%%%%%%%
+
+\section{Authentication}\label{sec:backgroundauthentication}
+
+Authentication can be defined as: `Verifying the identity of a user, process or
+device, often as a prerequisite to allowing access to resources in an information
+system.'\cite{authentication}. Simply put, it refers to any processes used to
+ensure that only those with the right to access a resource or perform functions
+can do so. This is a very important part of any application, especially those that
+can be accessed from a remote location (such as via the internet). This is because
+protecting the data that is managed by the application is a legal requirement (see
+Chapter~\ref{ch:legalandethical}).
+
+There are several methods of authentication that can be implemented. A few are listed
+and described below:
+
+\begin{description}
+    \item[Basic Authentication\cite{basic-authentication}] {
+        This is the simplest form of authentication, and is often used in
+        conjunction with a username and password. The user is prompted to enter
+        their username and password, which is then sent to the server. The server
+        then checks the username and password against a list of valid credentials,
+        and if they match, the user is granted access to the resource. This is a
+        very simple form of authentication, but it is not very secure, as the
+        username and password are sent in plain text over the network. This means
+        that anyone who is able to intercept the request can read the username and
+        password and use them to access the resource. For this reason, it is not
+        recommended to use basic authentication for anything other than testing
+        purposes.
+        }
+    \item[Token-Based Authentication\cite{token-based-authentication}] {
+        This is a more secure form of authentication that is often used in
+        conjunction with a username and password. The user is prompted to enter
+        their username and password, which is then sent to the server. The server
+        then checks the username and password against a list of valid credentials,
+        and if they match, the server generates a token and sends it back to the
+        client. The client then includes the token in all subsequent requests to
+        the server, and the server checks the token against a list of valid tokens
+        to ensure that the user is authenticated. This is a more secure form of
+        authentication, as the token is not sent in plain text over the network.
+        This means that even if someone is able to intercept the request, they
+        will not be able to read the token and use it to access the resource.
+        }
+    \item[OAuth\cite{oauth}] {
+        is an open standard for access delegation, commonly used as a way
+        for Internet users to grant websites or applications access to their
+        information on other websites but without giving them the passwords.
+        This is done by authorizing the application to access the data on the
+        user's behalf, and then the application is given a token that can be
+        used to access the data. This is a very secure form of authentication,
+        as the user's password is never sent over the network. This means that
+        even if someone is able to intercept the request, they will not be able
+        to read the password and use it to access the resource.
+        }
+\end{description}
+
+\chapter{Technical Specification}\label{ch:techspec}
+
+\section{Framework}\label{sec:framework}
+
+Of the stacks mentioned in Section~\ref{sec:techstacks}, the NextJS framework
+was chosen for the GoLearn project. This was chosen for the following reasons:
+
+\begin{description}
+    \item[ReactJS\cite{what-is-react}] {
+        ReactJS is a very powerful and popular front-end framework that is
+        used to create SPAs and PWAs. It is very flexible and can be used to
+        create very complex applications. It is also very easy to learn and
+        use, which makes it a good choice for the GoLearn project.
+
+        As well as this, it was a framework that the author had used before,
+        meaning that he could get started with the project quickly and easily
+        and wouldn't have to spend a lot of time learning to use a new framework
+        or architect his own solution from scratch. This proved to save a lot
+        of time in the development process, as the author was able to get started
+        on the project and make progress quickly.
+        }
+    \item[Server Actions\cite{next-server-action}] {
+        As of NextJS 14, the framework included a feature called `Server Actions'.
+        This allowed functions to be shared between server- and client-side code.
+        Whenever a server action was called, a request is sent to the server as a
+        Fetch/XHR request from the client, the server would handle the request and
+        return the result to the client. This would prove to be a very useful feature,
+        as it allows for CRUD operations to be ran
+        }
+\end{description}
+
+\section{Database and ORM}\label{sec:databaseorm}
+
+The ORM chosen for the GoLearn project was Prisma. This was chosen for the
+following reasons:
+
+\begin{description}
+    \item[Type Safety\cite{prisma-type-safety}] {
+        Prisma is designed to be used with TypeScript, and has a strong focus
+        on type safety and code generation. This means that the author could
+        be confident that the code he was writing was correct and that the
+        database schema was being enforced correctly. This was very important
+        for the GoLearn project, as it was a project that was being developed
+        by a single developer, and there was no QA team to review the code.
+        }
+    \item[Code Generation\cite{prisma-code-generation}] {
+        Prisma uses code generation to generate the database schema and the
+        client-side code that is used to interact with the database. This
+        means that the author could be confident that the code he was writing
+        was correct and that the database schema was being enforced correctly.
+        This was very important for the GoLearn project, as it was a project
+        that was being developed by a single developer, and there was no QA
+        team to review the code.
+        }
+\end{description}
+
+Prisma can be used with many different databases, including PostgreSQL, MySQL,
+and SQLite. One of the factors that was considered was the ease of creating and
+maintaining the database. Originally the author had considered using a service
+called `Supabase', which is a service that provides a PostgreSQL database, and
+is a service that Prisma has a lot of support for.
+
+Later in the project when the application hosting was being considered, it was
+decided that the author would the application on Vercel, which is a service that
+provides hosting for NextJS applications. Vercel has a feature called `Vercel for
+Databases', which allows you to create a PostgreSQL database that is hosted on
+Vercel. It was a relatively simple process to migrate the database from Supabase
+to Vercel, and the author was able to do this without too much difficulty. The
+Vercel database is also a PostgreSQL database, which meant that the author could
+continue to use Prisma with the database without any issues.
+
+%%%%%%%%%%%% Implementation %%%%%%%%%%%%
+
+\chapter{Implementation}\label{ch:implementation}
+
+\section{Data model}\label{sec:datamodel}
+
+There was a lot of thought put into the data model for the GoLearn project.
+The data model was designed to be as simple as possible, while still being
+able to store all of the information that was needed for the application to
+function correctly. The following models were implemented, with various
+relations between them:
+
+\begin{description}
+
+    \item[User] {
+        The User model was used to store data about a User, such as username,
+        password, role, etc. The role was used to determine what permissions
+        the user had, such as being able to edit content or not.
+    }
+    \item[Student] {
+        The Student model was used to store data about Students, such as their
+        home and term addresses, enrolled course and modules. These fields were
+        used to determine which modules and course pages they could access. If
+        a student was not enrolled in a course, they would not be able to access
+        the course page, the same being for the modules.
+    }
+    \item[Teacher] {
+        The Teacher model was used to store data about Teachers, such as their
+        address and the modules they were teaching. These fields were used to
+        determine which modules pages they could access. If a teacher was not
+        teaching a module, then they can not add content to those modules, nor
+        make edits to them.
+    }
+    \item[Course] {
+        A course has a name, description and a list of modules that are part of
+        the course. The course is the top-level resource in the GoLearn project,
+        with all other resources being children of the course, or children of
+        children, etc. The students that are enrolled in the course are also
+        associated to a course.
+    }
+    \item[Module] {
+        A module has a name, description, assignments, units, students and
+        teachers. This is an important model, as it acts as a container for
+        students and teachers to interact with the content. Teachers can create
+        and modify the content in a module and it's children, and students can
+        view the content if they are enrolled in the module.
+    }
+    \item[Assignment] {
+        Assignments are a type of resource that can be created by teachers within
+        a module, which students can then create submissions for. Assignments
+        have a name, description, due date, and a list of submissions that have
+        been made for the assignment.
+    }
+    \item[Unit] {
+        A unit is a resource that teachers can create within a module. This is a
+        method for organising the content within a module into smaller, more
+        manageable chunks. Units have a name, description, and a list of resources
+        that are part of the unit. There can also be sections within a unit, which
+        are used to further organise the content within the unit.
+    }
+    \item[Section] {
+        A section is a resource that acts as a container for Resources within a
+        Unit. Sections have a name, description, and a list of resources that are
+        part of the section. The reason for this inclusion into the model was to
+        allow teachers to better organise content within a unit such that they can
+        group together resources that are related to each other without having to
+        use naming convention to organise it for them.
+    }
+    \item[Resource] {
+        A resource is a leaf resource that can be created by teachers within a
+        section and/or. This is the lowest level of resource that can be created,
+        and is used to store the content that is displayed to the students. Resources
+        have a name, description, and a content field that is used to store the
+        content that is displayed to the students. As well as this, they can have any
+        number of files attached to them, which can be used to provide additional
+        resources to the students that is more complex than can be expressed by
+        markdown.
+    }
+\end{description}
+
+\section{Authentication}\label{sec:authentication}
+
+The method of authentication that was chosen for the GoLearn project was token-based
+authentication. This was chosen as it is a relatively simple form of authentication
+that is secure and easy to implement. Within the database, a `UserSession' table was
+created to store the tokens that are generated for each user. When a user logs in,
+a token is generated and stored in the `UserSession' table, and the token is sent
+back to the client. Whenever a user makes a request from the server, it checks if
+a token has been included in the request, and checks that token against the list of
+valid tokens in the `UserSession' table. If the token exists and is not too old to
+be used, the user's request is granted, and the user is able to access the resource.
+
+This was effective, but has a few drawbacks. The main drawback is that the token
+is stored in the database, which means that the database has to be queried every
+time a user makes a request. This can be slow and can cause performance issues if
+the database is not optimised. A better implementation of this might have been to
+use a library that was written to interact on the server fully and store the token
+in memory, rather than in the database. This would have been faster as querying
+memory is significantly faster than querying a remote database, as well as allowing
+the database to not get cluttered with old tokens that have either expired or are
+no longer in use.
+
+\section{CRUD Operations}\label{sec:crudoperations}
+
+
+
+\section{Data Loading}\label{sec:dataloading}
+
+\section{Known Issues}\label{sec:knownissues}
+
+\chapter{Testing}\label{ch:testing}
+
+\section{Unit Testing}\label{sec:unittesting}
+
+\section{User Testing}\label{sec:usertesting}
+
+\chapter{Legal and Ethical}\label{ch:legalandethical}
+
+\chapter{Project Planning}\label{ch:projectplanning}
+
+\chapter{Conclusions}\label{ch:conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{report}
+
+\end{document}
