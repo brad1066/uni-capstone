@@ -1,11 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { User } from '~/prisma/generated/client'
+import { Button } from '@/components/ui/button'
 
-type AdminDashboardProps = {
-  user: User;
-};
-
-const AdminDashboard = ({ user } : AdminDashboardProps) => {
+const AdminDashboard = () => {
   return (
     <div>
       <h1>Admin Dashboard</h1>
