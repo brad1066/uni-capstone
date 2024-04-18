@@ -125,6 +125,8 @@
 
 %%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
 
+\newpage
+
 \tableofcontents
 
 \chapter{List of Symbols}
@@ -345,8 +347,8 @@ one of two categories: relational or non-relational.
         the ability to store large amounts of data. As well as this,
         applications that require a lot of flexibility in the data model can
         benefit from using a NoSQL database, as it allows for the change in the
-        data model over time, without having to make adjustments to the existing
-        data.
+        data model over time, without having to make adjustments to the
+        existing data.
         }
 
 \end{description}
@@ -746,7 +748,30 @@ usability of the application.
 
 \chapter{Legal and Ethical}\label{ch:legalandethical}
 
-% TODO
+\begin{description}
+    \item[GDPR\cite{gdpr}] {
+         refers to the set of regulations surrounding the handling of user
+        data. This set of regulations is designed to protect the data of
+        individuals, and to ensure that companies are handling the data in a
+        responsible and ethical manner. The GoLearn project makes sure that
+        the data that is stored in the database can only be accessed by users
+        with the correct access permissions, and that the data is stored in a
+        secure manner. As well as this, all database communications via prisma
+        are sent via SSL, which means that the data is encrypted when it is
+        sent over the network. This is very important, as it ensures that the
+        data is protected from being intercepted by malicious actors.
+        }
+
+    \item[User consent] {
+        The GoLearn project is intended to be used by institutions of learning,
+        such as schools, colleges and universities. This means that the users
+        of the application will already have provided their consent for their
+        data to be stored and maintained and utilised by that institution. The
+        author felt that this would be a suitable level of consent for the
+        application. For this reason, no GDPR consent forms were included in
+        the application, as it was felt that this would be unnecessary.
+        }
+\end{description}
 
 \chapter{Project Planning}\label{ch:projectplanning}
 
