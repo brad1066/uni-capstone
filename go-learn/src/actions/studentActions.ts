@@ -27,8 +27,9 @@ export async function getStudent(username: string, extraFields: string[] = [], r
 } | undefined> {
   const authCookie = cookies().get('auth')
   if (authCookie) {
-    const today: Date = new Date()
-    today.setHours(0, 0, 0, 0)
+    const yesterday: Date = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    yesterday.setHours(0, 0, 0, 0)
     const [session, student] = await prisma.$transaction([
       prisma.userSession.findFirst({ where: { cookieValue: authCookie.value }, select: { user: true } }),
       prisma.student.findUnique({
@@ -37,7 +38,7 @@ export async function getStudent(username: string, extraFields: string[] = [], r
           modules: extraFields.includes('modules') || extraFields.includes('assignmentsDue') ? {
             include: {
               assignments: extraFields.includes('assignmentsDue') ? {
-                where: { dueDate: { gte: today } },
+                where: { dueDate: { gt: yesterday } }, // Only get assignments due after yesterday (checking for > today was inconsistent between deployed and local environments)
                 orderBy: { dueDate: 'asc' },
               }: false
             }
