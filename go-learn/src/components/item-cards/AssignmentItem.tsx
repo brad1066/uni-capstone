@@ -1,7 +1,7 @@
 import { Button, buttonVariants } from '../ui/button'
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from '@radix-ui/react-icons'
 import { Assignment } from '~/prisma/generated/client'
-import { cn } from '@/lib/utils'
+import { cn, compareDates } from '@/lib/utils'
 import Link from 'next/link'
 
 type AssignmentItemProps = {
@@ -18,9 +18,9 @@ const AssignmentItem = ({ className, assignment, editable, onClick, onDelete }: 
       onClick={onClick}
     ><div className='flex flex-col gap-2'>
         <span>{assignment.title}</span>
-        {assignment?.dueDate && assignment.dueDate.getDay() < new Date().getDay() && (<span className='text-red-400'>Overdue</span>)}
-        {assignment?.dueDate && assignment.dueDate.getDay() == new Date().getDay() && (<span className='text-amber-400'>Due today</span>)}
-        {assignment?.dueDate && assignment.dueDate.getDay() > new Date().getDay() && (<span className='text-green-400'>Due {assignment.dueDate.toLocaleDateString()}</span>)}
+        {assignment?.dueDate && compareDates(assignment.dueDate, new Date()) == -1 && (<span className='text-red-400'>Overdue</span>)}
+        {assignment?.dueDate && compareDates(assignment.dueDate, new Date()) == 0 && (<span className='text-amber-400'>Due today</span>)}
+        {assignment?.dueDate && compareDates(assignment.dueDate, new Date()) == 1 && (<span className='text-green-400'>Due {assignment.dueDate.toLocaleDateString()}</span>)}
       </div>
       <div className="actions flex gap-1">
         <Link href={`/view/assignments/${assignment.id}`} onClick={(e) => e.stopPropagation()}
