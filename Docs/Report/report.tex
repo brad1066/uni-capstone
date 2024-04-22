@@ -15,6 +15,8 @@
 
 \usepackage[colorlinks,linkcolor=myblue,citecolor=mypurple]{hyperref}
 
+\graphicspath{ {./images/} }
+
 \renewcommand{\baselinestretch}{1.25}
 
 % Define \begin{theorem}, \end{theorem}, etc.
@@ -66,18 +68,22 @@
 \thispagestyle{empty} % For the title page, no header / footer
 
 \noindent
-\begin{minipage}{0.1\textwidth}
-    \includegraphics[height=4.5em]{essex.png}
-\end{minipage}
+\begin{multicols}{2}
 
-\hfill
-\begin{minipage}{0.5\textwidth}
-    \begin{center}
-        \renewcommand\familydefault{\sfdefault}
-        \fontfamily{phv}\selectfont
-        {\large School of Computer Science and Electrical Engineering}
-    \end{center}
-\end{minipage}
+    \begin{minipage}{0.1\textwidth}
+        \includegraphics[height=4.5em]{essex.png}
+    \end{minipage}
+
+    \hfill
+
+    \begin{minipage}{0.5\textwidth}
+        \begin{center}
+            \renewcommand\familydefault{\sfdefault}
+            \fontfamily{phv}\selectfont
+            {\large School of Computer Science and Electrical Engineering}
+        \end{center}
+    \end{minipage}
+\end{multicols}
 
 \begin{center}
     \noindent\textcolor{myred}{\rule{\linewidth}{4.8pt}}
@@ -125,6 +131,8 @@
 
 %%%%%%%%%%%% END TITLE PAGE %%%%%%%%%%%%
 
+\newpage
+
 \tableofcontents
 
 \chapter{List of Symbols}
@@ -160,7 +168,36 @@
 
 \chapter{Introduction}\label{ch:introduction}
 
-% TODO
+In the fast-evolving landscape of educational technology, individual passion
+and innovation can often spark transformative change. The GoLearn project is a
+testament to this notion, born from the fervent desire of a single individual
+to streamline the educational experience for both teachers and students. With a
+deep-seated belief in the power of technology to enhance learning, the creator
+of GoLearn embarked on a solitary journey to develop a platform that simplifies
+content organization and sharing.
+
+At its core, GoLearn embodies the creator's unwavering commitment to usability
+and security. Recognizing the complexities inherent in educational content
+management, the project sets out to offer a user-friendly interface coupled
+with robust authentication mechanisms. By leveraging modern technologies and
+best practices, the goal is to empower educators with a tool that seamlessly
+integrates into their teaching workflow, freeing them to focus on what matters
+most: fostering learning.
+
+The journey of building GoLearn is one marked by countless decisions,
+challenges, and moments of inspiration. From meticulously crafting
+authentication protocols to architecting data loading strategies, every step
+reflects the singular vision and dedication of its creator. As a solo venture,
+the project encapsulates not only technical prowess but also the resilience and
+determination required to navigate the complexities of software development
+alone.
+
+As this report delves deeper into the intricacies of GoLearn's development
+process, it aims to shed light on the triumphs and tribulations experienced
+along the way. By examining the project's evolution from its humble beginnings
+to its current state, we gain valuable insights into the transformative
+potential of individual-driven innovation in the field of educational
+technology.
 
 %%%%%%%%%%%% Background %%%%%%%%%%%%
 
@@ -345,8 +382,8 @@ one of two categories: relational or non-relational.
         the ability to store large amounts of data. As well as this,
         applications that require a lot of flexibility in the data model can
         benefit from using a NoSQL database, as it allows for the change in the
-        data model over time, without having to make adjustments to the existing
-        data.
+        data model over time, without having to make adjustments to the
+        existing data.
         }
 
 \end{description}
@@ -746,15 +783,150 @@ usability of the application.
 
 \chapter{Legal and Ethical}\label{ch:legalandethical}
 
-% TODO
+\begin{description}
+    \item[GDPR\cite{gdpr}] {
+        refers to the set of regulations surrounding the handling of user
+        data. This set of regulations is designed to protect the data of
+        individuals, and to ensure that companies are handling the data in a
+        responsible and ethical manner. The GoLearn project makes sure that
+        the data that is stored in the database can only be accessed by users
+        with the correct access permissions, and that the data is stored in a
+        secure manner. As well as this, all database communications via prisma
+        are sent via SSL, which means that the data is encrypted when it is
+        sent over the network. This is very important, as it ensures that the
+        data is protected from being intercepted by malicious actors.
+        }
+
+    \item[User consent] {
+        The GoLearn project is intended to be used by institutions of learning,
+        such as schools, colleges and universities. This means that the users
+        of the application will already have provided their consent for their
+        data to be stored and maintained and utilised by that institution. The
+        author felt that this would be a suitable level of consent for the
+        application. For this reason, no GDPR consent forms were included in
+        the application, as it was felt that this would be unnecessary.
+        }
+\end{description}
 
 \chapter{Project Planning}\label{ch:projectplanning}
 
-% TODO
+Atlassian's project management tool, Jira, was used for this project.
+This was a decision that was decided upon by the University, and was not
+a decision that was made by the author. Jira provides many features that
+are useful for project management, such as the ability to create tasks,
+assign them to team members, and track the progress of the project.
+
+This project makes use of a Kanban Board to track the progress of the project.
+A Kanban board is a visual representation of the work that needs to be done,
+and is divided into columns that represent the different stages of the
+development process. The columns that were used in this project were:
+
+\begin{description}
+    \item[Backlog] {
+        This column is used to store all of the tasks that need to be done.
+        These tasks are not assigned to anyone, and are not being worked on.
+        }
+    \item[Selected for Development] {
+        This column is used to store all of the tasks that have been selected
+        for development. These tasks are assigned to a team member, and are
+        expected to be worked on next in the process. This differs from the
+        Backlog column in that the tasks have been selected to be worked on
+        next, rather than being stored for future development.
+        }
+    \item[In Progress] {
+        This column is used to store all of the tasks that are currently being
+        worked on. These tasks are assigned to a team member, and are being
+        actively worked on.
+        }
+    \item[Done] {
+        This column is used to store all of the tasks that have been completed.
+        These tasks are assigned to a team member, and are not being actively
+        worked on.
+        }
+\end{description}
+
+At the beginning of the project, the author created a large number of tasks
+to be completed, each with various subtasks to bring that task to completion.
+These tasks were often assigned to a particular story, which is a kind of issue
+that can be created to represent a use-case scenario that would lead to some
+feature being implemented. As the project progressed, the author would move
+tasks from the Backlog column to the Selected for Development column, and then
+to the In Progress column, and finally to the Done column once the task was
+completed.
+
+In the first few weeks and months of the project, much work was completed to
+get the project off the ground and to get the basic functionality working. This
+involved setting up the NextJS project, creating the data models, setting up
+the Prisma client, and creating some initial server actions for basic CRUD
+operations. As the project progressed, the more complex/length features needed
+to be implemented. This, coupled with the fact that the author was working on
+various other work at the same time unrelated to this particular project, meant
+that the project slowed down significantly. Below (Figure
+\ref{fig:cumm-flow-diag}) is a cumulative flow diagram showing the flow of
+issues between the various states of completion.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{cummulative_flow_diagram.png}
+    \caption{Cumulative Flow Diagram}\label{fig:cumm-flow-diag}
+\end{figure}
+
+This shows that over time in each term, the beginning would see a peak in the
+apparent work performed by the author, though this is when the issues were
+marked as complete as compared to when the work was actually completed.
 
 \chapter{Conclusions}\label{ch:conclusion}
 
-% TODO
+The GoLearn project presented many challenges along the way, ranging from
+methods of implementing authentication to NextJS specific issues. Many things
+were learnt by the author along the way. This includes how to write JSX (for
+React), implementing ORMs and Authentication and GIT for versions control. As
+these skills had to be learnt in tandem, this led to many refactors of code to
+get a working solution for the various problems. Overall, despite missing some
+features that the author wanted from the outset of the project, he is quite
+happy with the amount of progress that was completed.
+
+\section{Future Work}
+
+There is still a lot of work that needs to go into GoLearn before it can be
+considered a complete and fully functional application. Some of the work that
+needs to be done includes:
+
+\begin{description}
+
+    \item[SSR] {
+        The first thing that needs to be done is to implement server-side
+        rendering. This is important, as it will allow the pages to be rendered
+        on the server and sent to the client, rather than the other way round.
+        This will help to improve the performance of the application, as well
+        as make it more secure. This is a large task that will require a lot of
+        refactoring, and will take some time to complete.
+        }
+
+    \item[Assignment Marking and Feedback] {
+        The next thing that needs to be done is to implement a system for
+        marking assignments and providing feedback to students. This is
+        important, as it will help to ensure that the students are able to
+        learn from their mistakes and improve their work. This is quite a
+        large addition to the application, but would add a lot of value to the
+        project.
+        }
+
+    \item[Messaging] {
+        A final feature that needs to be implemented is a messaging system.
+        This would allow for educators and students to communicate with each
+        other about the various modules, units and assignments that have been
+        created and are accessible. This is something that would be completely
+        new to the application, and would only make use of the authentication.
+        Likely, this would require a separate service to run on the server, and
+        have a separate database to store the messages. This is largely because
+        the messages would be so numerous that they would clutter the database
+        that is used to store the other data. A NoSQL database would be a good
+        choice for this, as it would allow for the data to be stored in a more
+        flexible format.
+        }
+
+\end{description}
 
 \bibliographystyle{ieeetr}
 \bibliography{report}
