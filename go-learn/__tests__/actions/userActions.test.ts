@@ -536,7 +536,7 @@ describe('userActions', () => {
 
       prismaMock.$transaction.mockResolvedValue([{count: 0}, {...user}])
 
-      await expect(deleteUser(user)).resolves.toEqual([{count: 0}, {...user}])
+      await expect(deleteUser(user.username)).resolves.toEqual([{count: 0}, {...user}])
     })
 
     it('should return undefined if the current user does not have the correct role', async () => {
@@ -546,7 +546,7 @@ describe('userActions', () => {
         role: UserRole.teacher,
       }})
 
-      await expect(deleteUser(user)).resolves.toBeUndefined()
+      await expect(deleteUser(user.username)).resolves.toBeUndefined()
     })
   })
   

@@ -23,7 +23,7 @@ export default function Dashboard() {
 
   return <>
     {loading && <div>Loading your dashboard</div>}
-    {!loading && user?.role === UserRole.admin && <AdminDashboard user={ user } />}
+    {!loading && user?.role === UserRole.admin && <AdminDashboard />}
     {!loading && user?.role === UserRole.teacher && <TeacherDashboard user={user} />}
     {!loading && user?.role === UserRole.student && <StudentDashboard user={user} />}
   </>
