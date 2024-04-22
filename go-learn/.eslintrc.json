@@ -1,5 +1,6 @@
 {
   "root": true,
+  "files": ["./src/**/*.{ts,tsx}"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
