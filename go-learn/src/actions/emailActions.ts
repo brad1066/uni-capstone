@@ -3,8 +3,8 @@
 import { render } from '@react-email/render'
 import { sendEmail } from '../lib/emails'
 import { Contact, User, UserVerification } from '~/prisma/generated/client'
-import NewUserWelcomeEmail from '../emails/NewUserWelcome'
-import PasswordResetEmail from '@/emails/PasswordResetEmail'
+import NewUserWelcomeEmail from '@/providers/emails/NewUserWelcome'
+import PasswordResetEmail from '@/providers/emails/PasswordReset'
 
 export async function sendWelcomeEmail(
   { username, forename, surname }: User,
