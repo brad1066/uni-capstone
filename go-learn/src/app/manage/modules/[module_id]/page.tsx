@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react'
 import AssignmentItem from '@/components/item-cards/AssignmentItem'
 import { createAssignment, deleteAssignment } from '@/actions/assignmentActions'
 import NewAssignmentForm from '@/components/forms/NewAssignmentForm'
+import NewAssignmentDialog from '@/components/dialogs/new-assignment-dialog'
 
 type SingleModuleManagePageProps = {
   params: { module_id: string }
@@ -235,16 +236,13 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
           <CardHeader className="flex flex-row items-center gap-2 space-y-0 justify-between">
             <CardTitle>Assignments</CardTitle>
             {/* Add Assignment Dialog */}
-            <Dialog open={creatingAssignmentOpen} onOpenChange={setCreatingAssignmentOpen}>
-              <DialogTrigger asChild><Button>Add Assignment</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Add Assignment</DialogTitle></DialogHeader>
-                <NewAssignmentForm submitAssignment={async ({ title, description }) => {
-                  createAssignment({ title, description, moduleId: module.id } as Assignment)
-                    .then(refreshModuleData)
-                }} />
-              </DialogContent>
-            </Dialog>
+            <NewAssignmentDialog
+              open={creatingAssignmentOpen}
+              onOpenChange={setCreatingAssignmentOpen}
+              onSubmit={async ({ title, description }) => {
+                createAssignment({ title, description, moduleId: module.id } as Assignment)
+                  .then(refreshModuleData)
+              }} />
           </CardHeader>
           <CardContent>
             {module.assignments?.length ? <ul className="flex gap-2">

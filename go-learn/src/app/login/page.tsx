@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
@@ -59,15 +59,17 @@ const LoginPage = () => {
 
   return (<>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <Card className="space-y-8 max-w-[30rem] mx-auto">
-          <CardHeader>Login</CardHeader>
-          <CardContent>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[50%]">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl">Login</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
             <FormField
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='grid gap-2'>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input placeholder="username" {...field} />
@@ -79,9 +81,8 @@ const LoginPage = () => {
             <FormField
               control={form.control}
               name="password"
-
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='grid gap-2'>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="password" {...field} />
@@ -103,9 +104,9 @@ const LoginPage = () => {
               )}
             />
           </CardContent>
-          <CardFooter>
-            <Button type="submit">Submit</Button>
-            <Button type="button" onClick={() => {
+          <CardFooter className='flex flex-col gap-4'>
+            <Button type="submit" className='w-full'>Submit</Button>
+            <Button type="button" className='w-full text-secondary' variant={'link'} onClick={() => {
               router.push('/login/forgot-password')
             }}>Forgot my password</Button>
           </CardFooter>

@@ -10,6 +10,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { Assignment, Course, Module, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { PlusIcon } from '@radix-ui/react-icons'
 
 type ViewModulePageProps = {
   params: {
@@ -62,7 +64,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
 
           {/* Module Assignments Card */}
           <Card className='lg:col-span-2'>
-            <CardHeader><CardTitle>Assignments</CardTitle></CardHeader>
+            <CardHeader><CardTitle className='flex flex-row items-center justify-between'>Assignments <Button>New</Button></CardTitle></CardHeader>
             <CardContent>
               {module.assignments?.length ? (
                 <div className="flex flex-row flex-wrap">
@@ -80,7 +82,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
 
           {/* Module Units Card */}
           <Card className='lg:col-span-3'>
-            <CardHeader><CardTitle>Units</CardTitle></CardHeader>
+            <CardHeader><CardTitle className='flex flex-row items-center justify-between'>Units <Button>New</Button></CardTitle></CardHeader>
             <CardContent>
               {module.units?.length ? (
                 <ul className="flex flex-row flex-wrap">
