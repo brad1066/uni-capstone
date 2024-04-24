@@ -60,7 +60,7 @@ const LoginPage = () => {
 
   return (<>
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-[50%]">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-12 md:w-[50%] md:max-w-[25rem]">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
