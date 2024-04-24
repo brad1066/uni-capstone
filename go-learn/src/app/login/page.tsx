@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { useAuth } from '@/hooks/useAuth'
+import Link from 'next/link'
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -105,10 +106,14 @@ const LoginPage = () => {
             />
           </CardContent>
           <CardFooter className='flex flex-col gap-4'>
-            <Button type="submit" className='w-full'>Submit</Button>
-            <Button type="button" className='w-full text-secondary' variant={'link'} onClick={() => {
-              router.push('/login/forgot-password')
-            }}>Forgot my password</Button>
+            <Button // Submit
+              type="submit"
+              className='w-full'>Submit</Button>
+            <Link // Forgot my password
+              href='/login/forgot-password'
+              className='w-fit text-gray-900 dark:text-white opacity-60 hover:opacity-90 transition-opacity hover:no-underline'>
+              Forgot my password
+            </Link>
           </CardFooter>
         </Card>
       </form>
