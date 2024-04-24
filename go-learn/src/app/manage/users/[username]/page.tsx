@@ -5,7 +5,7 @@ import { addStudentCourse, addStudentModule, getStudent, removeStudentCourse, re
 import { getTeacher } from '@/actions/teacherActions'
 import { getUser, updateUser } from '@/actions/userActions'
 import NoAccessNotice from '@/components/ui/NoAccessNotice'
-import ResourcesAuthoredCard from '@/components/ResourcesAuthoredCard'
+import ResourcesAuthoredCard from '@/components/item-cards/ResourcesAuthoredCard'
 import CourseItem from '@/components/item-cards/CourseItem'
 import ModuleItem from '@/components/item-cards/ModuleItem'
 import { AssignStudentCourseForm } from '@/components/forms/AssignStudentCourseForm'

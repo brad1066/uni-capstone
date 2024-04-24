@@ -1,6 +1,13 @@
 {
   "root": true,
-  "files": ["./src/**/*.{ts,tsx}"],
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ]
+    }
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -9,15 +16,39 @@
     "plugin:jest-dom/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": { "project": ["./tsconfig.json"] },
-  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "rules": {
-    "block-spacing": ["error", "always"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "never"],
-    "indent": ["error", 2],
-    "no-multi-spaces": ["error"],
+    "block-spacing": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "never"
+    ],
+    "indent": [
+      "error",
+      2
+    ],
+    "no-multi-spaces": [
+      "error"
+    ],
     "react-hooks/exhaustive-deps": "off"
   },
-  "ignorePatterns": ["src/**/*.test.ts", "src/frontend/generated/*", "src/components/ui/*"]
+  "ignorePatterns": [
+    "src/**/*.test.ts",
+    "src/frontend/generated/*",
+    "src/components/ui/*"
+  ]
 }

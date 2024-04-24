@@ -23,7 +23,6 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AssignmentItem from '@/components/item-cards/AssignmentItem'
 import { createAssignment, deleteAssignment } from '@/actions/assignmentActions'
-import NewAssignmentForm from '@/components/forms/NewAssignmentForm'
 import NewAssignmentDialog from '@/components/dialogs/new-assignment-dialog'
 
 type SingleModuleManagePageProps = {

@@ -10,9 +10,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { Assignment, Course, Module, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@radix-ui/react-icons'
-import NewAssignmentDialog from '@/components/dialogs/new-assignment-dialog'
 
 type ViewModulePageProps = {
   params: {

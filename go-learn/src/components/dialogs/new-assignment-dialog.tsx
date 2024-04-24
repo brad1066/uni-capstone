@@ -1,10 +1,10 @@
 'use client'
 
-import { Dispatch, SetStateAction, useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import { Button } from "../ui/button"
-import NewAssignmentForm from "../forms/NewAssignmentForm"
-import { Assignment } from "~/prisma/generated/client"
+import { Dispatch, SetStateAction, useState } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Button } from '../ui/button'
+import NewAssignmentForm from '../forms/NewAssignmentForm'
+import { Assignment } from '~/prisma/generated/client'
 
 type NewAssignmentDialogProps = {
   open?: boolean
