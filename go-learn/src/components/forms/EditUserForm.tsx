@@ -59,12 +59,16 @@ const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUse
               <Collapsible
                 open={nameEntryOpen}
                 onOpenChange={setNameEntryOpen}
-                className='newUserNameEntries space-y-4'
+                className='newUserNameEntries space-y-4 w-full'
               >
-                <div className='alwaysShown'>
+                <div className='alwaysShown w-full'>
                   {/* Name's 'title' input */}
-                  <Input disabled={!canEdit} placeholder='title' value={user?.title} onChange={({ target: { value: title } }) => (setUser(user ? { ...user, title } : user
-                  ))} />
+                  <Input
+                    disabled={!canEdit}
+                    placeholder='title'
+                    value={user?.title}
+                    className='w-full'
+                    onChange={({ target: { value: title } }) => (setUser(user ? { ...user, title } : user))} />
 
                   {/* Name's 'forename' input */}
                   <Input disabled={!canEdit} placeholder='forename' value={user?.forename} onChange={({ target: { value: forename } }) => (setUser(user ? { ...user, forename } : user))} />
@@ -94,14 +98,14 @@ const EditUserForm = ({ loading, user, setUser, onUpdateSave, canEdit }: EditUse
               </Collapsible>
             </li>
             <li className='hover:bg-accent'>
-              <div className='flex flex-col sm:flex-row gap-4'>
+              <div className='flex flex-col sm:flex-row gap-4 w-full'>
                 {/* Contact's 'email' input */}
                 <Label className='flex-1 flex flex-col gap-4'>Email
                   <Input disabled={!canEdit} type='email' placeholder='email' value={user?.contactDetails?.email ?? ''} onChange={(e) => { setUser?.({ ...user, contactDetails: { ...user?.contactDetails, email: e.target.value } as Contact }) }} />
                 </Label>
 
                 {/* Contact's 'mobile' input */}
-                <Label className='flex-1 flex flex-col gap-4'>Mobile
+                <Label className='flex-1 flex flex-col gap-4 w-full'>Mobile
                   <Input disabled={!canEdit} placeholder='mobile' value={user?.contactDetails?.mobile ?? ''} onChange={e => { setUser?.({ ...user, contactDetails: { ...user?.contactDetails, mobile: e.target.value } as Contact }) }} />
                 </Label>
               </div>
