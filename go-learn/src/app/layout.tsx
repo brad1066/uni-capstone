@@ -23,7 +23,7 @@ export default async function RootLayout({
       <body className={inter.className + ' min-h-screen'}>
         <PageWrapper>
           <Header />
-          <main className='flex flex-col items-center px-24 min-h-[100%]'>
+          <main className='flex flex-col items-center px-6 md:px-24 min-h-[100%]'>
             <Suspense>
               {children}
             </Suspense>

@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 import UserDropdown from '../navigation/UserDropdown'
 import Link from 'next/link'

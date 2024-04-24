@@ -1,13 +1,13 @@
 'use client'
 
 import { Resource, User } from '~/prisma/generated/client'
-import { Card, CardContent, CardHeader } from './ui/card'
+import { Card, CardContent, CardHeader } from '../ui/card'
 import { useEffect, useState } from 'react'
 import { getResources } from '@/actions/resourceActions'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { ScrollArea } from './ui/scroll-area'
-import ResourceItem from './item-cards/ResourceItem'
+import { ScrollArea } from '../ui/scroll-area'
+import ResourceItem from './ResourceItem'
 
 type ResourcesAuthoredCardProps = {
   author: User

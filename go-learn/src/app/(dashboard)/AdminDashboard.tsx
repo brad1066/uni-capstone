@@ -5,7 +5,7 @@ import Link from 'next/link'
 const AdminDashboard = () => {
   return (
     <div>
-      <h1>Admin Dashboard</h1>
+      <h1 className='text-center'>Admin Dashboard</h1>
       <Card className='mt-8'>
         <CardContent className='p-8 flex flex-col gap-4'>
           <Link href='manage/users' className={buttonVariants({variant: 'default'})}>Users</Link>

@@ -96,12 +96,12 @@
   }
 
   .site-header>.navbar {
-    @apply m-4 my-auto;
+    @apply m-2 my-auto;
     grid-area: navigation;
   }
 
   .site-header>.account-button {
-    @apply m-4 my-auto;
+    @apply m-2 my-auto;
     grid-area: account;
   }
 }

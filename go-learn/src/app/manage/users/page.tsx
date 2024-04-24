@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { createUser as createUser, deleteUser, getUsersByRole } from '@/actions/userActions'
 import { Contact, User, UserRole } from '~/prisma/generated/client'
 import { AlertDialog, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogCancel, AlertDialogContent, AlertDialogAction } from '@/components/ui/alert-dialog'
+import { InfinitySpin } from 'react-loader-spinner'
 
 export default function UsersManagePage() {
   const router = useRouter()
@@ -32,29 +33,22 @@ export default function UsersManagePage() {
     setUserDeleteConfirmOpen(true)
   }
 
-  useEffect(() => {
-    !user && validateLoggedIn?.()
-      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
-    filter
-
-    !user && getUsersByRole(filter != UserRole.unassigned ? [filter] as UserRole[] : undefined)
-      .then((allUsers) => allUsers && setUsers([...allUsers]))
-      .finally(() => setLoading(false))
-  }, [])
-
+  // When the search params is changed, check auth and get users
   useEffect(() => {
     setLoading(true)
-    const filter = searchParams?.get('filter') as string | null
-    if (filter && filter in Object.keys(UserRole)) {
-      setFilter(filter as UserRole)
-    } else {
-      setFilter(UserRole.unassigned)
-    }
-    setLoading(false)
+    !user && validateLoggedIn?.()
+      .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
+
+    // Get users by role (all if no filter), set the filter state and stop loading
+    getUsersByRole(filter != UserRole.unassigned ? [filter] as UserRole[] : undefined)
+      .then((allUsers) => { allUsers && setUsers([...allUsers]) })
+      .then(() => setFilter(searchParams?.get('filter') as UserRole || UserRole.unassigned))
+      .finally(() => setLoading(false))
   }, [searchParams])
 
   return (
     <>
+      {loading && <InfinitySpin color='primary'/>}
       {(!loading && user?.role != UserRole.admin) && <NoAccessNotice />}
       {!loading && user?.role == UserRole.admin && <>
         <h1 className="mb-[1rem] flex gap-4 items-center">Users
@@ -118,6 +112,27 @@ export default function UsersManagePage() {
               </CardContent>
             </Card>
           }
+          {(filter == UserRole.unassigned || filter == UserRole.admin) &&
+            <Card>
+              <CardHeader>Admin</CardHeader>
+              <CardContent>
+                <ul className={cn('grid grid-cols-1 gap-4', filter == UserRole.admin ? 'flex flex-wrap flex-row' : '')}>
+                  {
+                    users && users.filter(user => user.role == UserRole.admin).map(user => (
+                      <UserItem
+                        key={user.username}
+                        user={user}
+                        editable
+                        onDelete={async () => { confirmUserDelete(user) }} />
+                    ))
+                  }
+                  {
+                    users.filter(user => user.role == UserRole.admin).length == 0 && 'No admin found'
+                  }
+                </ul>
+              </CardContent>
+            </Card>
+          }
         </div> : 'No users found'
         }
       </>
@@ -136,7 +151,7 @@ export default function UsersManagePage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={async () => {
                 deleteUser(userToDelete.username)
-                  .then(() => router.replace('/manage/users'))
+                  .then(() => setUsers(users => users?.filter(user => user.username != userToDelete.username)))
               }}>Confirm</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

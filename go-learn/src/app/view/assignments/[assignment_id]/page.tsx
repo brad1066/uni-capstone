@@ -40,6 +40,7 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
     if (user && assignment_id) {
       const extraFields: string[] = ['module', 'resources']
       if (user.role == UserRole.student) { extraFields.push('user.submissions') }
+
       if (user.role == UserRole.teacher || user.role == UserRole.admin) { extraFields.push('submissions') }
       getAssignment(assignment_id, extraFields)
         .then((assignment) => {
@@ -121,7 +122,7 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
             }
           </CardContent>
         </Card>
-        
+
         <Card className="w-full">
           <CardHeader className='flex flex-row justify-between items-center'>
             <CardTitle>Submissions</CardTitle>
@@ -161,25 +162,23 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
               assignment?.submissions?.length
                 ? (<ul className='flex gap-2 flex-row flex-wrap'>
                   {assignment.submissions?.map?.(submission => (<>
-                    {user?.role == UserRole.student ? <SubmissionItem
+                    <SubmissionItem
                       key={submission.id}
                       submission={submission}
                       className='max-w-fit min-w-sm'
-                      onDelete={async () => {
-                        deleteSubmission(submission.id)
-                          .then((resp) => {
-                            if (!resp?.deletedUpload) { return }
-                            supabase.storage
-                              .from('golearn-resources')
-                              .remove([resp.deletedUpload.path])
-                          })
-                          .then(refreshAssignmentData)
-                      }} />
-                      : <SubmissionItem
-                        key={submission.id}
-                        submission={submission}
-                        className='max-w-fit min-w-sm' />
-                    } 
+                      onDelete={
+                        user?.role == UserRole.student
+                          ? async () => {
+                            deleteSubmission(submission.id)
+                              .then((resp) => {
+                                if (!resp?.deletedUpload) { return }
+                                supabase.storage
+                                  .from('golearn-resources')
+                                  .remove([resp.deletedUpload.path])
+                              })
+                              .then(refreshAssignmentData)
+                          } : undefined
+                      } />
                   </>))}
                 </ul>)
                 : <p>No Submissions</p>

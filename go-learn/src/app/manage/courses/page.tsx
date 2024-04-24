@@ -37,21 +37,21 @@ export default function CoursesManagePage() {
 
   return (
     <>
+      <h1 className="mb-[1rem] flex gap-4 items-center">All Courses
+        {!loading && <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild><Button variant="secondary" className='bg-card border shadow'>New<PlusIcon className="ml-1" /></Button></DialogTrigger>
+          <DialogContent>
+            <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
+            <NewCourseForm submitCourse={async course => {
+              course && createCourse(course)
+                .then(() => setDialogOpen(false))
+                .then(refreshCourses)
+            }} />
+          </DialogContent>
+        </Dialog>}
+      </h1>
       {(!loading && user?.role != UserRole.admin) && <NoAccessNotice />}
       {!loading && user?.role == UserRole.admin && <>
-        <h1 className="mb-[1rem] flex gap-4 items-center">All Courses
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild><Button variant="secondary" className='bg-card border shadow'>New<PlusIcon className="ml-1" /></Button></DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>New Course</DialogTitle></DialogHeader>
-              <NewCourseForm submitCourse={async course => {
-                course && createCourse(course)
-                  .then(() => setDialogOpen(false))
-                  .then(refreshCourses)
-              }} />
-            </DialogContent>
-          </Dialog>
-        </h1>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">
           {courses.map(course => (
             <CourseItem

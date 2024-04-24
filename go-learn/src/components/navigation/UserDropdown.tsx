@@ -35,7 +35,7 @@ export function UserDropdown({ className }: UserDropdownProps) {
         <Button variant="outline" className={cn(className, 'bg-card border shadow')}>Hi {user?.forename}</Button>
       </DropdownMenuTrigger>
       }
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 mx-6">
         <DropdownMenuLabel className="flex items-center justify-between">
           <span>{user?.forename} {user?.surname}</span>
           <ThemeToggler className="theme-toggler" />
@@ -53,10 +53,11 @@ export function UserDropdown({ className }: UserDropdownProps) {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Users</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuSubContent>
+                <DropdownMenuSubContent className='mx-2'>
                   <DropdownMenuItem><Link href="/manage/users" className="w-full">All</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link href="/manage/users?filter=teachers" className="w-full">Teachers</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link href="/manage/users?filter=students" className="w-full">Students</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users?filter=teacher" className="w-full">Teachers</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users?filter=student" className="w-full">Students</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/manage/users?filter=admin" className="w-full">Admin</Link></DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>

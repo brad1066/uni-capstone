@@ -66,7 +66,7 @@ export async function createUser(userInfo: User & { contactDetails?: Contact }){
         verificationCode: genVerificationCode(),
       }
     })
-    sendWelcomeEmail(user, userInfo.contactDetails, verification)
+    await sendWelcomeEmail(user, userInfo.contactDetails, verification).catch(e => console.error(e))
   }
   return user
 }

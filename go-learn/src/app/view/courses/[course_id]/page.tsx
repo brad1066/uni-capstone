@@ -33,11 +33,11 @@ export default function ViewCoursePage({ params: { course_id } }: ViewCoursePage
 
   return (
     <>
+      <h1 className="mb-4 text-center">{course?.title}</h1>
       {!loading && !course && <>
         <NotFoundPage />
       </>}
       {!loading && course && <>
-        <h1 className="mb-4">{course?.title}</h1>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-col gap-4">
           {/* Description Card */}
           <Card className="">
