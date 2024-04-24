@@ -17,12 +17,12 @@ export default function ForgotPasswordPage() {
   })
 
   return (<>
-    <div>
+    <div className='flex flex-col gap-4 mx-4 md:mx-0'>
       <h1>Forgot Password</h1>
 
       <p>Enter your username and we&apos;ll send you a link to reset your password.</p>
 
-      <form onSubmit={(e) => {
+      <form className='mt-4 flex flex-col gap-2' onSubmit={(e) => {
         e.preventDefault()
         requestUserPasswordChange(username)
           .then((resp) => {
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
             })
           })
       }}>
-        <Input placeholder="username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
+        <Input placeholder="Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
         <Button type="submit">Submit</Button>
       </form>
       <AlertDialog open={alert.open}>
