@@ -23,7 +23,7 @@ export const sendEmail = async (data: EmailPayload) => {
   })
 
   return await transporter.sendMail({
-    from: process.env.SMTP_FROM_EMAIL,
+    from: `GoLearn <${process.env.SMTP_FROM_EMAIL}>`,
     ...data,
   })
 }
