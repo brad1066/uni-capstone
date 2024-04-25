@@ -55,7 +55,7 @@ export async function createUnit({ title, description = '', moduleId }: Unit) {
   if (!title) return undefined
 
   const session = await getCurrentUserSession()
-  if (!session || session.user.role != UserRole.admin) return undefined
+  if (!session || !(session.user.role == UserRole.admin || session.user.role == UserRole.teacher)) return undefined
 
   return await prisma.unit.create({ data: { title, description, moduleId } }) ?? undefined
 }
