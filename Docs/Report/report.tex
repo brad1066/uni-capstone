@@ -139,30 +139,33 @@
 
 \begin{multicols}{2}
     \begin{description}
-        \item[API]  Application Programming Interface
-        \item[CRUD] Create Read Update Delete
-        \item[DB]   Database
-        \item[JS]   JavaScript
-        \item[LAMP] Linux, Apache, MySQL, PHP
-        \item[LEMP] Linux, (E)\@Nginx, MySQL, PHP
-        \item[LRM]  Learning Resource Management
-        \item[MEAN] Mongo, Express, Angular, Node
-        \item[MEVN] Mongo, Express, Vue, Node
-        \item[MERN] Mongo, Express, React, Node
-        \item[NPM]  Node Package Manager
-        \item[ORM]  Object Relational Mapper
-        \item[OS]   Operating System
-        \item[PHP]  Hypertext Preprocessor
-        \item[PWA]  Progressive Web Application
-        \item[QA]   Quality Assurance
-        \item[SEO]  Search Engine Optimisation
-        \item[SPA]  Single Page Application
-        \item[SQL]  Structured Query Language
-        \item[SSR]  Server Side Rendering
-        \item[TS]   TypeScript
-        \item[UAT]  User Acceptance Testing
-        \item[WP]   WordPress
-        \item[XHR]  XMLHttpRequest
+        \item[API]   Application Programming Interface
+        \item[CI/CD] Continuous Integration / Continuous Deployment
+        \item[CRUD]  Create Read Update Delete
+        \item[DB]    Database
+        \item[GIT]   Global Information Tracker
+        \item[JS]    JavaScript
+        \item[LAMP]  Linux, Apache, MySQL, PHP
+        \item[LEMP]  Linux, (E)\@Nginx, MySQL, PHP
+        \item[LRM]   Learning Resource Management
+        \item[MEAN]  Mongo, Express, Angular, Node
+        \item[MEVN]  Mongo, Express, Vue, Node
+        \item[MERN]  Mongo, Express, React, Node
+        \item[NPM]   Node Package Manager
+        \item[ORM]   Object Relational Mapper
+        \item[OS]    Operating System
+        \item[PHP]   Hypertext Preprocessor
+        \item[PWA]   Progressive Web Application
+        \item[QA]    Quality Assurance
+        \item[SEO]   Search Engine Optimisation
+        \item[SPA]   Single Page Application
+        \item[SQL]   Structured Query Language
+        \item[SSR]   Server Side Rendering
+        \item[TS]    TypeScript
+        \item[UAT]   User Acceptance Testing
+        \item[VCS]   Version Control System
+        \item[WP]    WordPress
+        \item[XHR]   XMLHttpRequest
     \end{description}
 \end{multicols}
 
@@ -717,6 +720,42 @@ Actions were not compatible with the methods used to perform the server-side
 rendering. This would require a large amount of refactoring to fix, and would
 be a large task to undertake.
 
+\section{Component design}\label{sec:componentdesign}
+
+For the GoLearn project, the component design was kept simple. Rather than
+spending an exceptional amount of time developing a complex component
+library of reusable components, the author decided to use the `shadcn/ui'
+library. This is an open source library that builds on the radix-ui library,
+and provides a set of components that are designed to be used in React
+applications. The components are very easy to use and are very flexible, which
+made them a good choice for the GoLearn project.
+
+\section{Emails}\label{sec:emails}
+
+When a user is created, or they submit a request to reset their password, an
+email is sent to the user to provide them with a code and a link to set their
+password. This was implemented using the react-email and nodemailer libraries.
+The service that was used to actually send the email was Brevo. This required
+the setup of a Brevo account, and the configuration of the account in the
+`.env' file.
+
+\section{Deployment}\label{sec:deployment}
+
+The deployment of the GoLearn project was done using Vercel. Vercel is a
+service that provides hosting for various Node-backed applications, and is very
+easy to use. The deployment process was very simple once set up. The initial
+setup required the author to link the Vercel account to the GitHub repository
+that the project was stored in. The environment variables that were used in the
+project were then set up in the Vercel dashboard. Once this was done, the
+author could deploy the project by pushing to a `master' branch of the
+repository. This would then trigger a build on Vercel, and the project would be
+deployed to the Vercel servers.
+
+Once the project was deployed to the Vercel servers, the author then applied
+a custom domain to the project. This was done by adding the domain to the
+Vercel dashboard, and then updating the DNS records for the domain to point to
+the Vercel servers.
+
 \section{Known Issues}\label{sec:knownissues}
 
 As mentioned before in section \ref{sec:dataloading}, there is an issue with
@@ -772,14 +811,37 @@ courses and modules. The friends and family members would also make the same
 checks, and be watching out for anything that seemed out of place, as well as
 providing feedback on the design and usability of the application.
 
-This was not performed, as the application was not in a state where it could be
-tested by anyone other than the author. The application was deployed to a
-Vercel server, but the application itself was not working as intended (as
-discussed in section~\ref{sec:knownissues}). This meant that the application
-was not readily testable for end users. Despite this, during the development of
-the application, the author was able to get some face-to-face feedback from
-friends and family members, which was used to make changes to the design and
-usability of the application.
+GoLearn was not ready for user testing until the week that this report was
+due. Therefore the UAT that was performed was very informal, and a
+questionnaire was not provided for the tester that I managed to get to test the
+application. That being said, the feedback that was received was very critical
+and useful in identifying the issues that were present in the application.
+
+The main points that were brought up were as follows:
+
+\begin{itemize}
+    \item ``It seems to run fine, a bit odd having the update button be at the
+          top next to `user data' but that might just be my preferences being
+          weird. ''
+    \item ``I cant see any courses (did you make a template one?) but from what
+          i can see it all looks good.''
+    \item ``I guess you could also move the `courses' from the dropdown to
+          perhaps a bar at the top (as im not sure if its an admin view thing,
+          but the page looks kinda empty)''
+\end{itemize}
+
+These points were very useful in identifying some issues with the UX that
+seemed like good ideas at the time that they were implemented. The issue
+mentioned in the second comment was a known issue relating to the way that the
+data was loaded onto the page. The final comment was something that was
+considered early on in the project, and was something that was decided against
+for the purposes of keeping a clean UI\@. This is something that could be added
+in the future, but is not a priority for the project.
+
+Some more directed UAT in the form of a questionnaire would be useful in
+addressing some of the UX concerns brought up by the tester. If the opinions of
+the tester are shared by other users, then addressing this and making some
+changes to these aspects of the application would be a good idea.
 
 \chapter{Legal and Ethical}\label{ch:legalandethical}
 
@@ -874,6 +936,21 @@ issues between the various states of completion.
 This shows that over time in each term, the beginning would see a peak in the
 apparent work performed by the author, though this is when the issues were
 marked as complete as compared to when the work was actually completed.
+
+\section{GIT}\label{sec:git}
+
+GIT is a VCS method that is a currently one of the most known and used VCS's
+used. This works by having a set of files and directories being tracked by some
+program, with changes bundled together in commits. Usually a GIT repository is
+created and worked on within local environments (on a work laptop or PC for
+example), and then uploaded to a remote server (called pushing).
+
+For this project, the University provided a GIT remote location (built on top
+of GitLab). The author also kept track of changes in a GitHub remote on their
+own personal GitHub account. The University's GitLab setup was to be used and
+referenced by the University to get statistics on VCS utilisation, whilst the
+personal remote on GitHub was used as part of a CI/CD with Vercel (as
+discussed in Section~\ref{sec:deployment}).
 
 \chapter{Conclusions}\label{ch:conclusion}
 
