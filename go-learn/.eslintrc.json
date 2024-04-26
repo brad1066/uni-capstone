@@ -1,13 +1,5 @@
 {
   "root": true,
-  "overrides": [
-    {
-      "files": [
-        "*.ts",
-        "*.tsx"
-      ]
-    }
-  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -47,8 +39,7 @@
     "react-hooks/exhaustive-deps": "off"
   },
   "ignorePatterns": [
-    "src/**/*.test.ts",
-    "src/frontend/generated/*",
+    "./**/*.test.ts",
     "src/components/ui/*"
   ]
 }
