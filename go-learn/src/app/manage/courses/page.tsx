@@ -29,7 +29,7 @@ export default function CoursesManagePage() {
   }
 
   useEffect(() => {
-    if (user) { return }
+    if (user) { refreshCourses(); return }
     validateLoggedIn?.()
       .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
       .then(refreshCourses)
