@@ -1,6 +1,4 @@
-
 'use client'
-
 
 import { createCourse, deleteCourse, getCourses } from '@/actions/courseActions'
 import NoAccessNotice from '@/components/ui/NoAccessNotice'
@@ -29,8 +27,8 @@ export default function CoursesManagePage() {
   }
 
   useEffect(() => {
-    if (user) { refreshCourses(); return }
-    validateLoggedIn?.()
+    if (user) { refreshCourses() }
+    else validateLoggedIn?.()
       .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
       .then(refreshCourses)
   }, [])
