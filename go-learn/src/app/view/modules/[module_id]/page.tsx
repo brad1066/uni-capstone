@@ -39,7 +39,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
 
   return (
     <>
-    {loading && <InfinitySpin color='red'/>}
+      {loading && <InfinitySpin color='red' />}
       {!loading && !module && <NotFoundPage />}
       {!loading && module && <>
         <h1 className="mb-4">{module?.title}</h1>
