@@ -18,6 +18,7 @@ import { Course, Module, Student, UserRole } from '~/prisma/generated/client'
 import { DialogTitle, DialogTrigger } from '@radix-ui/react-dialog'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 
 type SingleCourseManagePageProps = {
@@ -59,6 +60,7 @@ export default function SingleCourseManagePage({ params: { course_id } }: Single
   }, [user, course_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(user?.role == UserRole.admin) && <>
       <NoAccessNotice />
     </>}

@@ -11,6 +11,7 @@ import { Course, UserRole } from '~/prisma/generated/client'
 import { PlusIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 export default function CoursesManagePage() {
   const { user, validateLoggedIn } = useAuth()
@@ -48,6 +49,7 @@ export default function CoursesManagePage() {
           </DialogContent>
         </Dialog>}
       </h1>
+      {loading && <InfinitySpin color='red'/>}
       {(!loading && user?.role != UserRole.admin) && <NoAccessNotice />}
       {!loading && user?.role == UserRole.admin && <>
         {courses?.length > 0 && <div className="grid md:grid-cols-2 xl:grid-cols-3 w-full gap-5">

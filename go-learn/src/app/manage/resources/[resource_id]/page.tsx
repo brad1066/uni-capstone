@@ -20,6 +20,7 @@ import { useSupabase } from '@/hooks/useSupabase'
 import UploadItem from '@/components/item-cards/UploadItem'
 import { createUpload, deleteUpload } from '@/actions/uploadActions'
 import NoAccessNotice from '@/components/ui/NoAccessNotice'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type SingleResourceManagePageProps = {
   params: {
@@ -59,6 +60,7 @@ export default function SingleResourceManagePage({ params: { resource_id } }: Si
   }, [user, resource_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}

@@ -16,6 +16,7 @@ import ModuleItem from '@/components/item-cards/ModuleItem'
 import { Separator } from '@/components/ui/separator'
 import NewResourceForm from '@/components/forms/NewResourceForm'
 import { createResource, deleteResource } from '@/actions/resourceActions'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type SingleAssignmentManagePageProps = {
   params: { assignment_id: string }
@@ -52,6 +53,7 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
   }, [user, assignment_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}

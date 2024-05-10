@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Resource, Section, Unit, User, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type SingleSectionManagePageProps = {
   params: { section_id: string }
@@ -53,6 +54,7 @@ export default function SingleSectionManagePage({ params: { section_id } }: Sing
   }, [user, section_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}

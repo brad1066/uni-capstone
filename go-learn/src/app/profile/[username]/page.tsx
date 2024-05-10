@@ -11,6 +11,7 @@ import { Contact, User, UserRole } from '~/prisma/generated/client'
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ProfilePageProps = {
   params: {
@@ -52,23 +53,26 @@ const ProfilePage = ({ params: { username } }: ProfilePageProps) => {
   }, [user])
 
   return <>
+    {loading && <InfinitySpin color='red' />}
     {!loading && !(signedInUser?.role == UserRole.admin || signedInUser?.username == user?.username) && <NoAccessNotice />}
-    <h1 className="mb-[2rem]">Hi {user?.forename} {user?.surname}</h1>
-    <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
-      <EditUserForm
-        user={user as User} setUser={setUser as Dispatch<SetStateAction<User | undefined>>}
-        canEdit={user?.username == signedInUser?.username || signedInUser?.role == UserRole.admin} onUpdateSave={(updatedUser) => {
-          // if (!updated) return
-          updateUser(updatedUser as User)
-            .then(validateLoggedIn)
-            .then(userUpdateSuccess)
-            .then(() => { setUpdated(false) }).catch(userUpdateFailed)
-          if (updatedUser?.contactId) updateContact(updatedUser.contactDetails as Contact)
-          else createContactForUser(updatedUser?.contactDetails as Contact, updatedUser?.username as string)
-            .then(userUpdateSuccess)
-            .catch(userUpdateFailed)
-        }} />
-    </div>
+    {!loading && user && <>
+      <h1 className="mb-[2rem]">Hi {user?.forename} {user?.surname}</h1>
+      <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
+        <EditUserForm
+          user={user as User} setUser={setUser as Dispatch<SetStateAction<User | undefined>>}
+          canEdit={user?.username == signedInUser?.username || signedInUser?.role == UserRole.admin} onUpdateSave={(updatedUser) => {
+            // if (!updated) return
+            updateUser(updatedUser as User)
+              .then(validateLoggedIn)
+              .then(userUpdateSuccess)
+              .then(() => { setUpdated(false) }).catch(userUpdateFailed)
+            if (updatedUser?.contactId) updateContact(updatedUser.contactDetails as Contact)
+            else createContactForUser(updatedUser?.contactDetails as Contact, updatedUser?.username as string)
+              .then(userUpdateSuccess)
+              .catch(userUpdateFailed)
+          }} />
+      </div>
+    </>}
   </>
 }
 

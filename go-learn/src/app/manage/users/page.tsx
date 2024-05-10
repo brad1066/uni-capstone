@@ -48,7 +48,7 @@ export default function UsersManagePage() {
 
   return (
     <>
-      {loading && <InfinitySpin color='primary'/>}
+      {loading && <InfinitySpin color='red'/>}
       {(!loading && user?.role != UserRole.admin) && <NoAccessNotice />}
       {!loading && user?.role == UserRole.admin && <>
         <h1 className="mb-[1rem] flex gap-4 items-center">Users

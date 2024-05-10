@@ -23,7 +23,7 @@ import { Address, Contact, Course, Module, Student, Teacher, User, UserRole } fr
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { CircleLoader } from 'react-spinners'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type UserManagePageProps = {
   params: { username: string }
@@ -93,7 +93,7 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
   }, [urlParams])
 
   return (<>
-    {loading && <CircleLoader />}
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(loggedInUser?.role == UserRole.admin) && <NoAccessNotice />}
     {!loading && !user && <>
       {username} could not be found in the database. <Button variant={'secondary'} onClick={router?.back}>Go Back</Button>

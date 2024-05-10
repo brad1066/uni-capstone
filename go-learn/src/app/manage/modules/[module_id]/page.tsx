@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react'
 import AssignmentItem from '@/components/item-cards/AssignmentItem'
 import { createAssignment, deleteAssignment } from '@/actions/assignmentActions'
 import NewAssignmentDialog from '@/components/dialogs/new-assignment-dialog'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type SingleModuleManagePageProps = {
   params: { module_id: string }
@@ -70,6 +71,7 @@ export default function SingleModuleManagePage({ params: { module_id } }: Single
   }, [user, module_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <>
       <NoAccessNotice />
     </>}

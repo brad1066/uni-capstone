@@ -7,6 +7,7 @@ import { UserRole } from '~/prisma/generated/client'
 import TeacherDashboard from './(dashboard)/TeacherDashboard'
 import StudentDashboard from './(dashboard)/StudentDashboard'
 import AdminDashboard from './(dashboard)/AdminDashboard'
+import { InfinitySpin } from 'react-loader-spinner'
 
 export default function Dashboard() {
   const { user, validateLoggedIn } = useAuth()
@@ -21,7 +22,7 @@ export default function Dashboard() {
   }, [])
 
   return <>
-    {loading && <div>Loading your dashboard</div>}
+    {loading && <InfinitySpin color='red' />}
     {!loading && user?.role === UserRole.admin && <AdminDashboard />}
     {!loading && user?.role === UserRole.teacher && <TeacherDashboard user={user} />}
     {!loading && user?.role === UserRole.student && <StudentDashboard user={user} />}

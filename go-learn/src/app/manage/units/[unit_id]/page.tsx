@@ -18,6 +18,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Unit, Module, Resource, Section, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type SingleUnitManagePageProps = {
   params: { unit_id: string }
@@ -53,6 +54,7 @@ export default function SingleUnitManagePage({ params: { unit_id } }: SingleUnit
   }, [user, unit_id])
 
   return (<>
+    {loading && <InfinitySpin color='red' />}
     {!loading && !(user?.role == UserRole.admin || user?.role == UserRole.teacher) && <NoAccessNotice />}
     {!loading && unit && <>
       <h1 className="mb-[2rem]">{unit.title}</h1>
