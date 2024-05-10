@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from '@/components/ui/button'
 import NewSubmissionForm from '@/components/forms/NewSubmissionForm'
 import { createUpload } from '@/actions/uploadActions'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewAssignmentPageProps = {
   params: { assignment_id: string }
@@ -66,6 +67,7 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
   }, [user, assignment_id])
 
   return (<>
+    {loading && <InfinitySpin color='red'/>}
     {!loading && assignment && <>
       <h1 className="mb-[2rem]">{assignment.title}</h1>
       <div className="grid gap-[2rem] w-full xl:grid-cols-2">
