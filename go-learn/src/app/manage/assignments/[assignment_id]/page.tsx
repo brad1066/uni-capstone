@@ -112,7 +112,6 @@ export default function SingleAssignmentManagePage({ params: { assignment_id } }
                 <DialogTrigger><Button>Add Resource</Button></DialogTrigger>
                 <DialogContent>
                   <DialogHeader><DialogTitle>Add Resource</DialogTitle></DialogHeader>
-                  <p>Coming soon...</p>
                   <NewResourceForm onSubmit={async (resource) => {
                     createResource(resource, undefined, assignment.id)
                       .then(refreshAssignmentData)

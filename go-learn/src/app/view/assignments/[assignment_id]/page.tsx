@@ -134,7 +134,6 @@ export default function ViewAssignmentPage({ params: { assignment_id } }: ViewAs
                   <DialogTrigger asChild><Button>Add Submission</Button></DialogTrigger>
                   <DialogContent>
                     <DialogHeader><DialogTitle>Add Submission</DialogTitle></DialogHeader>
-                    <p>Coming soon...</p>
                     <NewSubmissionForm submitSubmission={(title, file) => {
                       if (!(title && file && user)) { return }
 
