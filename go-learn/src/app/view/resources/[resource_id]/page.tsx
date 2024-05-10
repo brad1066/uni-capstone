@@ -9,6 +9,7 @@ import { Resource, Section, Unit, Upload, User } from '~/prisma/generated/client
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Markdown from 'react-markdown'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewResourcePageProps = {
   params: {
@@ -39,6 +40,7 @@ export default function ViewResourcePage({ params: { resource_id } }: ViewResour
 
   return (
     <>
+      {loading && <InfinitySpin color='red' />}
       {!loading && !resource && <>
         <NotFoundPage />
       </>}
@@ -72,7 +74,7 @@ export default function ViewResourcePage({ params: { resource_id } }: ViewResour
                   <UploadItem
                     key={upload.id}
                     upload={upload}
-                    className="w-fit"/>
+                    className="w-fit" />
                 ))}
                 {
                   resource?.uploads?.length === 0 && <p>No uploads are available for this resource</p>

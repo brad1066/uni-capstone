@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Assignment, Submission, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewAssignmentSubmissionsPageProps = {
   params: { assignment_id: string }
@@ -33,7 +34,7 @@ export default function ViewAssignmentSubmissionsPage({ params: { assignment_id 
   }, [user, assignment_id])
 
   useEffect(() => {
-    
+
   }, [assignment])
 
   const refreshAssignmentData = async () => {
@@ -45,10 +46,10 @@ export default function ViewAssignmentSubmissionsPage({ params: { assignment_id 
       })
     return assignment
   }
-  
+
 
   return <>
-    {loading && <p>Loading...</p>}
+    {loading && <InfinitySpin color='red' />}
     {!loading && assignment && <>
       <h1 className='mb-4'>Submissions for assignment: {assignment?.title}</h1>
       <div className={assignment?.submissions?.length ? 'grid gap-4 w-full md:grid-cols-2 xl:grid-cols-3' : ''}>

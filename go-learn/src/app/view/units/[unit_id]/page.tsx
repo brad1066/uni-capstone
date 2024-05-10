@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Unit, Module, Resource, Section, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewUnitPageProps = {
   params: {
@@ -39,6 +40,7 @@ export default function ViewUnitPage({ params: { unit_id } }: ViewUnitPageProps)
 
   return (
     <>
+      {loading && <InfinitySpin color='red' />}
       {!loading && !unit && <>
         <NotFoundPage />
       </>}

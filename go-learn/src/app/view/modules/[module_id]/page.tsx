@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Assignment, Course, Module, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewModulePageProps = {
   params: {
@@ -38,6 +39,7 @@ export default function ViewModulePage({ params: { module_id } }: ViewModulePage
 
   return (
     <>
+    {loading && <InfinitySpin color='red'/>}
       {!loading && !module && <NotFoundPage />}
       {!loading && module && <>
         <h1 className="mb-4">{module?.title}</h1>

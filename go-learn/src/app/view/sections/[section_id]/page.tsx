@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Section, Resource, Unit, UserRole } from '~/prisma/generated/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { InfinitySpin } from 'react-loader-spinner'
 
 type ViewSectionPageProps = {
   params: {
@@ -37,6 +38,7 @@ export default function ViewSectionPage({ params: { section_id } }: ViewSectionP
 
   return (
     <>
+      {loading && <InfinitySpin color='red' />}
       {!loading && !section && <>
         <NotFoundPage />
       </>}
