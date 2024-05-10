@@ -23,6 +23,7 @@ import { Address, Contact, Course, Module, Student, Teacher, User, UserRole } fr
 import { ToastAction } from '@radix-ui/react-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { CircleLoader } from 'react-spinners'
 
 type UserManagePageProps = {
   params: { username: string }
@@ -64,11 +65,12 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
   useEffect(() => {
     !loggedInUser && validateLoggedIn?.()
       .then(({ loggedIn }) => !loggedIn && router.replace('/login'))
-      .then(() => setLoading(false))
   }, [])
+  
 
   useEffect(() => {
     (async () => {
+      setLoading(true)
       const user = await getUser(username, ['contactDetails'])
       setUser(user as User & { contactDetails?: Contact | null })
       // Use of initialUser state allows stops the initial definition of user at runtime on client
@@ -84,16 +86,19 @@ export default function UserManagePage({ params: { username } }: UserManagePageP
         setTermAddress(student?.termAddress ?? EMPTY_ADDRESS)
         await setStudent(student)
       }
+
+      setLoading(false)
     })()
 
   }, [urlParams])
 
   return (<>
+    {loading && <CircleLoader />}
     {!loading && !(loggedInUser?.role == UserRole.admin) && <NoAccessNotice />}
-    {!user && <>
+    {!loading && !user && <>
       {username} could not be found in the database. <Button variant={'secondary'} onClick={router?.back}>Go Back</Button>
     </>}
-    {user && <>
+    {!loading && user && <>
       <h1 className="mb-[2rem]">{initialUser?.title} {initialUser?.forename} {initialUser?.surname}</h1>
       <div className="flex gap-[2rem] w-full flex-col xl:flex-row">
         {/* User Data Card */}

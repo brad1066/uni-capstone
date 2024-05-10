@@ -31,12 +31,12 @@ export default function ResourcesAuthoredCard({ author, className, noHeader }: R
       <CardContent>
         <ScrollArea className='height-[100%]'>
           {resources?.map?.((resource, idx) => <>
-            {idx < 5 && <>
+            {idx < 5 ? <>
               <ResourceItem
                 key={resource.id}
                 resource={resource}
                 onClick={() => { router.push(`/view/resources/${resource.id}`) }} />
-            </>}
+            </> : null}
           </>)}
           {resources.length == 0 && 'No resources found'}
         </ScrollArea>
